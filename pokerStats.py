@@ -19,11 +19,11 @@ from resetList import *
 from calcPercentAndTranspose import *
 from transpose import *
 
-# Find path to Excel spreadsheet with log
+# Find path_log to Excel spreadsheet with log
 
-path = "Logs/log_5 4.xls"
+path_log = "Logs/log_5 4.xls"
 
-book = xlrd.open_workbook(path)
+book = xlrd.open_workbook(path_log)
 sheet = book.sheet_by_index(0)
 rows = sheet.nrows
 
@@ -41,7 +41,8 @@ actionCount = [[[], []], [[], []], [[], []], [[],[]]] # 3D list that counts ever
 af = [[], [], []] # 2D list for aggression factor, aggression frequency
 afq = [[], [], []] 
 
-# bbWonPerFiftyHands = [] # Big Blinds won per 50 hands
+bbWonPerFiftyHands = [] # Big Blinds won per 50 hands
+
 # wtsd = [[]] # went to showdown (%)
 # wasd = [[]] # won at showdown (%)
 # mwas = [[]] # money won at showdown ($)
@@ -177,6 +178,9 @@ class Player:
 		self.af = af # aggression factor
 		self.afq = afq # aggression frequency (%)
 		# self.bbWon = bbWon # bb won per fifty hands
+
+	def stats(self, position=''):
+
 		args = ['early', 'late', '']
 
 		i = search(args, position)
@@ -191,35 +195,6 @@ class Player:
 		print("Three-bet        :", self.tbp[i], '\n')
 		print("Aggression factor:", self.af[i])
 		print("Aggression freq  :", self.afq[i])
-	def stats(self, position=''):
-		if (position == 'early'):
-			print('\n')
-			print("early stats for", self.name)
-			print("VPIP             :", self.vpip[0])
-			print("Pre-flop raise   :", self.pfr[0])
-			print("Three-bet        :", self.tbp[0], '\n')
-			print("Aggression factor:", self.af[0])
-			print("Aggression freq  :", self.afq[0])
-
-		elif (position == 'late'):
-			print('\n')
-			print("late stats for", self.name)
-			print("VPIP             :", self.vpip[1])
-			print("Pre-flop raise   :", self.pfr[1])
-			print("Three-bet        :", self.tbp[1], '\n')
-			print("Aggression factor:", self.af[1])
-			print("Aggression freq  :", self.afq[1])
-
-		else:
-			print('\n')
-			print("stat averages for", self.name)
-			print("VPIP             :", self.vpip[2])
-			print("Pre-flop raise   :", self.pfr[2])
-			print("Three-bet        :", self.tbp[2], '\n')
-			print("Aggression factor:", self.af[2])
-			print("Aggression freq  :", self.afq[2])
-
-
 
 fish = Player("Fish", vpipM[k[0]], pfrM[k[0]], tbpM[k[0]], afM[k[0]], afqM[k[0]])
 
