@@ -1,6 +1,6 @@
 from search import *
 
-def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed):
+def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded):
 	# Assigns new players an index, seat, and position
 	# Assigns old players a seat and position
 
@@ -16,6 +16,7 @@ def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed):
 		tempID = str[atIndex+2:atIndex+2+10] # 10 character player ID
 
 		currPlayerIDs[0].append(tempID) # add player ID to list for this hand
+		hasFolded.append(0)
 		
 		if search(playerIDs, tempID) == -1: # new player has been found
 			playerIDs.append(tempID) # add new player ID to main list

@@ -16,7 +16,7 @@ def calcPercentAndTranspose(handsPlayed, stat, decimalPlaces):
 		totalList.append(total) # add to overall list
 
 	# Combine position and total lists ----------------------------------------------------------
-	tempStat = [[0] * len(stat[0])] * len(stat) # Create a # players x 3 list (early, late, total)
+	tempStat = [[0] * len(stat[0])] * 3 # Create a # players x 3 list (early, late, total)
 	
 	tempStat[0] = earlyList
 	tempStat[1] = lateList
