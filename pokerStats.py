@@ -254,3 +254,5 @@ scott.stats()
 
 print('Done!')
 
+print('Is GitHub even real?')
+
