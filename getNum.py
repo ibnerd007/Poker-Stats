@@ -6,7 +6,7 @@ def getNum(str):
 	assert str.find('@') != -1, 'No ID in string'
 	afterIDIndex = str.find('@')
 	strAfterID = str[afterIDIndex+13:] # Makes sure no numbers in IDs are counted
-	print(strAfterID)
+	# print(strAfterID)
 
 	numRegex = re.findall('[0-9]+', strAfterID)
 	assert len(numRegex) >= 1, 'No number in string'

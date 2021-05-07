@@ -25,14 +25,20 @@ from getNum import *
 
 # Find path to Excel spreadsheet with log
 
-path_log = "Logs/log_4 26.xls"
+path_log = "Logs/log_5 4.xls"
 path_ledger = "Ledgers/ledger_5 4.xls"
 
 log_book = xlrd.open_workbook(path_log)
 log_sheet = log_book.sheet_by_index(0)
 log_rows = log_sheet.nrows
 
-# 
+# Find path to Excel spreadsheet with ledger
+
+ledger_book = xlrd.open_workbook(path_ledger)
+ledger_sheet = ledger_book.sheet_by_index(0)
+ledger_rows = ledger_sheet.nrows
+print(ledger_rows)
+
 
 # The following lists keep track of specific stats; indexed by player ----------------------------------------
 
@@ -174,11 +180,11 @@ while (i < log_rows):
 		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # Any player that hasn't folded now, has gone to showdown
 
 	i += 1
-	print(i)
-# ------------------------------------------------------------------------------------------
+	# print(i)
+# Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): mwas[i] /= 100 # turn into dollar amounts
 for i in range(len(mwbs)): mwbs[i] /= 100 # turn into dollar amounts
-print(mwbs)
+# print(mwbs)
 # Calculate stats by player in early, late, and total position
 
 vpipM = calcPercentAndTranspose(handsPlayed, vpip, 3)
@@ -195,6 +201,12 @@ afqM = transpose(afq)
 
 # print(handsPlayed)
 print(playerIDs, '\n')
+
+# Loop for ledger
+i = 0
+
+while i < ledger_rows:
+	pass
 
 # ------------------------------------------------------------------------------------------
 
@@ -266,8 +278,8 @@ class Player:
 			print("Aggression factor:", self.af[i])
 
 			print("Aggression freq  : %.1f %%" % (self.afq[i]*100))
-			print("\nWent to showdown  : %.1f %%" % (self.wtsd[i]*100))
-			print("Won at showdown   : %.1f %%" % (self.wasd[i]*100))
+			print("\nWent to showdown  : %.1f %% of hands played" % (self.wtsd[i]*100))
+			print("Won at showdown   : %.1f %% \"" % (self.wasd[i]*100))
 
 			print("\nMonetary stats for %s, not position-based" % self.name)
 			print("$ won at showdown    : $%.2f" % self.mwas)
