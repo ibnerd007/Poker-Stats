@@ -15,11 +15,12 @@ from calcAF import *
 from calcAFQ import *
 from calcWTSD import *
 from calcWASD import *
-
+from calcMWAS import *
 
 from resetList import *
 from calcPercentAndTranspose import *
 from transpose import *
+from getNum import *
 
 # Find path_log to Excel spreadsheet with log
 
@@ -96,7 +97,7 @@ while (i < rows):
 		appendMultiple3D(actionCount, playersAdded) # different function for 3D list
 		appendMultiple(wtsd, playersAdded)
 		appendMultiple(wasd, playersAdded)
-		# print(currPlayerIDs)
+		for j in range(playersAdded): mwas.append(0) # different function for 1D list
 
 		beforeFlop = True
 
@@ -149,12 +150,15 @@ while (i < rows):
 	# Store those 3 stats in 3 lists.
 	# These stats are NOT position-based
 	if str.find('collected') != -1 & str.find('combination') != -1: # someone has won the pot at showdown
-		wasdID = getID(str)
+		winnerID = getID(str)
 
-		calcWASD(wasd, wasdID, playerIDs, currPlayerIDs, hasCollected)
-		hasCollected.append(wasdID) # player has won and can't win again if a side pot is also collected
-		print(wasd)
-		# print(wasd)
+		# Log who won at showdown
+		calcWASD(wasd, winnerID, playerIDs, currPlayerIDs, hasCollected)
+		hasCollected.append(winnerID) # player has won and can't win again if a side pot is also collected
+
+		# Collect data for money won at showdown (MWAS)
+		pot = getNum(str)
+		calcMWAS(mwas, pot, winnerID, playerIDs)
 
 	if str.find('ending hand #') != -1: # hand has ended
 		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # Any player that hasn't folded now, has gone to showdown
@@ -162,7 +166,8 @@ while (i < rows):
 	i += 1
 	print(i)
 # ------------------------------------------------------------------------------------------
-
+for i in range(len(mwas)): mwas[i] /= 100 # turn into dollar amounts
+print(mwas)
 # Calculate stats by player in early, late, and total position
 
 vpipM = calcPercentAndTranspose(handsPlayed, vpip, 3)
@@ -198,7 +203,7 @@ for i in range(len(k)):
 
 class Player:
 
-	def __init__(self, name, vpip, pfr, tbp, af, afq, wtsd, wasd):
+	def __init__(self, name, vpip, pfr, tbp, af, afq, wtsd, wasd, mwas):
 		self.name = name
 		self.vpip = vpip # voluntarily put in pot (%)
 		self.pfr = pfr # pre-flop raise (%)
@@ -207,6 +212,7 @@ class Player:
 		self.afq = afq # aggression frequency (%)
 		self.wtsd = wtsd # went to showdown (%)
 		self.wasd = wasd # went to showdown (%)
+		self.mwas = mwas # money won at showdown ($) *not position-based
 		# self.bbWon = bbWon # bb won per fifty hands
 
 	def stats(self, position=''):
@@ -227,32 +233,35 @@ class Player:
 		print("Aggression freq  :", self.afq[i])
 		print("\nWent to showdown  :", self.wtsd[i])
 		print("Won at showdown   :", self.wasd[i])
+		print("\nMonetary stats for", self.name)
+		print("$ won at showdown  : $%.2f" % self.mwas)
 
-fish = Player("Fish", vpipM[k[0]], pfrM[k[0]], tbpM[k[0]], afM[k[0]], afqM[k[0]], wtsdM[k[0]], wasdM[k[0]])
 
-raymond = Player("Raymond", vpipM[k[1]], pfrM[k[1]], tbpM[k[1]], afM[k[1]], afqM[k[1]], wtsdM[k[1]], wasdM[k[1]])
+fish = Player("Fish", vpipM[k[0]], pfrM[k[0]], tbpM[k[0]], afM[k[0]], afqM[k[0]], wtsdM[k[0]], wasdM[k[0]], mwas[k[0]])
 
-cedric = Player("Cedric", vpipM[k[2]], pfrM[k[2]], tbpM[k[2]], afM[k[2]], afqM[k[2]], wtsdM[k[2]], wasdM[k[2]])
+raymond = Player("Raymond", vpipM[k[1]], pfrM[k[1]], tbpM[k[1]], afM[k[1]], afqM[k[1]], wtsdM[k[1]], wasdM[k[1]], mwas[k[1]])
 
-cheyenne = Player("Cheyenne", vpipM[k[3]], pfrM[k[3]], tbpM[k[3]], afM[k[3]], afqM[k[3]], wtsdM[k[3]], wasdM[k[3]])
+cedric = Player("Cedric", vpipM[k[2]], pfrM[k[2]], tbpM[k[2]], afM[k[2]], afqM[k[2]], wtsdM[k[2]], wasdM[k[2]], mwas[k[2]])
 
-scott = Player("Scott", vpipM[k[4]], pfrM[k[4]], tbpM[k[4]], afM[k[4]], afqM[k[4]], wtsdM[k[4]], wasdM[k[4]])
+cheyenne = Player("Cheyenne", vpipM[k[3]], pfrM[k[3]], tbpM[k[3]], afM[k[3]], afqM[k[3]], wtsdM[k[3]], wasdM[k[3]], mwas[k[3]])
 
-tristan = Player("Tristan", vpipM[k[5]], pfrM[k[5]], tbpM[k[5]], afM[k[5]], afqM[k[5]], wtsdM[k[5]], wasdM[k[5]])
+scott = Player("Scott", vpipM[k[4]], pfrM[k[4]], tbpM[k[4]], afM[k[4]], afqM[k[4]], wtsdM[k[4]], wasdM[k[4]], mwas[k[4]])
 
-kynan = Player("Kynan", vpipM[k[6]], pfrM[k[6]], tbpM[k[6]], afM[k[6]], afqM[k[6]], wtsdM[k[6]], wasdM[k[6]])
+tristan = Player("Tristan", vpipM[k[5]], pfrM[k[5]], tbpM[k[5]], afM[k[5]], afqM[k[5]], wtsdM[k[5]], wasdM[k[5]], mwas[k[5]])
 
-xavier = Player("Xavier", vpipM[k[7]], pfrM[k[7]], tbpM[k[7]], afM[k[7]], afqM[k[7]], wtsdM[k[7]], wasdM[k[7]])
+kynan = Player("Kynan", vpipM[k[6]], pfrM[k[6]], tbpM[k[6]], afM[k[6]], afqM[k[6]], wtsdM[k[6]], wasdM[k[6]], mwas[k[6]])
 
-bill = Player("Bill", vpipM[k[8]], pfrM[k[8]], tbpM[k[8]], afM[k[8]], afqM[k[8]], wtsdM[k[8]], wasdM[k[8]])
+xavier = Player("Xavier", vpipM[k[7]], pfrM[k[7]], tbpM[k[7]], afM[k[7]], afqM[k[7]], wtsdM[k[7]], wasdM[k[7]], mwas[k[7]])
 
-marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], afqM[k[9]], wtsdM[k[9]], wasdM[k[9]])
+bill = Player("Bill", vpipM[k[8]], pfrM[k[8]], tbpM[k[8]], afM[k[8]], afqM[k[8]], wtsdM[k[8]], wasdM[k[8]], mwas[k[8]])
 
-regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]])
+marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], afqM[k[9]], wtsdM[k[9]], wasdM[k[9]], mwas[k[9]])
+
+regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]])
 
 
 # assert k[4] != -1, 'This player didn\'t play this session'
-fish.stats()
+bill.stats()
 
 
 print('Done!')
