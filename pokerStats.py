@@ -79,6 +79,7 @@ while (i < rows):
 		dealerID = startingHandNumber(str) # dealer ID is determined and returned from this function
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
+		hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
 		totalPlayed += 1
 
 	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
@@ -147,17 +148,19 @@ while (i < rows):
 	# Determine 1) who went to showdown, 2) who won at that showdown, and 3) how much money that player won
 	# Store those 3 stats in 3 lists.
 	# These stats are NOT position-based
-
 	if str.find('collected') != -1 & str.find('combination') != -1: # someone has won the pot at showdown
 		wasdID = getID(str)
-		calcWASD(wasd, wasdID, playerIDs, currPlayerIDs)
+
+		calcWASD(wasd, wasdID, playerIDs, currPlayerIDs, hasCollected)
+		hasCollected.append(wasdID) # player has won and can't win again if a side pot is also collected
+		print(wasd)
 		# print(wasd)
 
 	if str.find('ending hand #') != -1: # hand has ended
 		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # Any player that hasn't folded now, has gone to showdown
 
 	i += 1
-	# print(i)
+	print(i)
 # ------------------------------------------------------------------------------------------
 
 # Calculate stats by player in early, late, and total position
@@ -248,11 +251,8 @@ marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], af
 regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]])
 
 
-assert k[4] != -1, 'This player didn\'t play this session'
-scott.stats()
+# assert k[4] != -1, 'This player didn\'t play this session'
+fish.stats()
 
 
 print('Done!')
-
-print('Is GitHub even real?')
-
