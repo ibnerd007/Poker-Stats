@@ -25,8 +25,10 @@ from getNum import *
 
 # Find path to Excel spreadsheet with log
 
-path_log = "Logs/log_5 4.xls"
-path_ledger = "Ledgers/ledger_5 4.xls"
+date = '5 4'
+
+path_log = "Logs/log_%s.xls" % date
+path_ledger = "Ledgers/ledger_%s.xls" % date
 
 log_book = xlrd.open_workbook(path_log)
 log_sheet = log_book.sheet_by_index(0)
@@ -184,7 +186,7 @@ while (i < log_rows):
 # Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): mwas[i] /= 100 # turn into dollar amounts
 for i in range(len(mwbs)): mwbs[i] /= 100 # turn into dollar amounts
-# print(mwbs)
+
 # Calculate stats by player in early, late, and total position
 
 vpipM = calcPercentAndTranspose(handsPlayed, vpip, 3)
@@ -192,21 +194,65 @@ pfrM = calcPercentAndTranspose(handsPlayed, pfr, 3)
 tbpM = calcPercentAndTranspose(handsPlayed, tbp, 4) # Calculates percentages for each preflop statistic
 wtsdM = calcPercentAndTranspose(handsPlayed, wtsd, 3)
 wasdM = calcPercentAndTranspose(handsPlayed, wasd, 3)
-# print(wtsdM)
 
 af = calcAF(af, actionCount, 2)
 afq = calcAFQ(afq, actionCount, 3)
 afM = transpose(af)
 afqM = transpose(afq)
 
-# print(handsPlayed)
 print(playerIDs, '\n')
+# ---------------------------------------------------------------------
+
+# ledger = [[total buy-in], [total buy-out], [net profit/loss], [# of rebuys]] per player
+ledger = [[], [], [], []]
+appendMultiple(ledger, len(playerIDs))
+# print(ledger)
+cols = {'id': 1, 'buy-in': 4, 'buy-out': 5, 'stack': 6, 'net': 7}
 
 # Loop for ledger
-i = 0
+i = 1
 
 while i < ledger_rows:
-	pass
+	# print(cols['buy-in'])
+	id = ledger_sheet.cell_value(i, cols['id'])
+	idIndex = search(playerIDs,id)
+
+	# Capture the player's buy in so far
+	buyIn = ledger_sheet.cell_value(i, cols['buy-in'])
+	ledger[0][idIndex] += buyIn
+
+	# Capture the player's buy out
+	buyOut = ledger_sheet.cell_value(i, cols['buy-out'])
+	if buyOut != '': # player 'left' the table
+		ledger[1][idIndex] += buyOut
+	else: # player never technically 'left' so still has a 'stack'
+		ledger[1][idIndex] += ledger_sheet.cell_value(i, cols['stack'])
+
+	# Catpure the player's net profit/loss
+	net = ledger_sheet.cell_value(i, cols['net'])
+	ledger[2][idIndex] += net
+
+	# Capture the player's rebuys
+	ledger[3][idIndex] += 1
+
+	i += 1
+
+i = 0
+while i < len(playerIDs):
+	ledger[3][i] -= 1
+	i += 1
+
+ledgerM = transpose(ledger)
+
+# Make into dollar amounts and round to necessary digits
+for i in range(len(playerIDs)):
+	for j in range(len(ledgerM[0])):
+		if j < 3: # monetary amounts
+			ledgerM[i][j] /= 100
+			ledgerM[i][j] = round(ledgerM[i][j], 2) # $ amounts are in cents
+		else:
+			ledgerM[i][j] = round(ledgerM[i][j]) # number of rebuys is an integer
+
 
 # ------------------------------------------------------------------------------------------
 
@@ -226,7 +272,7 @@ for i in range(len(k)):
 
 class Player:
 
-	def __init__(self, name, vpip, pfr, tbp, af, afq, wtsd, wasd, mwas, mwbs):
+	def __init__(self, name, vpip, pfr, tbp, af, afq, wtsd, wasd, mwas, mwbs, ledger):
 		self.name = name
 		self.vpip = vpip # voluntarily put in pot (%)
 		self.pfr = pfr # pre-flop raise (%)
@@ -237,18 +283,26 @@ class Player:
 		self.wasd = wasd # went to showdown (%)
 		self.mwas = mwas # money won at showdown ($) *not position-based
 		self.mwbs = mwbs # money won before showdown ($) *not position-based
+		self.ledger = ledger # contains bankroll stats for each player
 		# self.bbWon = bbWon # bb won per fifty hands
 
 	def stats(self, position='', isDecimal=''):
 
 		args = ['early', 'late', '']
 
+		# + or - for profit/loss. It's gonna look cool man
+
+		if self.ledger[2] > 0: 
+			PoL = '+' # profit
+		else: 
+			PoL = '-' # loss
+
 		i = search(args, position)
 		assert args[i] != -1, 'Enter a valid position argument'
 
-		if isDecimal != '': # decimal output desired
+		if isDecimal != '': # report in decimal form
 			if position == '': # stat averages have been requested
-				print('stat averages for', self.name)
+				print('stat averages for %s           Bankroll stats' % self.name)
 			else:
 				print(args[i], 'stats for', self.name)
 
@@ -266,16 +320,18 @@ class Player:
 			print("$ won before showdown: $%.2f" % self.mwbs)
 
 		else: # report in percentage form
+			print(self.name.upper(), '\n')
 			if position == '': # stat averages have been requested
-				print('stat averages for', self.name)
+				print('stat averages                    Bankroll stats')
 			else:
-				print(args[i], 'stats for', self.name)
+				print(args[i], 'stats                      Bankroll stats')
 
-			print("VPIP             : %.1f %%" % (self.vpip[i]*100))
-			print("Pre-flop raise   : %.2f %%" % (self.pfr[i]*100))
-			print("Three-bet        : %.2f %%" % (self.tbp[i]*100), '\n')
+			print("VPIP             : %.1f %%        Total buy-in: $%.2f" % ((self.vpip[i]*100), self.ledger[0]))
+			print("Pre-flop raise   : %.2f %%       Total buy-out: $%.2f" % ((self.pfr[i]*100), self.ledger[1]))
+			print("Three-bet        : %.2f %%        Net profit: %s$%.2f" % ((self.tbp[i]*100), PoL, abs(self.ledger[2])))
+			print("                                 Rebuys: %d" % self.ledger[3])
 
-			print("Aggression factor:", self.af[i])
+			print("\nAggression factor:", self.af[i])
 
 			print("Aggression freq  : %.1f %%" % (self.afq[i]*100))
 			print("\nWent to showdown  : %.1f %% of hands played" % (self.wtsd[i]*100))
@@ -286,31 +342,31 @@ class Player:
 			print("$ won before showdown: $%.2f" % self.mwbs)
 
 
-fish = Player("Fish", vpipM[k[0]], pfrM[k[0]], tbpM[k[0]], afM[k[0]], afqM[k[0]], wtsdM[k[0]], wasdM[k[0]], mwas[k[0]], mwbs[k[0]])
+fish = Player("Fish", vpipM[k[0]], pfrM[k[0]], tbpM[k[0]], afM[k[0]], afqM[k[0]], wtsdM[k[0]], wasdM[k[0]], mwas[k[0]], mwbs[k[0]], ledgerM[k[0]])
 
-raymond = Player("Raymond", vpipM[k[1]], pfrM[k[1]], tbpM[k[1]], afM[k[1]], afqM[k[1]], wtsdM[k[1]], wasdM[k[1]], mwas[k[1]], mwbs[k[1]])
+raymond = Player("Raymond", vpipM[k[1]], pfrM[k[1]], tbpM[k[1]], afM[k[1]], afqM[k[1]], wtsdM[k[1]], wasdM[k[1]], mwas[k[1]], mwbs[k[1]], ledgerM[k[1]])
 
-cedric = Player("Cedric", vpipM[k[2]], pfrM[k[2]], tbpM[k[2]], afM[k[2]], afqM[k[2]], wtsdM[k[2]], wasdM[k[2]], mwas[k[2]], mwbs[k[2]])
+cedric = Player("Cedric", vpipM[k[2]], pfrM[k[2]], tbpM[k[2]], afM[k[2]], afqM[k[2]], wtsdM[k[2]], wasdM[k[2]], mwas[k[2]], mwbs[k[2]], ledgerM[k[2]])
 
-cheyenne = Player("Cheyenne", vpipM[k[3]], pfrM[k[3]], tbpM[k[3]], afM[k[3]], afqM[k[3]], wtsdM[k[3]], wasdM[k[3]], mwas[k[3]], mwbs[k[3]])
+cheyenne = Player("Cheyenne", vpipM[k[3]], pfrM[k[3]], tbpM[k[3]], afM[k[3]], afqM[k[3]], wtsdM[k[3]], wasdM[k[3]], mwas[k[3]], mwbs[k[3]], ledgerM[k[3]])
 
-scott = Player("Scott", vpipM[k[4]], pfrM[k[4]], tbpM[k[4]], afM[k[4]], afqM[k[4]], wtsdM[k[4]], wasdM[k[4]], mwas[k[4]], mwbs[k[4]])
+scott = Player("Scott", vpipM[k[4]], pfrM[k[4]], tbpM[k[4]], afM[k[4]], afqM[k[4]], wtsdM[k[4]], wasdM[k[4]], mwas[k[4]], mwbs[k[4]], ledgerM[k[4]])
 
-tristan = Player("Tristan", vpipM[k[5]], pfrM[k[5]], tbpM[k[5]], afM[k[5]], afqM[k[5]], wtsdM[k[5]], wasdM[k[5]], mwas[k[5]], mwbs[k[5]])
+tristan = Player("Tristan", vpipM[k[5]], pfrM[k[5]], tbpM[k[5]], afM[k[5]], afqM[k[5]], wtsdM[k[5]], wasdM[k[5]], mwas[k[5]], mwbs[k[5]], ledgerM[k[5]])
 
-kynan = Player("Kynan", vpipM[k[6]], pfrM[k[6]], tbpM[k[6]], afM[k[6]], afqM[k[6]], wtsdM[k[6]], wasdM[k[6]], mwas[k[6]], mwbs[k[6]])
+kynan = Player("Kynan", vpipM[k[6]], pfrM[k[6]], tbpM[k[6]], afM[k[6]], afqM[k[6]], wtsdM[k[6]], wasdM[k[6]], mwas[k[6]], mwbs[k[6]], ledgerM[k[6]])
 
-xavier = Player("Xavier", vpipM[k[7]], pfrM[k[7]], tbpM[k[7]], afM[k[7]], afqM[k[7]], wtsdM[k[7]], wasdM[k[7]], mwas[k[7]], mwbs[k[7]])
+xavier = Player("Xavier", vpipM[k[7]], pfrM[k[7]], tbpM[k[7]], afM[k[7]], afqM[k[7]], wtsdM[k[7]], wasdM[k[7]], mwas[k[7]], mwbs[k[7]], ledgerM[k[7]])
 
-bill = Player("Bill", vpipM[k[8]], pfrM[k[8]], tbpM[k[8]], afM[k[8]], afqM[k[8]], wtsdM[k[8]], wasdM[k[8]], mwas[k[8]], mwbs[k[8]])
+bill = Player("Bill", vpipM[k[8]], pfrM[k[8]], tbpM[k[8]], afM[k[8]], afqM[k[8]], wtsdM[k[8]], wasdM[k[8]], mwas[k[8]], mwbs[k[8]], ledgerM[k[8]])
 
-marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], afqM[k[9]], wtsdM[k[9]], wasdM[k[9]], mwas[k[9]], mwbs[k[9]])
+marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], afqM[k[9]], wtsdM[k[9]], wasdM[k[9]], mwas[k[9]], mwbs[k[9]], ledgerM[k[9]])
 
-regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]])
+regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]], ledgerM[k[10]])
 
 
 # assert k[4] != -1, 'This player didn\'t play this session'
-fish.stats()
+regan.stats()
 
 
-print('Done!')
+print('\n')
