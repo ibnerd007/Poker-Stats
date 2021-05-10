@@ -284,6 +284,7 @@ class Player:
 		self.mwas = mwas # money won at showdown ($) *not position-based
 		self.mwbs = mwbs # money won before showdown ($) *not position-based
 		self.ledger = ledger # contains bankroll stats for each player
+		# self.bbWon = bbWon # bb won per fifty hands
 
 	def stats(self, position='', isDecimal=''):
 
@@ -300,7 +301,7 @@ class Player:
 		assert args[i] != -1, 'Enter a valid position argument'
 
 		if isDecimal != '': # report in decimal form
-			if position == '': # stat averages have been requested
+			if position == 'avg': # stat averages have been requested
 				print('stat averages for %s           Bankroll stats' % self.name)
 			else:
 				print(args[i], 'stats for', self.name)
@@ -364,7 +365,7 @@ marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], af
 regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]], ledgerM[k[10]])
 
 # assert k[4] != -1, 'This player didn\'t play this session'
-regan.stats()
+# fish.stats('avg')
 
 
 print('\n')
