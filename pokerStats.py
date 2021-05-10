@@ -373,8 +373,24 @@ fish = Player("Fish", stat[k[0]])
 
 # regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]], ledgerM[k[10]])
 
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 assert k[4] != -1, 'This player didn\'t play this session'
 fish.stats('avg', 'decimal')
+=======
+# assert k[4] != -1, 'This player didn\'t play this session'
+fish.stats()
+>>>>>>> parent of 9533b60 (Update pokerStats.py)
+=======
+# assert k[4] != -1, 'This player didn\'t play this session'
+fish.stats()
+>>>>>>> parent of 9533b60 (Update pokerStats.py)
+=======
+# assert k[4] != -1, 'This player didn\'t play this session'
+fish.stats()
+>>>>>>> parent of 9533b60 (Update pokerStats.py)
 
 
 print('\n')
