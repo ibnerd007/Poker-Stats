@@ -375,8 +375,13 @@ fish = Player("Fish", stat[k[0]])
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 assert k[4] != -1, 'This player didn\'t play this session'
 fish.stats('avg', 'decimal')
+=======
+# assert k[4] != -1, 'This player didn\'t play this session'
+fish.stats()
+>>>>>>> parent of 9533b60 (Update pokerStats.py)
 =======
 # assert k[4] != -1, 'This player didn\'t play this session'
 fish.stats()
