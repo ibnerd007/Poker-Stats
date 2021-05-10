@@ -26,7 +26,7 @@ from calcMWBS import *
 
 # Find path to Excel spreadsheet with log
 
-date = '5 4'
+date = '4 26'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -288,7 +288,7 @@ class Player:
 
 	def stats(self, position='', isDecimal=''):
 
-		args = ['early', 'late', '']
+		args = ['early', 'late', 'avg']
 
 		# + or - for profit/loss. It's gonna look cool man
 
@@ -365,8 +365,8 @@ marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], af
 regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]], ledgerM[k[10]])
 
 
-# assert k[4] != -1, 'This player didn\'t play this session'
-fish.stats()
+assert k[4] != -1, 'This player didn\'t play this session'
+fish.stats('avg','decimal')
 
 
 print('\n')
