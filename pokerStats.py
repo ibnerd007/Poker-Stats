@@ -366,7 +366,7 @@ regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM
 
 
 assert k[4] != -1, 'This player didn\'t play this session'
-fish.stats('avg','decimal')
+fish.stats()
 
 
 print('\n')
