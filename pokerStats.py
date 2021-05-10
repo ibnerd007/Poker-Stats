@@ -6,11 +6,15 @@ from assignPositions import *
 from appendMultiple import *
 from appendMultiple3D import *
 from getID import *
+from countAction import *
+from resetList import *
+from calcPercentAndTranspose import *
+from transpose import *
+from getNum import *
 
 from calcVPIP import *
 from calcPFR import *
 from calcTBP import *
-from countAction import *
 from calcAF import *
 from calcAFQ import *
 from calcWTSD import *
@@ -18,10 +22,7 @@ from calcWASD import *
 from calcMWAS import *
 from calcMWBS import *
 
-from resetList import *
-from calcPercentAndTranspose import *
-from transpose import *
-from getNum import *
+
 
 # Find path to Excel spreadsheet with log
 
@@ -39,7 +40,6 @@ log_rows = log_sheet.nrows
 ledger_book = xlrd.open_workbook(path_ledger)
 ledger_sheet = ledger_book.sheet_by_index(0)
 ledger_rows = ledger_sheet.nrows
-print(ledger_rows)
 
 
 # The following lists keep track of specific stats; indexed by player ----------------------------------------
@@ -366,7 +366,7 @@ regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM
 
 
 # assert k[4] != -1, 'This player didn\'t play this session'
-regan.stats()
+fish.stats()
 
 
 print('\n')
