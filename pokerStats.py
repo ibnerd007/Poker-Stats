@@ -263,6 +263,9 @@ staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
 #             kynan,       xavier,      bill,        marshall,    regan
 
+playerDict = {'fish': 0, 'ray': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4,
+		      'kynan': 5, 'xavier': 6, 'bill': 7, 'marshall': 8, 'regan': 9}
+
 
 # k list allows the program to find the same players every session, regardless of order
 
@@ -301,14 +304,16 @@ class Player:
 		assert args[i] != -1, 'Enter a valid position argument'
 
 		if isDecimal != '': # report in decimal form
-			if position == '': # stat averages have been requested
-				print('stat averages for %s           Bankroll stats' % self.name)
+			if position == 'avg': # stat averages have been requested
+				print('stat averages                  Bankroll stats' % self.name)
 			else:
-				print(args[i], 'stats for', self.name)
+				print(args[i], 'stats for %s             Bankroll stats' % self.name)
 
-			print("VPIP             :", self.vpip[i])
-			print("Pre-flop raise   :", self.pfr[i])
-			print("Three-bet        :", self.tbp[i], '\n')
+			print("VPIP             : %.2f           Total buy-in: $%.2f" % ((self.vpip[i]), self.ledger[0]))
+			print("Pre-flop raise   : %.2f          Total buy-out: $%.2f" % ((self.pfr[i]), self.ledger[1]))
+			print("Three-bet        : %.2f           Net profit: %s$%.2f" % ((self.tbp[i]), PoL, abs(self.ledger[2])))
+			print("                                 Rebuys: %d" % self.ledger[3])
+
 			print("Aggression factor:", self.af[i])
 			print("Aggression freq  :", self.afq[i])
 
@@ -365,8 +370,8 @@ marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], af
 regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]], ledgerM[k[10]])
 
 
-assert k[4] != -1, 'This player didn\'t play this session'
-fish.stats()
+assert k[playerDict['scott']] != -1, 'This player didn\'t play this session'
+scott.stats()
 
 
 print('\n')
