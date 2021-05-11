@@ -22,11 +22,15 @@ from calcWASD import *
 from calcMWAS import *
 from calcMWBS import *
 
+from reportPercentages import *
+from reportDecimals import *
+from printAllStats import *
+
 
 
 # Find path to Excel spreadsheet with log
 
-date = '4 26'
+date = '4 19'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -200,7 +204,8 @@ afq = calcAFQ(afq, actionCount, 3)
 afM = transpose(af)
 afqM = transpose(afq)
 
-print(playerIDs, '\n')
+# print(playerIDs, '\n')
+
 # ---------------------------------------------------------------------
 
 # ledger = [[total buy-in], [total buy-out], [net profit/loss], [# of rebuys]] per player
@@ -259,12 +264,30 @@ for i in range(len(playerIDs)):
 # With all stats calculated, add them to a class to easily look up per player
 
 staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
-			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4']
+			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
+			 'LragqkH6mQ', 'pnFzv-_qqL']
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
-#             kynan,       xavier,      bill,        marshall,    regan
+#             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
+#			  jacob,       cheyenne
 
-playerDict = {'fish': 0, 'ray': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4,
-		      'kynan': 5, 'xavier': 6, 'bill': 7, 'marshall': 8, 'regan': 9}
+playerDict = {'fish': 0, 'raymond': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4, 'tristan': 5,
+		      'kynan': 6, 'xavier': 7, 'bill': 8, 'marshall': 9, 'regan': 10, 'jonathan': 11,
+		      'jacob': 12, 'cheyenne': 13}
+
+players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
+		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
+		   'Cheyenne']
+
+
+print('The following people played this session:')
+a = []
+for i in range(len(playerIDs)):
+	index = search(staticIDs, playerIDs[i])
+	if index != -1:
+		a.append(players[index])
+print(a, '\n')
+
+print('Date: %s\n' % date)
 
 
 # k list allows the program to find the same players every session, regardless of order
@@ -289,62 +312,27 @@ class Player:
 		self.ledger = ledger # contains bankroll stats for each player
 		# self.bbWon = bbWon # bb won per fifty hands
 
-	def stats(self, position='', isDecimal=''):
-
-		args = ['early', 'late', 'avg']
-
-		# + or - for profit/loss. It's gonna look cool man
-
+		# + or - for profit/loss sign convention
 		if self.ledger[2] > 0: 
-			PoL = '+' # profit
+			self.PoL = '+' # profit
 		else: 
-			PoL = '-' # loss
+			self.PoL = '-' # loss
+
+	def posStats(self, position): # print stats to command line based on position
+
+		args = ['early', 'late', 'avg'] # valid arguments for stats() method
 
 		i = search(args, position)
-		assert args[i] != -1, 'Enter a valid position argument'
+		assert i != -1, 'Enter a valid position argument: early or late, or none for avg'
 
-		if isDecimal != '': # report in decimal form
-			if position == 'avg': # stat averages have been requested
-				print('stat averages                  Bankroll stats' % self.name)
-			else:
-				print(args[i], 'stats for %s             Bankroll stats' % self.name)
+		# if isDecimal != '': # report in decimal form
+		# 	reportDecimals(self, position, i)
 
-			print("VPIP             : %.2f           Total buy-in: $%.2f" % ((self.vpip[i]), self.ledger[0]))
-			print("Pre-flop raise   : %.2f          Total buy-out: $%.2f" % ((self.pfr[i]), self.ledger[1]))
-			print("Three-bet        : %.2f           Net profit: %s$%.2f" % ((self.tbp[i]), PoL, abs(self.ledger[2])))
-			print("                                 Rebuys: %d" % self.ledger[3])
+		# else: # report in percentage form
+		reportPercentages(self, position, i)
 
-			print("Aggression factor:", self.af[i])
-			print("Aggression freq  :", self.afq[i])
-
-			print("\nWent to showdown  :", self.wtsd[i])
-			print("Won at showdown   :", self.wasd[i])
-
-			print("\nMonetary stats for %s, not position-based" % self.name)
-			print("$ won at showdown    : $%.2f" % self.mwas)
-			print("$ won before showdown: $%.2f" % self.mwbs)
-
-		else: # report in percentage form
-			print(self.name.upper(), '\n')
-			if position == '': # stat averages have been requested
-				print('stat averages                    Bankroll stats')
-			else:
-				print(args[i], 'stats                      Bankroll stats')
-
-			print("VPIP             : %.1f %%        Total buy-in: $%.2f" % ((self.vpip[i]*100), self.ledger[0]))
-			print("Pre-flop raise   : %.2f %%       Total buy-out: $%.2f" % ((self.pfr[i]*100), self.ledger[1]))
-			print("Three-bet        : %.2f %%        Net profit: %s$%.2f" % ((self.tbp[i]*100), PoL, abs(self.ledger[2])))
-			print("                                 Rebuys: %d" % self.ledger[3])
-
-			print("\nAggression factor:", self.af[i])
-
-			print("Aggression freq  : %.1f %%" % (self.afq[i]*100))
-			print("\nWent to showdown  : %.1f %% of hands played" % (self.wtsd[i]*100))
-			print("Won at showdown   : %.1f %% \"" % (self.wasd[i]*100))
-
-			print("\nMonetary stats for %s, not position-based" % self.name)
-			print("$ won at showdown    : $%.2f" % self.mwas)
-			print("$ won before showdown: $%.2f" % self.mwbs)
+	def allStats(self): # print all stats to command line 
+		printAllStats(self)
 
 
 fish = Player("Fish", vpipM[k[0]], pfrM[k[0]], tbpM[k[0]], afM[k[0]], afqM[k[0]], wtsdM[k[0]], wasdM[k[0]], mwas[k[0]], mwbs[k[0]], ledgerM[k[0]])
@@ -369,9 +357,10 @@ marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], af
 
 regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]], ledgerM[k[10]])
 
-
+# -----------------------------------------------------------------------------------------------------------------------
 assert k[playerDict['scott']] != -1, 'This player didn\'t play this session'
-scott.stats()
+# raymond.posStats('late')
+scott.allStats()
 
 
 print('\n')
