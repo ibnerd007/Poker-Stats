@@ -30,7 +30,7 @@ from printAllStats import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 19'
+date = '4 24'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -362,13 +362,12 @@ print(a, '\n')
 
 print('Date: %s\n' % date)
 
+# Call this to see stats for one player
 assert k[playerDict['scott']] != -1, 'This player didn\'t play this session'
-# scott.posStats('late')
+scott.allStats()
+
 # scott.allStats()
 
 # Now, write current session stats for all players to Excel -----------------------------------------------------------
-import xlsxwriter
-
-
 
 print('\n')

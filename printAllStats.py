@@ -37,10 +37,3 @@ def printAllStats(self):
 	print(stats, '\n')
 	print(monetaryStats, '\n')
 	print(bankrollStats, '\n')
-
-	# print('Bankroll')
-	# print("\nTotal buy-in: $%.2f" % self.ledger[0])
-	# print("Total buy-out: $%.2f" % self.ledger[1])
-	# print("Net profit: %s$%.2f" % (self.PoL, abs(self.ledger[2])))
-	# print("Rebuys: %d" % self.ledger[3])
-

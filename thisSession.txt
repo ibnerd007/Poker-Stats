@@ -1,0 +1,17 @@
+SCOTT
+
+avg stats                      Bankroll stats
+VPIP             : 53.1 %        Total buy-in: $10.00
+Pre-flop raise   : 22.00 %       Total buy-out: $0.00
+Three-bet        : 5.08 %        Net profit: -$10.00
+                                 Rebuys: 0
+
+Aggression factor: 1.59
+Aggression freq  : 45.0 %
+
+Went to showdown  : 50.3 % of hands played
+Won at showdown   : 10.7 % "
+
+Monetary stats for Scott, not position-based
+$ won at showdown    : $86.81
+$ won before showdown: $71.44
