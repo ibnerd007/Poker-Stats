@@ -279,17 +279,6 @@ players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Cheyenne']
 
 
-print('The following people played this session:')
-a = []
-for i in range(len(playerIDs)):
-	index = search(staticIDs, playerIDs[i])
-	if index != -1:
-		a.append(players[index])
-print(a, '\n')
-
-print('Date: %s\n' % date)
-
-
 # k list allows the program to find the same players every session, regardless of order
 
 k = [0] * len(staticIDs) # number of players
@@ -358,9 +347,28 @@ marshall = Player("Marshall", vpipM[k[9]], pfrM[k[9]], tbpM[k[9]], afM[k[9]], af
 regan = Player("Regan", vpipM[k[10]], pfrM[k[10]], tbpM[k[10]], afM[k[10]], afqM[k[10]], wtsdM[k[10]], wasdM[k[10]], mwas[k[10]], mwbs[k[10]], ledgerM[k[10]])
 
 # -----------------------------------------------------------------------------------------------------------------------
+# Now, print everything that should be output:
+# 1. List of players
+# 2. Date of session
+# 3. Statistics & bankroll
+
+print('The following people played this session:')
+a = []
+for i in range(len(playerIDs)):
+	index = search(staticIDs, playerIDs[i])
+	if index != -1:
+		a.append(players[index])
+print(a, '\n')
+
+print('Date: %s\n' % date)
+
 assert k[playerDict['scott']] != -1, 'This player didn\'t play this session'
-# raymond.posStats('late')
-scott.allStats()
+# scott.posStats('late')
+# scott.allStats()
+
+# Now, write current session stats for all players to Excel -----------------------------------------------------------
+import xlsxwriter
+
 
 
 print('\n')
