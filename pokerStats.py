@@ -32,7 +32,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '5 4'
+date = '4 29'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -85,6 +85,9 @@ totalPlayed = 0 # total # of hands played
 beforeFlop = False
 hasRaised = False # there is a raise on the table
 
+holdEm = False
+PLO = False # possible hand types
+
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
 
@@ -100,6 +103,12 @@ while (i < log_rows):
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
 		hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
+
+		if holdEm == False and str[str.find('(') + 1:str.find('(') + 23] == 'No Limit Texas Hold\'em':
+			holdEm = True # At least one Hold Em hand was played
+		elif PLO == False and str[str.find('(') + 1:str.find('(') + 19] == 'Pot Limit Omaha Hi':
+			PLO = True # At least one PLO hand was played
+
 		totalPlayed += 1
 
 	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
@@ -200,10 +209,10 @@ while (i < log_rows):
 	# print(i)
 # Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): 
-	mwas[i] /= 100 # turn into dollar amounts
+	mwas[i] /= 100
 	mwbs[i] /= 100 # turn into dollar amounts
 
-# Calculate stats by player in early, late, and total position
+# Calculate stat percentages by player in early, late, and total position
 
 vpipM = calcPercentAndTranspose(handsPlayed, vpip, 3)
 pfrM = calcPercentAndTranspose(handsPlayed, pfr, 3)
@@ -211,8 +220,8 @@ tbpM = calcPercentAndTranspose(handsPlayed, tbp, 4) # Calculates percentages for
 wtsdM = calcPercentAndTranspose(handsPlayed, wtsd, 3)
 wasdM = calcPercentAndTranspose(handsPlayed, wasd, 3)
 
-af = calcAF(af, actionCount, 2)
-afq = calcAFQ(afq, actionCount, 3)
+af = calcAF(af, actionCount, 2) # not a percentage
+afq = calcAFQ(afq, actionCount, 3) # percentage
 afM = transpose(af)
 afqM = transpose(afq)
 
@@ -276,10 +285,10 @@ for i in range(len(playerIDs)):
 
 staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
 			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
-			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp']
+			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp', 'FIgidiXEkn']
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
 #             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
-#			  jacob,       cheyenne,    tristan,     jacob
+#			  jacob,       cheyenne,    tristan,     jacob,       jacob
 
 playerDict = {'fish': 0, 'raymond': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4, 'tristan': 5,
 		      'kynan': 6, 'xavier': 7, 'bill': 8, 'marshall': 9, 'regan': 10, 'jonathan': 11,
@@ -287,7 +296,7 @@ playerDict = {'fish': 0, 'raymond': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4, '
 
 players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
-		   'Cheyenne', 'Tristan', 'Jacob']
+		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob']
 
 
 # k list allows the program to find the same players every session, regardless of order
@@ -370,10 +379,19 @@ for i in range(len(playerIDs)):
 	if index != -1:
 		a.append(players[index])
 print(a, '\n')
+print(playerIDs)
 
+print('Date: %s' % date)
 assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
 
-print('Date: %s\n' % date)
+
+
+if holdEm == True and PLO == False:
+	print('No Limit Texas Hold\'em\n')
+elif holdEm == False and PLO == True:
+	print('Pot Limit Omaha\n')
+else: # both are true
+	print('No Limit Texas Hold\'em & Pot Limit Omaha\n')
 
 # Call this to see stats for one player --------------------------------------------
 # assert k[playerDict['xavier']] != -1, 'This player didn\'t play this session'
