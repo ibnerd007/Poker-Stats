@@ -24,7 +24,8 @@ from calcMWBS import *
 
 from reportPercentages import *
 from reportDecimals import *
-from printAllStats import *
+from printAllStatsForOnePlayer import *
+from printAllStatsForAllPlayers import *
 
 
 
@@ -242,17 +243,14 @@ while i < ledger_rows:
 
 	i += 1
 
-i = 0
-while i < len(playerIDs):
-	ledger[3][i] -= 1
-	i += 1
+for i in range(len(playerIDs)): ledger[3][i] -= 1 # Correct # of rebuys
 
 ledgerM = transpose(ledger)
 
 # Make into dollar amounts and round to necessary digits
 for i in range(len(playerIDs)):
 	for j in range(len(ledgerM[0])):
-		if j < 3: # monetary amounts
+		if j < 3: # monetary amounts, not # of rebuys
 			ledgerM[i][j] /= 100
 			ledgerM[i][j] = round(ledgerM[i][j], 2) # $ amounts are in cents
 		else:
@@ -265,18 +263,18 @@ for i in range(len(playerIDs)):
 
 staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
 			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
-			 'LragqkH6mQ', 'pnFzv-_qqL']
+			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN']
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
 #             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
-#			  jacob,       cheyenne
+#			  jacob,       cheyenne,    tristan
 
 playerDict = {'fish': 0, 'raymond': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4, 'tristan': 5,
 		      'kynan': 6, 'xavier': 7, 'bill': 8, 'marshall': 9, 'regan': 10, 'jonathan': 11,
-		      'jacob': 12, 'cheyenne': 13}
+		      'jacob': 12, 'cheyenne': 13, 'tristan': 14}
 
 players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
-		   'Cheyenne']
+		   'Cheyenne', 'Tristan']
 
 
 # k list allows the program to find the same players every session, regardless of order
@@ -321,7 +319,7 @@ class Player:
 		reportPercentages(self, position, i)
 
 	def allStats(self): # print all stats to command line 
-		printAllStats(self)
+		printAllStatsForOnePlayer(self)
 
 
 fish = Player("Fish", vpipM[k[0]], pfrM[k[0]], tbpM[k[0]], afM[k[0]], afqM[k[0]], wtsdM[k[0]], wasdM[k[0]], mwas[k[0]], mwbs[k[0]], ledgerM[k[0]])
@@ -360,14 +358,22 @@ for i in range(len(playerIDs)):
 		a.append(players[index])
 print(a, '\n')
 
+assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
+
 print('Date: %s\n' % date)
 
-# Call this to see stats for one player
-assert k[playerDict['scott']] != -1, 'This player didn\'t play this session'
-scott.allStats()
+# Call this to see stats for one player --------------------------------------------
+assert k[playerDict['xavier']] != -1, 'This player didn\'t play this session'
+# xavier.allStats()
+# xavier.posStats('late')
 
-# scott.allStats()
+# Call this to see all stats for all players in session ----------------------------
+
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, staticIDs, playerIDs, players, handsPlayed)
+
 
 # Now, write current session stats for all players to Excel -----------------------------------------------------------
 
 print('\n')
+

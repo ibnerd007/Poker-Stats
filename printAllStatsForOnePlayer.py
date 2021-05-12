@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-def printAllStats(self):
+def printAllStatsForOnePlayer(self):
 	# prints all stats for all positions in a command line table
 	print('%s\'s poker statistics for this session by position\n' % self.name.upper())
 
