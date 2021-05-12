@@ -32,7 +32,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 19'
+date = '5 4'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -75,7 +75,7 @@ mwbs = [] # money won before showdown ($) No takers?
 
 playerIDs = []
 handsPlayed = [] # both indexed for each player. Order does not change throughout session.
-bestHands = [[], [], []] # bestHands = [[type], [rank (integer)] [combination]]
+bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer)], [combination (string)], [high card (string)]]
 
 # Static variables
 bb = 20 # cents
@@ -171,7 +171,7 @@ while (i < log_rows):
 	# End of hand -----------------------------------------------------------------------------------
 	# Determine 1) who went to showdown, 2) who won at that showdown, and 3) how much money that player won
 	# Store those 3 stats in 3 lists.
-	# These stats are NOT position-based
+	# 1) and 2) are postion-based, 3) is not
 	if str.find('collected') != -1 & str.find('combination') != -1: # someone has won the pot at showdown
 		winnerID = getID(str)
 
@@ -184,8 +184,8 @@ while (i < log_rows):
 		calcMWAS(mwas, pot, winnerID, playerIDs)
 
 		# Capture the hand they won with IF it is better than the previous best
-		wI = search(playerIDs, winnerID)
-		assert wI != -1, 'idk what is wrong lol'
+		wI = search(playerIDs, winnerID) # winner index
+		assert wI != -1, 'winner ID not found in playerIDs somehow'
 		calcBestHands(str, wI, bestHands)
 
 	elif str.find('collected') != -1: # player has won before showdown. No side pots if there is no showdown (no one is all in)
@@ -197,10 +197,11 @@ while (i < log_rows):
 		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # Any player that hasn't folded now, has gone to showdown
 
 	i += 1
-	print(i)
+	# print(i)
 # Post-loop calculations ------------------------------------------------------------------------------------------
-for i in range(len(mwas)): mwas[i] /= 100 # turn into dollar amounts
-for i in range(len(mwbs)): mwbs[i] /= 100 # turn into dollar amounts
+for i in range(len(mwas)): 
+	mwas[i] /= 100 # turn into dollar amounts
+	mwbs[i] /= 100 # turn into dollar amounts
 
 # Calculate stats by player in early, late, and total position
 
@@ -214,6 +215,8 @@ af = calcAF(af, actionCount, 2)
 afq = calcAFQ(afq, actionCount, 3)
 afM = transpose(af)
 afqM = transpose(afq)
+
+bestHandsM = transpose(bestHands)
 
 # print(playerIDs, '\n')
 
@@ -379,8 +382,8 @@ print('Date: %s\n' % date)
 
 # Call this to see all stats for all players in session ----------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 
 # Now, write current session stats for all players to Excel -----------------------------------------------------------

@@ -1,7 +1,9 @@
 from search import *
 from prettytable import PrettyTable
 
-def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, ledgerM, staticIDs, playerIDs, players, handsPlayed):
+def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs,
+
+							   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM):
 	# prints all stats for all players in the session to the command line using prettytable
 	# Copy and paste command line output to a text file to save
 	
@@ -54,5 +56,6 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas,
 		print(monetaryStats, '\n')
 		print(bankrollStats, '\n\n')
 		print('%s played %d hands this session.' % (players[j], handsPlayed[i]))
+		print('Best hand: %s - %s' % (bestHandsM[i][0], bestHandsM[i][2]))
 
 		print('----------------------------------------------------------------------\n')
