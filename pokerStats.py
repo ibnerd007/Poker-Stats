@@ -21,6 +21,7 @@ from calcWTSD import *
 from calcWASD import *
 from calcMWAS import *
 from calcMWBS import *
+from calcBestHands import *
 
 from reportPercentages import *
 from reportDecimals import *
@@ -31,7 +32,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 24'
+date = '4 19'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -74,6 +75,7 @@ mwbs = [] # money won before showdown ($) No takers?
 
 playerIDs = []
 handsPlayed = [] # both indexed for each player. Order does not change throughout session.
+bestHands = [[], [], []] # bestHands = [[type], [rank (integer)] [combination]]
 
 # Static variables
 bb = 20 # cents
@@ -117,6 +119,8 @@ while (i < log_rows):
 		for j in range(playersAdded): mwas.append(0) # different function for 1D list
 		for j in range(playersAdded): mwbs.append(0)
 
+		appendMultiple(bestHands, playersAdded)
+
 		beforeFlop = True
 
 	# Now, look for action preflop: call, raise, and/or 3 bet
@@ -143,6 +147,7 @@ while (i < log_rows):
 		# break
 
 	# Count the player's action in the actionCount list, regardless whether before flop ---------------
+	# This is for the aggression frequency stat
 
 	if str.find('bets') != -1:
 		actionID = getID(str)
@@ -178,6 +183,11 @@ while (i < log_rows):
 		pot = getNum(str)
 		calcMWAS(mwas, pot, winnerID, playerIDs)
 
+		# Capture the hand they won with IF it is better than the previous best
+		wI = search(playerIDs, winnerID)
+		assert wI != -1, 'idk what is wrong lol'
+		calcBestHands(str, wI, bestHands)
+
 	elif str.find('collected') != -1: # player has won before showdown. No side pots if there is no showdown (no one is all in)
 		winnerID = getID(str)
 		pot = getNum(str)
@@ -187,7 +197,7 @@ while (i < log_rows):
 		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # Any player that hasn't folded now, has gone to showdown
 
 	i += 1
-	# print(i)
+	print(i)
 # Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): mwas[i] /= 100 # turn into dollar amounts
 for i in range(len(mwbs)): mwbs[i] /= 100 # turn into dollar amounts
@@ -217,11 +227,11 @@ cols = {'id': 1, 'buy-in': 4, 'buy-out': 5, 'stack': 6, 'net': 7}
 
 # Loop for ledger
 i = 1
-
 while i < ledger_rows:
 	# print(cols['buy-in'])
 	id = ledger_sheet.cell_value(i, cols['id'])
 	idIndex = search(playerIDs,id)
+	assert idIndex != -1, 'Player ID not found in ledger'
 
 	# Capture the player's buy in so far
 	buyIn = ledger_sheet.cell_value(i, cols['buy-in'])
@@ -263,18 +273,18 @@ for i in range(len(playerIDs)):
 
 staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
 			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
-			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN']
+			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp']
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
 #             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
-#			  jacob,       cheyenne,    tristan
+#			  jacob,       cheyenne,    tristan,     jacob
 
 playerDict = {'fish': 0, 'raymond': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4, 'tristan': 5,
 		      'kynan': 6, 'xavier': 7, 'bill': 8, 'marshall': 9, 'regan': 10, 'jonathan': 11,
-		      'jacob': 12, 'cheyenne': 13, 'tristan': 14}
+		      'jacob': 12, 'cheyenne': 13, 'tristan': 14, 'jacob': 15}
 
 players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
-		   'Cheyenne', 'Tristan']
+		   'Cheyenne', 'Tristan', 'Jacob']
 
 
 # k list allows the program to find the same players every session, regardless of order
@@ -363,17 +373,18 @@ assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
 print('Date: %s\n' % date)
 
 # Call this to see stats for one player --------------------------------------------
-assert k[playerDict['xavier']] != -1, 'This player didn\'t play this session'
+# assert k[playerDict['xavier']] != -1, 'This player didn\'t play this session'
 # xavier.allStats()
 # xavier.posStats('late')
 
 # Call this to see all stats for all players in session ----------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, staticIDs, playerIDs, players, handsPlayed)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed)
 
 
 # Now, write current session stats for all players to Excel -----------------------------------------------------------
 
 print('\n')
+
 
