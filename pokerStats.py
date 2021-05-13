@@ -414,12 +414,11 @@ else: # both are true
 # 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ------------------------
-print(ledgerM)
 
 writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
 
-print(date, '\n')
+print('Date: ', date, '\n')
 
 
 
