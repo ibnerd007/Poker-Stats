@@ -32,7 +32,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 29'
+date = '4 24'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -379,7 +379,7 @@ for i in range(len(playerIDs)):
 	if index != -1:
 		a.append(players[index])
 print(a, '\n')
-print(playerIDs)
+# print(playerIDs)
 
 print('Date: %s' % date)
 assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
@@ -405,7 +405,7 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 
 
 # Now, write current session stats for all players to Excel -----------------------------------------------------------
-
+print('Date: %s' % date)
 print('\n')
 
 
