@@ -11,6 +11,7 @@ from resetList import *
 from calcPercentAndTranspose import *
 from transpose import *
 from getNum import *
+from writeToExcel import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -32,7 +33,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 29'
+date = '4 26'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -290,13 +291,22 @@ staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J
 #             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
 #			  jacob,       cheyenne,    tristan,     jacob,       jacob
 
-playerDict = {'fish': 0, 'raymond': 1, 'cedric': 2, 'cheyenne': 3, 'scott': 4, 'tristan': 5,
-		      'kynan': 6, 'xavier': 7, 'bill': 8, 'marshall': 9, 'regan': 10, 'jonathan': 11,
-		      'jacob': 12, 'cheyenne': 13, 'tristan': 14, 'jacob': 15}
-
 players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
 		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob']
+
+
+playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedric', 
+
+			  'DAovHf6aFe': 'Cheyenne', '-4Mt9GCcpf': 'Scott', 'J_J1Sm6uON': 'Tristan',
+
+		      'Tfv9gQlCKp': 'Kynan', 'zQzHYg1f_X': 'Xavier', 'EUC1-Ekcwo': 'Bill', 
+
+		      'FHfdGMNnXa': 'Marshall', 'UPoeIpvEQ4': 'Regan', 'mZh56-rfJ5': 'Jonathan',
+
+		      'LragqkH6mQ': 'Jacob', 'pnFzv-_qqL': 'Cheyenne', 'jvWHRQaeUN': 'Tristan', 
+
+		      'wHCkaNaedp': 'Jacob', 'FIgidiXEkn': 'Jacob'}
 
 
 # k list allows the program to find the same players every session, regardless of order
@@ -379,7 +389,7 @@ for i in range(len(playerIDs)):
 	if index != -1:
 		a.append(players[index])
 print(a, '\n')
-print(playerIDs)
+# print(playerIDs)
 
 print('Date: %s' % date)
 assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
@@ -394,18 +404,22 @@ else: # both are true
 	print('No Limit Texas Hold\'em & Pot Limit Omaha\n')
 
 # Call this to see stats for one player --------------------------------------------
-# assert k[playerDict['xavier']] != -1, 'This player didn\'t play this session'
+# assert k[0] != -1, 'This player didn\'t play this session'
 # xavier.allStats()
 # xavier.posStats('late')
 
 # Call this to see all stats for all players in session ----------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+
+# Now, write current session stats for all players to Excel ------------------------
+
+writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
+
+print('Date: ', date, '\n')
 
 
-# Now, write current session stats for all players to Excel -----------------------------------------------------------
-
-print('\n')
 
 
