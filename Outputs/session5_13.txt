@@ -1,0 +1,81 @@
+The following people played this session:
+['Fish', 'Scott'] 
+
+Date: 5 13
+No Limit Texas Hold'em & Pot Limit Omaha
+
+FISH's poker statistics for this session by position
+
++-------------------+---------+--------+--------+
+|    Fish's stats   | Average | Early  |  Late  |
++-------------------+---------+--------+--------+
+|        VPIP       |  62.9 % | 85.4 % | 40.4 % |
+|   Pre-flop raise  |  2.3 %  | 0.9 %  | 3.8 %  |
+|     Three-bet     |  0.9 %  | 0.0 %  | 1.9 %  |
+|                   |         |        |        |
+| Aggression factor |   0.40  |  0.60  |  0.19  |
+|  Aggression freq  |  20.6 % | 28.3 % | 13.0 % |
+|                   |         |        |        |
+|  Went to showdown |  55.4 % | 53.5 % | 57.3 % |
+|  Won at showdown  |  14.1 % | 11.3 % | 16.9 % |
++-------------------+---------+--------+--------+ 
+
++---------------------------+---------+
+|   Fish's monetary stats   |         |
++---------------------------+---------+
+|   Money won at showdown   | $107.64 |
+| Money won before showdown |  $40.58 |
++---------------------------+---------+ 
+
++-----------------+---------+
+| Fish's Bankroll |         |
++-----------------+---------+
+|   Total buy-in  |  $20.00 |
+|  Total buy-out  |  $0.00  |
+|    Net profit   | -$20.00 |
+|      Rebuys     |    1    |
++-----------------+---------+ 
+
+
+Fish played 213 hands this session.
+----------------------------------------------------------------------
+
+SCOTT's poker statistics for this session by position
+
++-------------------+---------+--------+--------+
+|   Scott's stats   | Average | Early  |  Late  |
++-------------------+---------+--------+--------+
+|        VPIP       |  59.6 % | 32.9 % | 86.4 % |
+|   Pre-flop raise  |  37.6 % | 31.9 % | 43.2 % |
+|     Three-bet     |  1.9 %  | 2.8 %  | 0.9 %  |
+|                   |         |        |        |
+| Aggression factor |   9.31  | 16.50  |  2.13  |
+|  Aggression freq  |  69.4 % | 79.5 % | 59.3 % |
+|                   |         |        |        |
+|  Went to showdown |  73.2 % | 76.1 % | 70.4 % |
+|  Won at showdown  |  15.5 % | 17.8 % | 13.1 % |
++-------------------+---------+--------+--------+ 
+
++---------------------------+---------+
+|   Scott's monetary stats  |         |
++---------------------------+---------+
+|   Money won at showdown   | $120.82 |
+| Money won before showdown |  $67.40 |
++---------------------------+---------+ 
+
++------------------+---------+
+| Scott's Bankroll |         |
++------------------+---------+
+|   Total buy-in   |  $10.00 |
+|  Total buy-out   |  $30.00 |
+|    Net profit    | +$20.00 |
+|      Rebuys      |    0    |
++------------------+---------+ 
+
+
+Scott played 213 hands this session.
+----------------------------------------------------------------------
+
+Date:  5 13 
+
+[Finished in 1.7s]

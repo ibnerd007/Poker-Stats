@@ -33,7 +33,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 20'
+date = '5 13'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
