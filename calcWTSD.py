@@ -1,9 +1,8 @@
 from search import *
 
 def calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs):
-	for i in range(len(hasFolded)): # hasFolded
-		if hasFolded[i] != 1: # player did not fold in the hand (went to showdown)
-
+	for i in range(len(hasFolded)): # loop through who has folded
+		if hasFolded[i] != 1: # all players left went to showdown
 			sdID = currPlayerIDs[0][i] # Find ID of the champion who went to showdown
 			position = currPlayerIDs[2][i]
 			wtsdIndex = search(playerIDs,sdID)

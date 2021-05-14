@@ -1,7 +1,5 @@
-from replaceSuits import *
+from otherPlayersIn import *
 
-str = '"Fish @ L5G0fi1P1T" collected 40 from pot with Pair, J\'s (combination: Jâ™¥, Jâ™¦, Qâ™£, 9â™ , 8â™ )'
+list = [1, 0, 0, 0, 0, 0, 0, 0, 0]
 
-print(str)
-newStr = replaceSuits(str)
-print(newStr)
+print(otherPlayersIn(list, 1))

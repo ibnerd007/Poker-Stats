@@ -11,6 +11,7 @@ from resetList import *
 from calcPercentAndTranspose import *
 from transpose import *
 from getNum import *
+from numPlayersIn import *
 from writeToExcel import *
 
 from calcVPIP import *
@@ -33,7 +34,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '5 13'
+date = '5 4'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -203,8 +204,8 @@ while (i < log_rows):
 		pot = getNum(str)
 		calcMWBS(mwbs, pot, winnerID, playerIDs)
 
-	if str.find('ending hand #') != -1: # hand has ended
-		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # Any player that hasn't folded now, has gone to showdown
+	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # hand has ended AND two or more players didn't fold
+			calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 
 	i += 1
 	# print(i)
@@ -410,13 +411,13 @@ else: # both are true
 
 # Call this to see all stats for all players in session ----------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ------------------------
 
-# writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
+writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
 
 print('Date: ', date, '\n')
 
