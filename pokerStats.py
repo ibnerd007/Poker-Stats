@@ -12,7 +12,6 @@ from calcPercentAndTranspose import *
 from transpose import *
 from getNum import *
 from numPlayersIn import *
-from writeToExcel import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -30,11 +29,12 @@ from reportDecimals import *
 from printAllStatsForOnePlayer import *
 from printAllStatsForAllPlayers import *
 
-
+from writeCurrSessionToExcel import *
+from writeBankrollsToExcel import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 09'
+date = '5 13'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -287,14 +287,16 @@ for i in range(len(playerIDs)):
 
 staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
 			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
-			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp', 'FIgidiXEkn']
+			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp', 'FIgidiXEkn', 'IZfCYGmoLP',
+			 'EZvsCiYcdt', 'RlQUK84X1Q']
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
 #             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
-#			  jacob,       cheyenne,    tristan,     jacob,       jacob
+#			  jacob,       cheyenne,    tristan,     jacob,       jacob,       jacob,
+#             Dmkpro67,    colin
 
 players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
-		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob']
+		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob', 'Jacob', 'Dmkpro67', 'Colin']
 
 
 playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedric', 
@@ -307,7 +309,9 @@ playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedr
 
 		      'LragqkH6mQ': 'Jacob', 'pnFzv-_qqL': 'Cheyenne', 'jvWHRQaeUN': 'Tristan', 
 
-		      'wHCkaNaedp': 'Jacob', 'FIgidiXEkn': 'Jacob'}
+		      'wHCkaNaedp': 'Jacob', 'FIgidiXEkn': 'Jacob', 'IZfCYGmoLP': 'Jacob', 
+
+		      'EZvsCiYcdt': 'Dmkpro67', 'RlQUK84X1Q': 'Colin'}
 
 
 # k list allows the program to find the same players every session, regardless of order
@@ -389,13 +393,12 @@ for i in range(len(playerIDs)):
 	index = search(staticIDs, playerIDs[i])
 	if index != -1:
 		a.append(players[index])
+
+print(playerIDs, '\n')
 print(a, '\n')
-# print(playerIDs)
 
 print('Date: %s' % date)
 assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
-
-
 
 if holdEm == True and PLO == False:
 	print('No Limit Texas Hold\'em\n')
@@ -416,8 +419,12 @@ else: # both are true, both types were played
 
 # Now, write current session stats for all players to Excel ------------------------
 
-writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
+
+writeBankrollsToExcel(ledgerM, playerIDs, date)
+
+print(ledgerM)
 
 print('Date: ', date, '\n')
 

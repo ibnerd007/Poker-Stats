@@ -1,7 +1,7 @@
 import openpyxl
 
-def writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			     ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM):
+def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM):
 	
 	# wb = openpyxl.Workbook() # create new workbook
 	wb_path = r'Outputs\stats.xlsx'
@@ -46,11 +46,9 @@ def writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs,
 		sheet.cell(row=player + 2, column=15, value=handsPlayed[player]) # averaged positions
 
 	row = player + 2 + 1
+	rows = sheet.max_row
 
-	while row < 15: # Hopefully there won't be more than 25 players in one session!
-		sheet.delete_rows(row) # delete rows that may remain from previous sessions
-		row += 1
-
+	sheet.delete_rows(row, sheet.max_row) # delete rows that may remain from previous sessions
 
 	wb.save(wb_path)
 
