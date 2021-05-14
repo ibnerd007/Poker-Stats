@@ -33,7 +33,7 @@ from printAllStatsForAllPlayers import *
 
 # Find path to Excel spreadsheet with log
 
-date = '4 26'
+date = '4 20'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -410,16 +410,13 @@ else: # both are true
 
 # Call this to see all stats for all players in session ----------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ------------------------
 
-writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
+# writeToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
 
 print('Date: ', date, '\n')
-
-
-
 
