@@ -1,14 +1,21 @@
 import openpyxl
 
 def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date):
+			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date,
+			                handTypeDesired):
 	
 	# wb = openpyxl.Workbook() # create new workbook
 	wb_path = r'Outputs\stats.xlsx'
 
 	wb = openpyxl.load_workbook(wb_path) # load existing workbook
 
-	sheet = wb['Stats-this session'] # access sheet
+	if handTypeDesired == 'NL':
+		sheet = wb['NL Stats-this session'] # access sheet
+	elif handTypeDesired == 'PLO':
+		sheet = wb['PLO Stats-this session'] # access sheet
+	else: # combined hand types are desired
+		sheet = wb['All Stats-this session'] # access sheet
+
 
 	# for bankroll in bankrolls:
 	# 	sheet.append(bankroll) # append to end of data

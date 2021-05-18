@@ -35,7 +35,7 @@ from writeBankrollsToExcel import *
 # Find path to Excel spreadsheet with log
 
 date = '5 17'
-handTypeDesired = 'combined' # can be NL, PLO, or combined
+handTypeDesired = 'PLO' # can be NL, PLO, or combined
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Input accepted hand type'
 
@@ -447,12 +447,12 @@ else: # both are true, both types were played
 
 # Now, write current session stats for all players to Excel ------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Update the all-time bankrolls for players if not already entered
 
-writeBankrollsToExcel(ledgerM, playerIDs, date)
+# writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 print('Date: ', date, '\n')
 

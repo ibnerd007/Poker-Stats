@@ -58,7 +58,6 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 			newNet += ledgerM[index][2]
 
 			bankroll = sheet.cell(row=sheet.max_row-1, column=netCols[i] + 1).value
-			print('Column: {}'.format(netCols[i]))
 			ownMoneyInvested = sheet.cell(row=sheet.max_row-1, column=netCols[i] + 2).value
 			buyIn = ledgerM[index][0]
 
