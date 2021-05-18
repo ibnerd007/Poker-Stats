@@ -13,6 +13,7 @@ from transpose import *
 from getNum import *
 from numPlayersIn import *
 from whichHandType import *
+from getPlayerStacks import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -83,6 +84,7 @@ mwbs = [] # money won before showdown ($) No takers?
 playerIDs = []
 handsPlayed = [] # both indexed for each player. Order does not change throughout session.
 bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer)], [combination (string)], [high card (string)]]
+stacks = []
 
 # Static variables
 bb = 20 # cents
@@ -95,8 +97,6 @@ hasRaised = False # there is a raise on the table
 holdEm = False
 PLO = False # possible hand types
 handType = None # set variable used to determine stats for PLO
-dealerID = None
-prevDealer = None
 
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
@@ -114,7 +114,6 @@ while (i < log_rows):
 		handType = whichHandType(str, handType)
 
 		dealerID = startingHandNumber(str) # dealer ID is determined and returned from this function
-		print(dealerID)
 
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
@@ -140,8 +139,6 @@ while (i < log_rows):
 		assert totalPlayed > 0, "You forgot to run the Excel macro; log order is reversed!"
 		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
 
-		print(currPlayerIDs)
-
 		# Add necessary elements to stat lists & counter 3D list to not over-index
 		appendMultiple(vpip, playersAdded)
 		appendMultiple(pfr, playersAdded) 
@@ -153,10 +150,21 @@ while (i < log_rows):
 		appendMultiple(wasd, playersAdded)
 		for j in range(playersAdded): mwas.append(0) # different function for 1D list
 		for j in range(playersAdded): mwbs.append(0)
+		for j in range(playersAdded): stacks.append(0)
 
 		appendMultiple(bestHands, playersAdded)
 
+		# Get each player's stack based on currPlayerIDs order
+		getPlayerStacks(str, stacks, playerIDs, currPlayerIDs)
+		print(stacks)
+		# writePlayerStacksToExcel(stacks)
+
 		beforeFlop = True
+
+	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
+		bustID = getID(str)
+		print(stacks)
+		stacks[search(playerIDs, bustID)] = 0 # set their stack to 0 and leave it unless they rejoin
 
 	# Now, look for action preflop: call, raise, and/or 3 bet
 	if beforeFlop == True and (str.find('calls') != -1 or str.find('raises') != -1):
@@ -229,7 +237,7 @@ while (i < log_rows):
 		calcMWBS(mwbs, pot, winnerID, playerIDs)
 
 	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
-			calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
+		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 			
 	i += 1
 	print(i)
@@ -367,13 +375,13 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session ----------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Update the all-time bankrolls for players if not already entered -----------------
 
