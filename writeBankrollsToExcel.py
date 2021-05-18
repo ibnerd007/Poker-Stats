@@ -12,8 +12,6 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 	bankrollIDs = ['L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH', 'DAovHf6aFe']
 	#               Fish          Raymond       Scott         Cedric        Cheyenne
 
-	# print(ledgerM)
-
 	# 1. Open workbook and sheet
 
 	wb_path = r'Outputs\stats.xlsx'
@@ -28,7 +26,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 	dates = []
 	netCols = [3, 8, 14, 20, 26] # columns in Excel where the net will be stored
 
-	print('Max row: ', sheet.max_row)
+	# print('Max row: ', sheet.max_row)
 
 	for i in range(2, sheet.max_row + 1):
 		cellDate = sheet.cell(row=i, column=1).value
@@ -90,19 +88,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 			sheet.cell(row=sheet.max_row, column=netCols[i] + 2, value=UNCHownMoneyInvested) # all values are unchanged from previous
 		
 
-		# 4. Adjust bankrolls & own money invested for all players -----------------------------
-
-
-
-
-
-
-
-
-
-
-
-
+		# 4. Adjust bankrolls & own money invested for all players ---------------------------
 
 
 	wb.save(wb_path)

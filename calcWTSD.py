@@ -6,6 +6,8 @@ def calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs):
 			sdID = currPlayerIDs[0][i] # Find ID of the champion who went to showdown
 			position = currPlayerIDs[2][i]
 			wtsdIndex = search(playerIDs,sdID)
+
+			print('{} went to showdown.'.format(sdID))
 			
 
 			if position == 'early':

@@ -92,6 +92,7 @@ PLO = False # possible hand types
 
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
+counter = 0
 
 while (i < log_rows):
 	# Step 1: Parse line beginning with "starting hand #", then 'Player stacks:', then certain actions
@@ -183,7 +184,7 @@ while (i < log_rows):
 	# Determine 1) who went to showdown, 2) who won at that showdown, and 3) how much money that player won
 	# Store those 3 stats in 3 lists.
 	# 1) and 2) are postion-based, 3) is not
-	if str.find('collected') != -1 & str.find('combination') != -1: # someone has won the pot at showdown
+	if str.find('collected') != -1 and str.find('combination') != -1: # someone has won the pot at showdown
 		winnerID = getID(str)
 
 		# Log who won at showdown
@@ -204,11 +205,13 @@ while (i < log_rows):
 		pot = getNum(str)
 		calcMWBS(mwbs, pot, winnerID, playerIDs)
 
-	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # hand has ended AND two or more players didn't fold
+	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # Shwodown hands only: hand has ended AND two or more players didn't fold
 			calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
-
+			
 	i += 1
-	# print(i)
+	print(i)
+
+
 # Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): 
 	mwas[i] /= 100
@@ -414,17 +417,17 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session ----------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ------------------------
 
 # writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 # 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
 
-writeBankrollsToExcel(ledgerM, playerIDs, date)
+# Update the all-time bankrolls for players if not already entered
 
-print(ledgerM)
+# writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 print('Date: ', date, '\n')
 
