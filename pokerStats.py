@@ -35,6 +35,9 @@ from writeBankrollsToExcel import *
 # Find path to Excel spreadsheet with log
 
 date = '5 17'
+handTypeDesired = 'combined' # can be NL, PLO, or combined
+handTypes = ['NL', 'PLO', 'combined']
+assert handTypeDesired in handTypes, 'Input accepted hand type'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -89,6 +92,7 @@ hasRaised = False # there is a raise on the table
 
 holdEm = False
 PLO = False # possible hand types
+handType = None # set variable used to determine stats for PLO
 
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
@@ -102,24 +106,40 @@ while (i < log_rows):
 	# Preflop -------------------------------------------------------------
 
 	if (str.find('starting hand #') != -1): # row found, indicates starting new hand
+
+		# Should we count this hand in stats?
+		if str.find('No Limit Texas Hold\'em') != -1: # This hand is NL Holdem
+			handType = 'NL'
+		elif str.find('Pot Limit Omaha Hi') != -1: # This hand is PLO
+			handType = 'PLO'
+		assert handType != None, 'Something is wrong, there should be hand type'
+
 		dealerID = startingHandNumber(str) # dealer ID is determined and returned from this function
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
 		hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
 
-		if holdEm == False and str[str.find('(') + 1:str.find('(') + 23] == 'No Limit Texas Hold\'em':
-			holdEm = True # At least one Hold Em hand was played
-		elif PLO == False and str[str.find('(') + 1:str.find('(') + 19] == 'Pot Limit Omaha Hi':
-			PLO = True # At least one PLO hand was played
-
 		totalPlayed += 1
+
+	# Code must skip every line until it finds a hand that matches desired hand type.
+	# This if statement effectively acts like hand types that are not desired were never played
+	# if handTypeDesired == 'combined', no problem.
+	if handType != handTypeDesired and handTypeDesired != 'combined':
+		i += 1
+		continue
+
+	# Put this if/else after the determination, so only the correct types are presented on the readout
+	if str.find('No Limit Texas Hold\'em') != -1: # This hand is NL Holdem
+		holdEm = True
+	else: # This hand is PLO
+		PLO = True
+
 
 	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
 		assert totalPlayed > 0, "You forgot to run the Excel macro; log order is reversed!"
 		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
 
 		# Add necessary elements to stat lists & counter 3D list to not over-index
-		# list.append() won't work later on because elements will not be filed in order
 		appendMultiple(vpip, playersAdded)
 		appendMultiple(pfr, playersAdded) 
 		appendMultiple(tbp, playersAdded)
@@ -205,7 +225,7 @@ while (i < log_rows):
 		pot = getNum(str)
 		calcMWBS(mwbs, pot, winnerID, playerIDs)
 
-	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # Shwodown hands only: hand has ended AND two or more players didn't fold
+	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
 			calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 			
 	i += 1
@@ -248,7 +268,11 @@ while i < ledger_rows:
 	# print(cols['buy-in'])
 	id = ledger_sheet.cell_value(i, cols['id'])
 	idIndex = search(playerIDs,id)
-	assert idIndex != -1, 'Player ID not found in ledger'
+	
+	if idIndex == -1: # player did not play this type, but is still in the ledger
+	# Still print their ledger stats for the session
+		i += 1
+		continue
 
 	# Capture the player's buy in so far
 	buyIn = ledger_sheet.cell_value(i, cols['buy-in'])
@@ -418,17 +442,17 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session ----------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date)
 
 # Update the all-time bankrolls for players if not already entered
 
-# writeBankrollsToExcel(ledgerM, playerIDs, date)
+writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 print('Date: ', date, '\n')
 

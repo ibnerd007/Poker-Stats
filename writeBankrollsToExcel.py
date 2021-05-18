@@ -24,7 +24,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 	#    Compare this session's date with date column
 
 	dates = []
-	netCols = [3, 8, 14, 20, 26] # columns in Excel where the net will be stored
+	netCols = [3, 8, 13, 18, 23] # columns in Excel where the net will be stored
 
 	# print('Max row: ', sheet.max_row)
 
@@ -58,6 +58,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 			newNet += ledgerM[index][2]
 
 			bankroll = sheet.cell(row=sheet.max_row-1, column=netCols[i] + 1).value
+			print('Column: {}'.format(netCols[i]))
 			ownMoneyInvested = sheet.cell(row=sheet.max_row-1, column=netCols[i] + 2).value
 			buyIn = ledgerM[index][0]
 
