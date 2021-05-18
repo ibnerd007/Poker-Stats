@@ -34,7 +34,7 @@ from writeBankrollsToExcel import *
 
 # Find path to Excel spreadsheet with log
 
-date = '5 13'
+date = '5 17'
 
 path_log = "Logs/log_%s.xls" % date
 path_ledger = "Ledgers/ledger_%s.xls" % date
@@ -209,7 +209,7 @@ while (i < log_rows):
 			calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 			
 	i += 1
-	print(i)
+	# print(i)
 
 
 # Post-loop calculations ------------------------------------------------------------------------------------------
@@ -291,15 +291,16 @@ for i in range(len(playerIDs)):
 staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
 			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
 			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp', 'FIgidiXEkn', 'IZfCYGmoLP',
-			 'EZvsCiYcdt', 'RlQUK84X1Q']
+			 'EZvsCiYcdt', 'RlQUK84X1Q', 'F7Ul_O2Igu']
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
 #             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
 #			  jacob,       cheyenne,    tristan,     jacob,       jacob,       jacob,
-#             Dmkpro67,    colin
+#             Dmkpro67,    colin,       cheyenne
 
 players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
-		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob', 'Jacob', 'Dmkpro67', 'Colin']
+		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob', 'Jacob', 'Dmkpro67', 'Colin',
+		   'Cheyenne']
 
 
 playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedric', 
@@ -314,7 +315,7 @@ playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedr
 
 		      'wHCkaNaedp': 'Jacob', 'FIgidiXEkn': 'Jacob', 'IZfCYGmoLP': 'Jacob', 
 
-		      'EZvsCiYcdt': 'Dmkpro67', 'RlQUK84X1Q': 'Colin'}
+		      'EZvsCiYcdt': 'Dmkpro67', 'RlQUK84X1Q': 'Colin', 'F7Ul_O2Igu': 'Cheyenne'}
 
 
 # k list allows the program to find the same players every session, regardless of order
@@ -422,12 +423,12 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 
 # Now, write current session stats for all players to Excel ------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
 
 # Update the all-time bankrolls for players if not already entered
 
-# writeBankrollsToExcel(ledgerM, playerIDs, date)
+writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 print('Date: ', date, '\n')
 
