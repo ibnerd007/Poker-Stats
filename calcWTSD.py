@@ -12,5 +12,7 @@ def calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs):
 
 			if position == 'early':
 				wtsd[0][wtsdIndex] += 1
-			else:
+			if position == 'late':
 				wtsd[1][wtsdIndex] += 1
+
+			assert position == 'early' or position == 'late', 'Invalid position'

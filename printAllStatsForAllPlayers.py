@@ -54,7 +54,7 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas,
 
 		print(stats, '\n')
 		print(monetaryStats, '\n')
-		print('*Bankroll stats are across all hand types for the session*')
+		print('*Bankroll stats are across all poker types for the session*')
 		print(bankrollStats, '\n\n')
 		print('%s played %d hands this session.' % (players[j], handsPlayed[i]))
 		print('Best hand: %s - %s' % (bestHandsM[i][0], bestHandsM[i][2]))
