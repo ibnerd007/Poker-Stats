@@ -34,7 +34,7 @@ from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 04'
+date = '5 17'
 handTypeDesired = 'NL' # can be NL, PLO, or combined
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -372,8 +372,8 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 
 # Now, write current session stats for all players to Excel ------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Update the all-time bankrolls for players if not already entered -----------------
 
