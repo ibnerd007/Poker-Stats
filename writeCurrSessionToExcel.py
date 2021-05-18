@@ -1,7 +1,7 @@
 import openpyxl
 
 def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM):
+			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date):
 	
 	# wb = openpyxl.Workbook() # create new workbook
 	wb_path = r'Outputs\stats.xlsx'
@@ -49,6 +49,8 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mw
 	rows = sheet.max_row
 
 	sheet.delete_rows(row, sheet.max_row) # delete rows that may remain from previous sessions
+
+	sheet.cell(row=3, column=20, value=date) # date of session
 
 	wb.save(wb_path)
 

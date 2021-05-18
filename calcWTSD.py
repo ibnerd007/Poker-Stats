@@ -7,7 +7,7 @@ def calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs):
 			position = currPlayerIDs[2][i]
 			wtsdIndex = search(playerIDs,sdID)
 
-			print('{} went to showdown.'.format(sdID))
+			# print('{} went to showdown.'.format(sdID))
 			
 
 			if position == 'early':

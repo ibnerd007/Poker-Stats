@@ -424,11 +424,11 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 # Now, write current session stats for all players to Excel ------------------------
 
 writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM)
+			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date)
 
 # Update the all-time bankrolls for players if not already entered
 
-writeBankrollsToExcel(ledgerM, playerIDs, date)
+# writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 print('Date: ', date, '\n')
 
