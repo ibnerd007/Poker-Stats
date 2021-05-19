@@ -1,6 +1,7 @@
 from search import *
+import pandas as pd
 
-def getPlayerStacks(str, stacks, playerIDs, currPlayerIDs):
+def capturePlayerStacks(str, stacks, playerIDs, currPlayerIDs):
 
 	prevAtIndex = 0
 	
@@ -10,8 +11,6 @@ def getPlayerStacks(str, stacks, playerIDs, currPlayerIDs):
 		tempID = str[atIndex+2:atIndex+2+10] # 10 character player ID
 
 		playerIndex = search(playerIDs, tempID)
-		print(playerIDs)
-		print('Player index:', playerIndex)
 
 		prevAtIndex = atIndex
 
@@ -23,3 +22,4 @@ def getPlayerStacks(str, stacks, playerIDs, currPlayerIDs):
 
 		stacks[playerIndex] = stack/100 # fill correct index with stack
 
+	return stacks

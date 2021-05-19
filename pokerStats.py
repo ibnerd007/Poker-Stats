@@ -1,5 +1,5 @@
 import xlrd
-import math
+import pandas as pd
 
 from startingHandNumber import *
 from assignPositions import *
@@ -13,8 +13,7 @@ from transpose import *
 from getNum import *
 from numPlayersIn import *
 from whichHandType import *
-from getPlayerStacks import *
-from writePlayerStacksToExcel import *
+from capturePlayerStacks import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -36,7 +35,7 @@ from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 04'
+date = '5 17'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -86,10 +85,10 @@ mwbs = [] # money won before showdown ($) No takers?
 playerIDs = []
 handsPlayed = [] # both indexed for each player. Order does not change throughout session.
 bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer)], [combination (string)], [high card (string)]]
-stacks = []
 
-# Static variables
-bb = 20 # cents
+sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
+stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
+
 
 # Variables changing within while loop
 totalPlayed = 0 # total # of hands played
@@ -102,7 +101,6 @@ handType = None # set variable used to determine stats for PLO
 
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
-counter = 0
 
 while (i < log_rows):
 	# Step 1: Parse line beginning with "starting hand #", then 'Player stacks:', then certain actions
@@ -139,7 +137,7 @@ while (i < log_rows):
 
 	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
 		assert totalPlayed > 0, "You forgot to run the Excel macro; log order is reversed!"
-		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
+		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks, hasFolded)
 
 		# Add necessary elements to stat lists & counter 3D list to not over-index
 		appendMultiple(vpip, playersAdded)
@@ -157,9 +155,9 @@ while (i < log_rows):
 		appendMultiple(bestHands, playersAdded)
 
 		# Get each player's stack based on currPlayerIDs order
-		getPlayerStacks(str, stacks, playerIDs, currPlayerIDs)
-		print(stacks)
-		# writePlayerStacksToExcel(stacks)
+		stacks = capturePlayerStacks(str, stacks, playerIDs, currPlayerIDs)
+		tempStacks = [item for item in stacks] # stacks points to its old version, so make a temp list to append to sessionStacks
+		sessionStacks.append(tempStacks) # will be made into pandas dataframe after loop
 
 		beforeFlop = True
 
@@ -242,7 +240,7 @@ while (i < log_rows):
 		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 			
 	i += 1
-	print(i)
+	# print(i)
 
 
 # Post-loop calculations ------------------------------------------------------------------------------------------
@@ -375,17 +373,22 @@ elif holdEm == False and PLO == True:
 else: # both are true, both types were played
 	print('No Limit Texas Hold\'em & Pot Limit Omaha\n')
 
-# Call this to see all stats for all players in session ----------------------------
+# Call this to see all stats for all players in session --------------------------------------------------------------------
 
 # printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 # 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
-# Now, write current session stats for all players to Excel ------------------------
+# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
 # writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 # 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
-# Update the all-time bankrolls for players if not already entered -----------------
+# Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
+
+df = pd.DataFrame(sessionStacks, columns=a)
+df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='dataHere', index_label='Hand')
+
+# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
 # writeBankrollsToExcel(ledgerM, playerIDs, date)
 
