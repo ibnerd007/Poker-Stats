@@ -21,5 +21,5 @@ def getPlayerStacks(str, stacks, playerIDs, currPlayerIDs):
 
 		stack = int(str[openIndex+1:closeIndex]) # stack'
 
-		stacks[playerIndex] = stack # fill correct index with stack
+		stacks[playerIndex] = stack/100 # fill correct index with stack
 

@@ -14,6 +14,7 @@ from getNum import *
 from numPlayersIn import *
 from whichHandType import *
 from getPlayerStacks import *
+from writePlayerStacksToExcel import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -35,8 +36,9 @@ from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 17'
-handTypeDesired = 'NL' # can be NL, PLO, or combined
+date = '5 04'
+handTypeDesired = 'combined' # can be NL, PLO, or combined
+
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
 
