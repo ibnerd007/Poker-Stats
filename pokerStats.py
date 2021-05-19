@@ -33,6 +33,7 @@ from printAllStatsForAllPlayers import *
 
 from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
+from stacksOverTimeLineChart import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
 date = '5 17'
@@ -387,6 +388,7 @@ else: # both are true, both types were played
 
 df = pd.DataFrame(sessionStacks, columns=a)
 df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='dataHere', index_label='Hand')
+stacksOverTimeLineChart(a, sessionStacks)
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
