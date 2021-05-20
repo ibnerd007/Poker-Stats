@@ -157,7 +157,7 @@ while (i < log_rows):
 
 		# Get each player's stack based on currPlayerIDs order
 		stacks = capturePlayerStacks(str, stacks, playerIDs, currPlayerIDs)
-		tempStacks = [item for item in stacks] # stacks points to its old version, so make a temp list to append to sessionStacks
+		tempStacks = [item for item in stacks] # 'stacks' points to its old version if appended directly, temp list needed
 		sessionStacks.append(tempStacks) # will be made into pandas dataframe after loop
 
 		beforeFlop = True
@@ -386,9 +386,16 @@ else: # both are true, both types were played
 
 # Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
 
-df = pd.DataFrame(sessionStacks, columns=a)
-df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='dataHere', index_label='Hand')
-stacksOverTimeLineChart(a, sessionStacks)
+if handTypeDesired == 'combined:' # only executes if entire ledger will be parsed from the log file
+
+	stacksVsTimePath = r'Outputs\stacks over time.xlsx'
+	print('Printing stacks vs time data & chart to {}'.format(stacksVsTimePath))
+
+	df = pd.DataFrame(sessionStacks, columns=a)
+	# df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='rawData', index_label='Hand')
+	df.to_excel(stacksVsTimePath, sheet_name='avgData', index_label='Hand')
+
+	stacksOverTimeLineChart(a, sessionStacks)
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
