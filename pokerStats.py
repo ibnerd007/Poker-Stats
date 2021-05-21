@@ -36,7 +36,7 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 04'
+date = '5 20'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -170,17 +170,18 @@ while (i < log_rows):
 		bustID = getID(str)
 		stacks[search(playerIDs, bustID)] = 0 # set their stack to 0 and leave it unless they rejoin
 
-	# Now, look for action preflop: call, raise, and/or 3 bet
-	if beforeFlop == True and (str.find('calls') != -1 or str.find('raises') != -1):
+	# Look for action throughout the entire hand to add to VPIP
+	if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:
 		calcVPIP(str, vpip, playerIDs, currPlayerIDs)
 
-		if str.find('raises') != -1: # Looking for a raise preflop
-			calcPFR(str, pfr, playerIDs, currPlayerIDs)
+	# Now, look for action preflop: call, raise, and/or 3 bet
+	if beforeFlop == True and str.find('raises') != -1: # Looking for a raise preflop
+		calcPFR(str, pfr, playerIDs, currPlayerIDs)
 
-			if (hasRaised): # this is now a 3 bet
-				calcTBP(str, tbp, playerIDs, currPlayerIDs)
-	
-			hasRaised = True
+		if (hasRaised): # this is now a 3 bet
+			calcTBP(str, tbp, playerIDs, currPlayerIDs)
+
+		hasRaised = True
 
 	# Flop --------------------------------------------------------------------------------------------
 
@@ -188,7 +189,6 @@ while (i < log_rows):
 		beforeFlop = False
 		hasRaised = False
 		# reset alreadyCounted lists until next flop
-		resetList(vpip[2])
 		resetList(pfr[2])
 		resetList(tbp[2])
 		# break
@@ -240,13 +240,17 @@ while (i < log_rows):
 		pot = getNum(str)
 		calcMWBS(mwbs, pot, winnerID, playerIDs)
 
-	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
-		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
+	if str.find('ending hand #') != -1:
+		resetList(vpip[2])
+
+		if numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
+			calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 
 			
 	i += 1
 	# print(i)
 
+print(vpip)
 
 # Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): 
@@ -407,4 +411,4 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 
 print('Date: ', date)
 print('Poker type: ', handTypeDesired, '\n')
-
+print(handsPlayed)
