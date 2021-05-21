@@ -7,12 +7,12 @@ def calcPercentAndTranspose(handsPlayed, stat, decimalPlaces):
 	lateList = [0] * len(stat[0])
 
 	for i in range(len(stat[0])):
-		earlyList[i] = round(stat[0][i]/(handsPlayed[i]/2), decimalPlaces)
-		lateList[i] = round(stat[1][i]/(handsPlayed[i]/2), decimalPlaces)
+		earlyList[i] = round(stat[0][i]/(handsPlayed[0][i]), decimalPlaces)
+		lateList[i] = round(stat[1][i]/(handsPlayed[1][i]), decimalPlaces)
 
 	totalList = []
 	for j in range(len(earlyList)):
-		total = round((stat[0][j]+stat[1][j])/handsPlayed[j], decimalPlaces) # calculate average
+		total = round((stat[0][j]+stat[1][j])/(handsPlayed[0][j]+handsPlayed[1][j]), decimalPlaces) # calculate average over all positions
 		totalList.append(total) # add to overall list
 
 	# Combine position and total lists ----------------------------------------------------------

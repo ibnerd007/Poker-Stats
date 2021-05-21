@@ -1,4 +1,5 @@
 from search import *
+from appendMultiple import *
 
 def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks, hasFolded):
 	# Assigns new players an index, seat, and position
@@ -20,12 +21,12 @@ def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks
 		
 		if search(playerIDs, tempID) == -1: # new player has been found
 			playerIDs.append(tempID) # add new player ID to main list
-			handsPlayed.append(0)
 			playersAdded += 1
 
-		handsPlayed[search(playerIDs, tempID)] += 1 # another hand is played
-
 		prevAtIndex = atIndex # hold past index to make sure to find new @ symbol
+
+	appendMultiple(handsPlayed, playersAdded)
+
 	# ---------------------------------------------------------------------------------------
 
 	# Next, assign each player to a seat.
@@ -45,7 +46,6 @@ def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks
 	# Assign positions for the hand
 	dealerIndex = search(currPlayerIDs[0],dealerID)
 
-	# i = 0
 	for i in range(len(currPlayerIDs[1])):
 		currPlayerIDs[2].append(0) # preallocate space for positions
 		
@@ -53,16 +53,19 @@ def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks
 	for j in range(len(currPlayerIDs[1])): # loop through seat numbers
 		currPlayerIDs[2][(dealerIndex+j) % len(currPlayerIDs[1])] = j # fill positions, wrap around list
 
-	# print(currPlayerIDs) # Use to see actual positions rather than early/late
-
 	#----------------------------------------------------------------------------------------
 
 	# Determine whether position is early or late
 	for i in range(len(currPlayerIDs[2])):
-		if currPlayerIDs[2][i]/len(currPlayerIDs[2]) < 0.5:
-			currPlayerIDs[2][i] = 'late' # player is in early position
+		playerIdx = search(playerIDs, currPlayerIDs[0][i])
 
-		else:
+		if currPlayerIDs[2][i]/len(currPlayerIDs[2]) < 0.5: # late position
+
+			currPlayerIDs[2][i] = 'late' # player is in early position
+			handsPlayed[1][playerIdx] += 1 # add hand played by position
+
+		else: # early position for the hand
 			currPlayerIDs[2][i] = 'early'
+			handsPlayed[0][playerIdx] += 1 # add hand played by position
 
 	return playersAdded

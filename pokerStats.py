@@ -36,7 +36,7 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 20'
+date = '5 04'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -84,7 +84,7 @@ mwbs = [] # money won before showdown ($) No takers?
 # -----------------------------------------------------------------------------------------------------------
 
 playerIDs = []
-handsPlayed = [] # both indexed for each player. Order does not change throughout session.
+handsPlayed = [[], []] # handsPlayed = [[early], [late]]
 bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer)], [combination (string)], [high card (string)]]
 
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
@@ -365,7 +365,7 @@ for i in range(len(playerIDs)):
 	if index != -1:
 		a.append(players[index])
 
-print(playerIDs, '\n')
+# print(playerIDs, '\n')
 print(a, '\n')
 
 print('Date: %s' % date)
