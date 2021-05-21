@@ -389,8 +389,8 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
 
@@ -407,7 +407,7 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-# writeBankrollsToExcel(ledgerM, playerIDs, date)
+writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 print('Date: ', date)
 print('Poker type: ', handTypeDesired, '\n')

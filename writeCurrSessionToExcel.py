@@ -46,7 +46,8 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mw
 			sheet.cell(row=player + 2, column=stat + 13, value=moneyStats[stat][player]) # averaged positions
 
 	for player in range(len(playerIDs)):
-		sheet.cell(row=player + 2, column=15, value=handsPlayed[player]) # averaged positions
+		totalHandsPlayedPlayed = handsPlayed[0][player] + handsPlayed[1][player]
+		sheet.cell(row=player + 2, column=15, value=totalHandsPlayedPlayed) # averaged positions
 
 	row = player + 2 + 1
 	rows = sheet.max_row
