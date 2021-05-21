@@ -1,4 +1,4 @@
-import openpyxl
+from openpyxl import Workbook
 from search import *
 
 def writeBankrollsToExcel(ledgerM, playerIDs, date):

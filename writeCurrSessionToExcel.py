@@ -1,4 +1,4 @@
-import openpyxl
+from openpyxl import Workbook
 
 def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date,
@@ -15,10 +15,6 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mw
 		sheet = wb['PLO Stats-this session'] # access sheet
 	else: # combined hand types are desired
 		sheet = wb['All Stats-this session'] # access sheet
-
-
-	# for bankroll in bankrolls:
-	# 	sheet.append(bankroll) # append to end of data
 
 	# sheet.insert_rows(1, 2) # Before 1st row, insert 2 columns
 

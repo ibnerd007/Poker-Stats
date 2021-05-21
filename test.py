@@ -1,5 +1,14 @@
-from otherPlayersIn import *
+listy = [1,2,3]
 
-list = [1, 0, 0, 0, 0, 0, 0, 0, 0]
 
-print(otherPlayersIn(list, 1))
+listy = [1,2,3]
+
+lista = [7,8,9]
+
+lists = []
+
+lists.append(listy)
+print(lists)
+lists.append(lista)
+
+print(lists)
