@@ -114,7 +114,8 @@ while (i < log_rows):
 
 		handType = whichHandType(str, handType)
 
-		dealerID = startingHandNumber(str) # dealer ID is determined and returned from this function
+		if not str.find('dead button') != -1: # dead button has NOT been found
+			dealerID = startingHandNumber(str) # dealer ID is determined and returned from this function
 
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
@@ -250,7 +251,6 @@ while (i < log_rows):
 	i += 1
 	# print(i)
 
-print(vpip)
 
 # Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): 
@@ -411,4 +411,3 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwb
 
 print('Date: ', date)
 print('Poker type: ', handTypeDesired, '\n')
-print(handsPlayed)
