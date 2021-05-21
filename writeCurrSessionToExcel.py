@@ -1,4 +1,4 @@
-from openpyxl import Workbook
+import openpyxl
 
 def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date,

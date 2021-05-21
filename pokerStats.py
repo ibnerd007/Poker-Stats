@@ -36,7 +36,7 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 17'
+date = '5 20'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -140,6 +140,10 @@ while (i < log_rows):
 		assert totalPlayed > 0, "You forgot to run the Excel macro; log order is reversed!"
 		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks, hasFolded)
 
+		# if search(currPlayerIDs[0], 'zQzHYg1f_X') != -1: # Xavier is playing
+		# 	print('Hand #: ', totalPlayed)
+		# 	print('Xavier\'s position: {} \n\n\n'.format(currPlayerIDs[2][search(currPlayerIDs[0], 'zQzHYg1f_X')]))
+
 		# Add necessary elements to stat lists & counter 3D list to not over-index
 		appendMultiple(vpip, playersAdded)
 		appendMultiple(pfr, playersAdded) 
@@ -164,7 +168,6 @@ while (i < log_rows):
 
 	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
 		bustID = getID(str)
-		print(stacks)
 		stacks[search(playerIDs, bustID)] = 0 # set their stack to 0 and leave it unless they rejoin
 
 	# Now, look for action preflop: call, raise, and/or 3 bet
@@ -239,6 +242,7 @@ while (i < log_rows):
 
 	if str.find('ending hand #') != -1 and numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
 		calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
+
 			
 	i += 1
 	# print(i)
@@ -376,8 +380,8 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
@@ -386,16 +390,16 @@ else: # both are true, both types were played
 
 # Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
 
-if handTypeDesired == 'combined:' # only executes if entire ledger will be parsed from the log file
+# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
 
-	stacksVsTimePath = r'Outputs\stacks over time.xlsx'
-	print('Printing stacks vs time data & chart to {}'.format(stacksVsTimePath))
+# 	stacksVsTimePath = r'Outputs\stacks over time.xlsx'
+# 	print('Printing stacks vs time data & chart to {}'.format(stacksVsTimePath))
 
-	df = pd.DataFrame(sessionStacks, columns=a)
-	# df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='rawData', index_label='Hand')
-	df.to_excel(stacksVsTimePath, sheet_name='avgData', index_label='Hand')
+# 	df = pd.DataFrame(sessionStacks, columns=a)
+# 	# df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='rawData', index_label='Hand')
+# 	df.to_excel(stacksVsTimePath, sheet_name='avgData', index_label='Hand')
 
-	stacksOverTimeLineChart(a, sessionStacks)
+# 	stacksOverTimeLineChart(a, sessionStacks)
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 

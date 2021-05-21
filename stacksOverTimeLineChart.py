@@ -10,7 +10,7 @@ def stacksOverTimeLineChart(a, sessionStacks):
 	wb_path = r'Outputs\stacks over time.xlsx'
 
 	wb = openpyxl.load_workbook(wb_path)
-	ws = wb['dataHere'] # access sheet
+	ws = wb['avgData'] # access sheet
 
 
 	c1 = LineChart()
