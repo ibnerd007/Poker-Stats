@@ -1,7 +1,7 @@
 from search import *
 from prettytable import PrettyTable
 
-def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs,
+def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs,
 
 							   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM):
 	# prints all stats for all players in the session to the command line using prettytable
@@ -21,12 +21,20 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas,
 
 		stats.add_row(['VPIP', '{:.1f} %'.format(vpipM[i][2]*100), '{:.1f} %'.format(vpipM[i][0]*100), '{:.1f} %'.format(vpipM[i][1]*100)])
 		stats.add_row(['Pre-flop raise', '{:.1f} %'.format(pfrM[i][2]*100), '{:.1f} %'.format(pfrM[i][0]*100), '{:.1f} %'.format(pfrM[i][1]*100)])
-		stats.add_row(['Three-bet', '{:.1f} %'.format(tbpM[i][2]*100), '{:.1f} %'.format(tbpM[i][0]*100), '{:.1f} %'.format(tbpM[i][1]*100)])
+		stats.add_row(['3-bet', '{:.1f} %'.format(tbpM[i][2]*100), '{:.1f} %'.format(tbpM[i][0]*100), '{:.1f} %'.format(tbpM[i][1]*100)])
 
 		stats.add_row(['', '', '', '']) # empty row
 
 		stats.add_row(['Aggression factor', '{:.2f}'.format(afM[i][2]), '{:.2f}'.format(afM[i][0]), '{:.2f}'.format(afM[i][1])])
 		stats.add_row(['Aggression freq', '{:.1f} %'.format(afqM[i][2]*100), '{:.1f} %'.format(afqM[i][0]*100), '{:.1f} %'.format(afqM[i][1]*100)])
+
+		stats.add_row(['', '', '', '']) # empty row
+
+		stats.add_row(['C-bets/opportunities', '{}/{}'.format((cbpCountM[i][0]+cbpCountM[i][1]), (cbpCountM[i][2]+cbpCountM[i][3])), 
+										       '{}/{}'.format(cbpCountM[i][0], cbpCountM[i][2]),
+									           '{}/{}'.format(cbpCountM[i][1], cbpCountM[i][3])])
+
+		stats.add_row(['C-bet %', '{:.1f} %'.format(cbpM[i][2]*100), '{:.1f} %'.format(cbpM[i][0]*100), '{:.1f} %'.format(cbpM[i][1]*100)])
 
 		stats.add_row(['', '', '', '']) # empty row
 
