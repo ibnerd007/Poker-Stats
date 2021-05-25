@@ -38,7 +38,7 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 17'
+date = '5 24'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -358,16 +358,16 @@ for i in range(len(playerIDs)):
 staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
 			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
 			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp', 'FIgidiXEkn', 'IZfCYGmoLP',
-			 'EZvsCiYcdt', 'RlQUK84X1Q', 'F7Ul_O2Igu']
+			 'EZvsCiYcdt', 'RlQUK84X1Q', 'F7Ul_O2Igu', 'yA43wEtccZ', 'V7WKPs0Ygv']
 #             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
 #             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
 #			  jacob,       cheyenne,    tristan,     jacob,       jacob,       jacob,
-#             Dmkpro67,    colin,       cheyenne
+#             Dmkpro67,    colin,       cheyenne,    regan        jacob
 
 players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
 		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
 		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob', 'Jacob', 'Dmkpro67', 'Colin',
-		   'Cheyenne']
+		   'Cheyenne', 'Regan', 'Jacob']
 
 
 playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedric', 
@@ -382,7 +382,9 @@ playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedr
 
 		      'wHCkaNaedp': 'Jacob', 'FIgidiXEkn': 'Jacob', 'IZfCYGmoLP': 'Jacob', 
 
-		      'EZvsCiYcdt': 'Dmkpro67', 'RlQUK84X1Q': 'Colin', 'F7Ul_O2Igu': 'Cheyenne'}
+		      'EZvsCiYcdt': 'Dmkpro67', 'RlQUK84X1Q': 'Colin', 'F7Ul_O2Igu': 'Cheyenne',
+
+		      'yA43wEtccZ': 'Regan', 'V7WKPs0Ygv': 'Jacob'}
 
 # -----------------------------------------------------------------------------------------------------------------------
 # Now, print everything that should be output:
@@ -422,16 +424,16 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM,
 
 # Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
 
-# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
 
-# 	stacksVsTimePath = r'Outputs\stacks over time.xlsx'
-# 	print('Printing stacks vs time data & chart to {}'.format(stacksVsTimePath))
+	stacksVsTimePath = r'Outputs\stacks over time.xlsx'
+	print('Printing stacks vs time data & chart to {}'.format(stacksVsTimePath))
 
-# 	df = pd.DataFrame(sessionStacks, columns=a)
-# 	# df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='rawData', index_label='Hand')
-# 	df.to_excel(stacksVsTimePath, sheet_name='avgData', index_label='Hand')
+	df = pd.DataFrame(sessionStacks, columns=a)
+	# df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='rawData', index_label='Hand')
+	df.to_excel(stacksVsTimePath, sheet_name='avgData', index_label='Hand')
 
-# 	stacksOverTimeLineChart(a, sessionStacks)
+	stacksOverTimeLineChart(a, sessionStacks)
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
