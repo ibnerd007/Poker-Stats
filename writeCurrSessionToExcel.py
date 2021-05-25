@@ -1,7 +1,7 @@
 import openpyxl
 
 def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date,
+			                ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date,
 			                handTypeDesired):
 	
 	# wb = openpyxl.Workbook() # create new workbook

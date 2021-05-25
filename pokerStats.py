@@ -30,16 +30,16 @@ from calcCBP import *
 
 from reportPercentages import *
 from reportDecimals import *
-from printAllStatsForOnePlayer import *
 from printAllStatsForAllPlayers import *
 
 from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
+from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 24'
-handTypeDesired = 'NL' # can be NL, PLO, or combined
+date = '5 04'
+handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -355,51 +355,39 @@ for i in range(len(playerIDs)):
 		else:
 			ledgerM[i][j] = round(ledgerM[i][j]) # number of rebuys is an integer
 
-staticIDs = ['L5G0fi1P1T','gpL6BdHM3Z','UOl9ieuNTH','DAovHf6aFe','-4Mt9GCcpf','J_J1Sm6uON',
-			 'Tfv9gQlCKp','zQzHYg1f_X','EUC1-Ekcwo','FHfdGMNnXa','UPoeIpvEQ4', 'mZh56-rfJ5',
-			 'LragqkH6mQ', 'pnFzv-_qqL', 'jvWHRQaeUN', 'wHCkaNaedp', 'FIgidiXEkn', 'IZfCYGmoLP',
-			 'EZvsCiYcdt', 'RlQUK84X1Q', 'F7Ul_O2Igu', 'yA43wEtccZ', 'V7WKPs0Ygv']
-#             fish,        raymond,     cedric,      cheyenne,    scott,       tristan,     
-#             kynan,       xavier,      bill,        marshall,    regan,       jonathan,
-#			  jacob,       cheyenne,    tristan,     jacob,       jacob,       jacob,
-#             Dmkpro67,    colin,       cheyenne,    regan        jacob
+# Create dictionary from playerDictionary.txt --------------------------------------------------------------------------
 
-players = ['Fish', 'Raymond', 'Cedric', 'Cheyenne', 'Scott', 'Tristan',
-		   'Kynan', 'Xavier', 'Bill', 'Marshall', 'Regan', 'Jonathan', 'Jacob',
-		   'Cheyenne', 'Tristan', 'Jacob', 'Jacob', 'Jacob', 'Dmkpro67', 'Colin',
-		   'Cheyenne', 'Regan', 'Jacob']
+playerDict = {}
+f = open('playerDictionary.txt', 'r')
 
+count = 0
+for line in f:
 
-playerDict = {'L5G0fi1P1T': 'Fish', 'gpL6BdHM3Z': 'Raymond', 'UOl9ieuNTH': 'Cedric', 
+	line = line.replace('\n', '')
+	if count % 2 == 0:       # even lines are keys
+		key = line
+		playerDict[key] = ''
+	else:                    # odd lines are names
+		name = line
+		playerDict[key] = name
+	count += 1
 
-			  'DAovHf6aFe': 'Cheyenne', '-4Mt9GCcpf': 'Scott', 'J_J1Sm6uON': 'Tristan',
-
-		      'Tfv9gQlCKp': 'Kynan', 'zQzHYg1f_X': 'Xavier', 'EUC1-Ekcwo': 'Bill', 
-
-		      'FHfdGMNnXa': 'Marshall', 'UPoeIpvEQ4': 'Regan', 'mZh56-rfJ5': 'Jonathan',
-
-		      'LragqkH6mQ': 'Jacob', 'pnFzv-_qqL': 'Cheyenne', 'jvWHRQaeUN': 'Tristan', 
-
-		      'wHCkaNaedp': 'Jacob', 'FIgidiXEkn': 'Jacob', 'IZfCYGmoLP': 'Jacob', 
-
-		      'EZvsCiYcdt': 'Dmkpro67', 'RlQUK84X1Q': 'Colin', 'F7Ul_O2Igu': 'Cheyenne',
-
-		      'yA43wEtccZ': 'Regan', 'V7WKPs0Ygv': 'Jacob'}
+f.close()
 
 # -----------------------------------------------------------------------------------------------------------------------
 # Now, print everything that should be output:
 # 1. List of players
 # 2. Date of session
-# 3. Statistics & bankroll
+# 3. Type of poker analyzed
+# 4. Statistics & bankroll
 
 print('The following people played this session:')
 a = []
 for i in range(len(playerIDs)):
-	index = search(staticIDs, playerIDs[i])
-	if index != -1:
-		a.append(players[index])
+	playerID = playerIDs[i]	
+	a.append(playerDict[playerID])
 
-print(playerIDs, '\n')
+# print(playerIDs, '\n')
 print(a, '\n')
 
 print('Date: %s' % date)
@@ -415,29 +403,23 @@ else: # both are true, both types were played
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
 printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
+						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
 # writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
 
 # if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-
-# 	stacksVsTimePath = r'Outputs\stacks over time.xlsx'
-# 	print('Printing stacks vs time data & chart to {}'.format(stacksVsTimePath))
-
-# 	df = pd.DataFrame(sessionStacks, columns=a)
-# 	# df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='rawData', index_label='Hand')
-# 	df.to_excel(stacksVsTimePath, sheet_name='avgData', index_label='Hand')
-
-# 	stacksOverTimeLineChart(a, sessionStacks)
+# 	writeStacksOverTimetoExcel(sessionStacks, a)
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
 # writeBankrollsToExcel(ledgerM, playerIDs, date)
+
+# --------------------------------------------------------------------------------------------------------------------------
 
 print('Date: ', date)
 print('Poker type: ', handTypeDesired, '\n')
