@@ -1,14 +1,5 @@
-listy = [1,2,3]
+dict = {'hello': 1, 'world': 2}
 
+ID = 'hello'
 
-listy = [1,2,3]
-
-lista = [7,8,9]
-
-lists = []
-
-lists.append(listy)
-print(lists)
-lists.append(lista)
-
-print(lists)
+print(ID in dict)

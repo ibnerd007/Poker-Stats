@@ -6,6 +6,7 @@ from assignPositions import *
 from appendMultiple import *
 from appendMultiple3D import *
 from getID import *
+from getName import *
 from countAction import *
 from resetList import *
 from calcPercentAndTranspose import *
@@ -38,11 +39,31 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 04'
+date = '5 24'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
+
+# Create dictionary from playerDictionary.txt --------------------------------------------------------------------------
+
+playerDict = {}
+f = open('playerDictionary.txt', 'r')
+
+count = 0
+for line in f:
+
+	line = line.replace('\n', '')
+	if count % 2 == 0:       # even lines are keys
+		key = line
+		playerDict[key] = ''
+	else:                    # odd lines are names
+		name = line
+		playerDict[key] = name
+	count += 1
+
+f.close()
+# ----------------------------------------------------------------------------------------------------------------------
 
 # Find path to Excel spreadsheet with log and ledger
 
@@ -93,6 +114,8 @@ bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer
 
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
 stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
+
+newKeys = []
 
 
 # Variables changing within while loop
@@ -175,6 +198,31 @@ while (i < log_rows):
 		sessionStacks.append(tempStacks) # will be made into pandas dataframe after loop
 
 		beforeFlop = True
+
+		# Add any new IDs to the playerDictionary
+
+		# newKeys = []
+
+		# for player in range(playersAdded):
+			
+		# 	key = playerIDs[-player] # iterate from end of list to get new IDs, only new players though
+		# 	print(playerDict.get(key))
+
+		# 	if playerDict.get(key) == None: # player is not in playerDictionary. Welcome to the club, unless you're Jacob!
+		# 		print('Adding Jacob\'s ID')
+		# 		playerDict[key] = '' # name will be filled the first time it is seen in a line
+		# 		newKeys.append(key)
+		# 		print(newKeys)
+
+	# keyLength = len(newKeys)
+	# for key in range(keyLength): # new names need to be filled
+	
+	# 	playerID = getID(str)
+	# 	if playerID in playerDict:
+	# 		name = getName(str, playerID)
+	# 		playerDict[playerID] = name
+
+
 
 	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
 		bustID = getID(str)
@@ -274,7 +322,7 @@ while (i < log_rows):
 
 			
 	i += 1
-	# print(i)
+	print(i)
 
 
 # Post-loop calculations ------------------------------------------------------------------------------------------
@@ -355,31 +403,14 @@ for i in range(len(playerIDs)):
 		else:
 			ledgerM[i][j] = round(ledgerM[i][j]) # number of rebuys is an integer
 
-# Create dictionary from playerDictionary.txt --------------------------------------------------------------------------
-
-playerDict = {}
-f = open('playerDictionary.txt', 'r')
-
-count = 0
-for line in f:
-
-	line = line.replace('\n', '')
-	if count % 2 == 0:       # even lines are keys
-		key = line
-		playerDict[key] = ''
-	else:                    # odd lines are names
-		name = line
-		playerDict[key] = name
-	count += 1
-
-f.close()
-
 # -----------------------------------------------------------------------------------------------------------------------
 # Now, print everything that should be output:
 # 1. List of players
 # 2. Date of session
 # 3. Type of poker analyzed
 # 4. Statistics & bankroll
+
+print(playerIDs, '\n')
 
 print('The following people played this session:')
 a = []
@@ -410,7 +441,7 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM,
 # writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 # 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
-# Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
+# Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
 # if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
 # 	writeStacksOverTimetoExcel(sessionStacks, a)
