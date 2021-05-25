@@ -9,6 +9,7 @@ from getID import *
 from countAction import *
 from resetList import *
 from calcPercentAndTranspose import *
+from calcPercentOfCbpAndTranspose import *
 from transpose import *
 from getNum import *
 from numPlayersIn import *
@@ -25,6 +26,7 @@ from calcWASD import *
 from calcMWAS import *
 from calcMWBS import *
 from calcBestHands import *
+from calcCBP import *
 
 from reportPercentages import *
 from reportDecimals import *
@@ -36,7 +38,7 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 20'
+date = '5 17'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -72,7 +74,9 @@ tbp  = [[], [], []] # 3-bet percentage
 actionCount = [[[], []], [[], []], [[], []], [[],[]]] # 3D list that counts every possible action and position when action is made, for each player
 													  # to be used for calculating aggression factor and aggression frequency
 af = [[], [], []] # 2D list for aggression factor, aggression frequency
-afq = [[], [], []] 
+afq = [[], [], []]
+
+cbp = [[], [], [], []] # C-bet %. cbp[[early pos count], [late pos count], [early opportunities count], [late opportunities count]] 
 
 wtsd = [[], []] # went to showdown (%)
 wasd = [[], []] # won at showdown (%)
@@ -95,10 +99,13 @@ stacks = [] # List that holds stack lists after a given hand for every player in
 totalPlayed = 0 # total # of hands played
 beforeFlop = False
 hasRaised = False # there is a raise on the table
+beforeTurn = False
 
 holdEm = False
 PLO = False # possible hand types
 handType = None # set variable used to determine stats for PLO
+
+aggressorID = None # initalize aggressor ID for program to compare
 
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
@@ -136,6 +143,7 @@ while (i < log_rows):
 	else: # This hand is PLO
 		PLO = True
 
+	# Pre-flop ----------------------------------------------------------------------------------------
 
 	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
 		assert totalPlayed > 0, "You forgot to run the Excel macro; log order is reversed!"
@@ -154,6 +162,7 @@ while (i < log_rows):
 		appendMultiple3D(actionCount, playersAdded) # different function for 3D list
 		appendMultiple(wtsd, playersAdded)
 		appendMultiple(wasd, playersAdded)
+		appendMultiple(cbp, playersAdded)
 		for j in range(playersAdded): mwas.append(0) # different function for 1D list
 		for j in range(playersAdded): mwbs.append(0)
 		for j in range(playersAdded): stacks.append(0)
@@ -184,15 +193,29 @@ while (i < log_rows):
 
 		hasRaised = True
 
+	# Search for pre-flop aggressor for C-bet statistic
+
+	if beforeFlop == True and str.find('raises') != -1: # raise has been found
+		aggressorID = getID(str) # the latest raiser is the aggressor
+
 	# Flop --------------------------------------------------------------------------------------------
 
 	if str.find('Flop:') != -1: # flop has been shown
 		beforeFlop = False
 		hasRaised = False
+		beforeTurn = True
 		# reset alreadyCounted lists until next flop
 		resetList(pfr[2])
 		resetList(tbp[2])
-		# break
+
+	if beforeTurn == True and getID(str) == aggressorID and (aggressorID in currPlayerIDs[0]):
+		# It is the aggressor's action
+		calcCBP(str, cbp, aggressorID, playerIDs, currPlayerIDs) # c-bet percentage
+
+	# Turn --------------------------------------------------------------------------------------------
+
+	if str.find('Turn:') != -1: # turn has been shown
+		beforeTurn = False
 
 	# Count the player's action in the actionCount list, regardless whether before flop ---------------
 	# This is for the aggression frequency stat
@@ -244,6 +267,8 @@ while (i < log_rows):
 	if str.find('ending hand #') != -1:
 		resetList(vpip[2])
 
+		beforeTurn = False
+
 		if numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
 			calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 
@@ -265,10 +290,13 @@ tbpM = calcPercentAndTranspose(handsPlayed, tbp, 4) # Calculates percentages for
 wtsdM = calcPercentAndTranspose(handsPlayed, wtsd, 3)
 wasdM = calcPercentAndTranspose(handsPlayed, wasd, 3)
 
+cbpM = calcPercentOfCbpAndTranspose(cbp, 2)
+
 af = calcAF(af, actionCount, 2) # not a percentage
 afq = calcAFQ(afq, actionCount, 3) # percentage
 afM = transpose(af)
 afqM = transpose(afq)
+cbpCountM = transpose(cbp)
 
 bestHandsM = transpose(bestHands)
 
@@ -369,7 +397,7 @@ for i in range(len(playerIDs)):
 	if index != -1:
 		a.append(players[index])
 
-# print(playerIDs, '\n')
+print(playerIDs, '\n')
 print(a, '\n')
 
 print('Date: %s' % date)
@@ -384,13 +412,13 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 						   ledgerM, staticIDs, playerIDs, players, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create and format charts with openpyxl -------------------------
 
@@ -407,7 +435,7 @@ writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs,
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-writeBankrollsToExcel(ledgerM, playerIDs, date)
+# writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 print('Date: ', date)
 print('Poker type: ', handTypeDesired, '\n')
