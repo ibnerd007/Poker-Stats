@@ -322,7 +322,7 @@ while (i < log_rows):
 
 			
 	i += 1
-	print(i)
+	# print(i)
 
 
 # Post-loop calculations ------------------------------------------------------------------------------------------
@@ -438,8 +438,8 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM,
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
