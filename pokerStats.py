@@ -410,16 +410,16 @@ for i in range(len(playerIDs)):
 # 3. Type of poker analyzed
 # 4. Statistics & bankroll
 
-print(playerIDs, '\n')
+# print(playerIDs, '\n')
 
 print('The following people played this session:')
-a = []
+playerNames = []
 for i in range(len(playerIDs)):
 	playerID = playerIDs[i]	
-	a.append(playerDict[playerID])
+	playerNames.append(playerDict[playerID])
 
 # print(playerIDs, '\n')
-print(a, '\n')
+print(playerNames, '\n')
 
 print('Date: %s' % date)
 assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
@@ -433,18 +433,20 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
-# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-# 	writeStacksOverTimetoExcel(sessionStacks, a)
+if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+	writeStacksOverTimetoExcel(sessionStacks, playerNames)
+else: 
+	print("Stacks over time not filled, handTypeDesired != 'combined'")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 

@@ -1,10 +1,17 @@
-def writeStacksOverTimetoExcel(sessionStacks, a):
+def writeStacksOverTimetoExcel(sessionStacks, playerNames):
 
-	stacksVsTimePath = r'Outputs\stacks over time.xlsx'
-	print('Printing stacks vs time data & chart to <{}>'.format(stacksVsTimePath))
+	rawPath = r'Outputs\stacks_over_time_raw.xlsx'
+	avgPath = r'Outputs\stacks_over_time_avg.xlsx'
 
-	df = pd.DataFrame(sessionStacks, columns=a)
-	# df.to_excel(r'Outputs\stacks over time.xlsx', sheet_name='rawData', index_label='Hand')
-	df.to_excel(stacksVsTimePath, sheet_name='avgData', index_label='Hand')
+	print('Printing stacks vs time raw & avg data & charts to \
+		   <{}> and <{}>...'.format(rawPath, avgPath))
 
-	stacksOverTimeLineChart(a, sessionStacks)
+	avgSessionStacks = calcAvgSessionStacks(sessionStacks)
+
+	rawDf = pd.DataFrame(sessionStacks, columns=playerNames)
+	avgDf = pd.DataFrame(avgSessionStacks, columns=playerNames)
+	
+	df.to_excel(rawPath, sheet_name='rawData', index_label='Hand')
+	df.to_excel(avgPath, sheet_name='avgData', index_label='Hand')
+
+	stacksOverTimeLineChart(playerNames, sessionStacks)
