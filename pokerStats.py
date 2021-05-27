@@ -422,7 +422,7 @@ for i in range(len(playerIDs)):
 print(playerNames, '\n')
 
 print('Date: %s' % date)
-assert len(a) == len(playerIDs), 'One or more player IDs are not in dictionary!'
+assert len(playerNames) == len(playerIDs), 'One or more player IDs are not in dictionary!'
 
 if holdEm == True and PLO == False:
 	print('No Limit Texas Hold\'em\n')
