@@ -9,9 +9,13 @@ def writeStacksOverTimetoExcel(sessionStacks, playerNames):
 
 	# print('Printing stacks vs time raw & avg data & charts to <{}> and <{}>...'.format(rawDataPath, avgDataPath))
 
-	avgStacks = calcAvgSessionStacks(sessionStacks, 10)
+	# i = 0
+	# for hand in sessionStacks:
+	# 	print('Hand ', i)
+	# 	print(hand)
+	# 	i += 1
 
-	print(avgStacks)
+	avgStacks = calcAvgSessionStacks(sessionStacks, 10)
 
 	# rawDf = pd.DataFrame(sessionStacks, columns=playerNames)
 	# avgDf = pd.DataFrame(avgStacks, columns=playerNames)
