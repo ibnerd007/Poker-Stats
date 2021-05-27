@@ -16,6 +16,7 @@ from getNum import *
 from numPlayersIn import *
 from whichHandType import *
 from capturePlayerStacks import *
+from addToPlayerDict import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -39,7 +40,7 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 24'
+date = '5 13'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -199,38 +200,20 @@ while (i < log_rows):
 
 		beforeFlop = True
 
-		# Add any new IDs to the playerDictionary
-
-		# newKeys = []
-
-		# for player in range(playersAdded):
-			
-		# 	key = playerIDs[-player] # iterate from end of list to get new IDs, only new players though
-		# 	print(playerDict.get(key))
-
-		# 	if playerDict.get(key) == None: # player is not in playerDictionary. Welcome to the club, unless you're Jacob!
-		# 		print('Adding Jacob\'s ID')
-		# 		playerDict[key] = '' # name will be filled the first time it is seen in a line
-		# 		newKeys.append(key)
-		# 		print(newKeys)
-
-	# keyLength = len(newKeys)
-	# for key in range(keyLength): # new names need to be filled
-	
-	# 	playerID = getID(str)
-	# 	if playerID in playerDict:
-	# 		name = getName(str, playerID)
-	# 		playerDict[playerID] = name
-
-
-
 	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
 		bustID = getID(str)
 		stacks[search(playerIDs, bustID)] = 0 # set their stack to 0 and leave it unless they rejoin
 
 	# Look for action throughout the entire hand to add to VPIP
 	if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:
-		calcVPIP(str, vpip, playerIDs, currPlayerIDs)
+		# Find ID of player
+		vpipID = getID(str)
+		calcVPIP(vpipID, vpip, playerIDs, currPlayerIDs)
+
+		if vpipID not in playerDict:
+			name = getName(str, vpipID)
+			addToPlayerDict(vpipID, name) # add to text file that keeps a running list of players
+			playerDict[vpipID] = name # add new player to this session's dictionary as well
 
 	# Now, look for action preflop: call, raise, and/or 3 bet
 	if beforeFlop == True and str.find('raises') != -1: # Looking for a raise preflop
@@ -433,8 +416,8 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
@@ -443,10 +426,10 @@ else: # both are true, both types were played
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
-if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-	writeStacksOverTimetoExcel(sessionStacks, playerNames)
-else: 
-	print("Stacks over time not filled, handTypeDesired != 'combined'")
+# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+# 	writeStacksOverTimetoExcel(sessionStacks, playerNames)
+# else: 
+# 	print("Stacks over time not filled, handTypeDesired != 'combined'")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 

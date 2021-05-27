@@ -3,7 +3,7 @@ def getName(str, id):
 	i = str.find(id)
 	assert i != -1, 'ID not contained in string'
 
-	start = str.find('"')
+	start = str.find('"') + 1
 	end = i - 3
 
 	name = str[start:end]
