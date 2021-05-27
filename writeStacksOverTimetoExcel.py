@@ -1,6 +1,8 @@
+import pandas as pd
+
 from calcAvgSessionStacks import *
 from stacksOverTimeLineChart import *
-import pandas as pd
+from calcNetStacks import *
 
 def writeStacksOverTimetoExcel(sessionStacks, playerNames):
 
@@ -10,6 +12,7 @@ def writeStacksOverTimetoExcel(sessionStacks, playerNames):
 	# print('Printing stacks vs time raw & avg data & charts to <{}> and <{}>...'.format(rawDataPath, avgDataPath))
 
 	avgStacks = calcAvgSessionStacks(sessionStacks, 10)
+	net = calcNetStacks(sessionStacks)
 
 	rawDf = pd.DataFrame(sessionStacks, columns=playerNames)
 	avgDf = pd.DataFrame(avgStacks, columns=playerNames)

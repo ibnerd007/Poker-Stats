@@ -35,11 +35,11 @@ def calcAvgSessionStacks(stacks, n):
 
 		iEffectives = [iEff+1 for iEff in iEffectives] # increment effective i counters
 
-		prevNumPlayers = numPlayers
+		prevNumPlayers = numPlayers # set players so that in next iteration new players will be found
 
 	for i in range(len(stacks)):
 		for j in range(len(stacks[0])):
-			avgStacks[i][j] = round(avgStacks[i][j], 2)
+			avgStacks[i][j] = round(avgStacks[i][j], 2) # After division, round all values to 2 decimal places
 
 	return avgStacks
 

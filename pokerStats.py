@@ -40,7 +40,7 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 13'
+date = '5 24'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -416,8 +416,8 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
@@ -426,10 +426,10 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM,
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
-# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-# 	writeStacksOverTimetoExcel(sessionStacks, playerNames)
-# else: 
-# 	print("Stacks over time not filled, handTypeDesired != 'combined'")
+if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+	writeStacksOverTimetoExcel(sessionStacks, playerNames)
+else: 
+	print("Stacks over time not filled, handTypeDesired != 'combined'")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
