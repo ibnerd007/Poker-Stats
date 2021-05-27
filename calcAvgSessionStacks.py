@@ -3,7 +3,7 @@ import time
 
 def calcAvgSessionStacks(stacks, n):
 	# n = number of hands to average
-
+	
 	avgStacks = []
 	prevNumPlayers = 0
 	iEffectives = []
@@ -40,8 +40,6 @@ def calcAvgSessionStacks(stacks, n):
 	for i in range(len(stacks)):
 		for j in range(len(stacks[0])):
 			avgStacks[i][j] = round(avgStacks[i][j], 2)
-
-	print('Length of avgStacks = ', len(avgStacks))
 
 	return avgStacks
 
