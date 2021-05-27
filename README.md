@@ -14,10 +14,6 @@ There are a few variables that must be set correctly before running program:
 2. Date = date of session. This date is used to find your PokerNow log and ledger files, which will be parsed.
     Log and ledger files should be named like this: 'log_MM DD', 'ledger_MM DD' and put in the same folder as pokerStats.py. 
     Use must use the same format to set date that you used to name the file, so that the file can be found.
-    
-3. Manually fill playerDictionary.txt
-    Unfortunately, there isn't yet functionality to automatically fill a text file with player nicknames and IDs. Coming soon, however.
-    So, you need to manually enter all player's IDs and nicknames into the dictionary file.
 
 Once you set these variables, there are a few options for output:
 
@@ -30,11 +26,11 @@ Once you set these variables, there are a few options for output:
     A template is included in the repository under /Outputs, called 'stats.xlsx'. It can show stats broken down by poker type,
     and organized into neat Excel charts for comparison.
 
-3. Write stacks vs time data to a separate Excel workbook, called 'stacks over time.xlsx'.
+3. Write stacks vs time data (raw and moving average) to separate Excel workbooks in \Outputs
     At the bottom of the script, run the function 'writeStacksOverTimetoExcel()' *NOTE: This function only runs if handTypeDesired = combined
     
-    This function uses the module pandas to create a dataframe with all the stack values at the start of every hand for each player 
-    over the course of the session. It then plots these data points in an Excel line chart for easy comparison.
+    This function uses the module pandas to create two dataframes with all the stack values at the start of every hand for each player 
+    over the course of the session (and moving averages). It then plots these data points in an Excel line chart for easy comparison in both workbooks.
     
 4. Write bankroll data across multiple sessions to 'stats.xlsx'.
     At the bottom of the script, run the function 'writeBankrollsToExcel()'
