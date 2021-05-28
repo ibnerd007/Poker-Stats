@@ -2,11 +2,9 @@ from appendMultiple import *
 from getID import *
 from search import *
 
-def calcVPIP(str, vpip, playerIDs, currPlayerIDs):
+def calcVPIP(vpipID, vpip, playerIDs, currPlayerIDs):
 	# Every hand, looks for players that call or raise preflop
 
-	# Find ID of player
-	vpipID = getID(str)
 	i = search(currPlayerIDs, vpipID) # for finding position ONLY
 	j = search(playerIDs, vpipID) # for adding whole stat
 

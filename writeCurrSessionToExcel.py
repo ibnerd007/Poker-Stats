@@ -1,7 +1,7 @@
 import openpyxl
 
-def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			                ledgerM, staticIDs, playerIDs, playerDict, handsPlayed, bestHandsM, date,
+def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			                ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date,
 			                handTypeDesired):
 	
 	# wb = openpyxl.Workbook() # create new workbook
@@ -31,23 +31,32 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM, mwas, mw
 			sheet.cell(row=player + 2, column=stat + 2, value=ledgerM[player][stat]) # averaged positions
 			# print(ledgerM[player][stat])
 
-
 	tdStats = [vpipM, pfrM, tbpM, afM, afqM, wtsdM, wasdM]
 	moneyStats = [mwas, mwbs]
 
 	# Fill Excel spreadsheet with percent stat data
-	for stat in range(len(tdStats)): # rows
-		for player in range(len(playerIDs)): # cols
+	for stat in range(len(tdStats)): # cols
+		for player in range(len(playerIDs)): # rows
 			sheet.cell(row=player + 2, column=stat + 6, value=tdStats[stat][player][2]) # averaged positions
+
+
+	# Fill Excel spreadsheet with C-bets vs opportunities, not a percent-based stat
+	for player in range(len(playerIDs)): # rows
+		totalBets = cbpCountM[player][0] + cbpCountM[player][1]
+		sheet.cell(row=player + 2, column=13, value=totalBets) # fill c-bets
+
+		totalOpps = cbpCountM[player][2] + cbpCountM[player][3]
+		sheet.cell(row=player + 2, column=14, value=totalOpps) # fill c-bet opportunities
+
 
 	# Fill Excel spreadsheet with monetary stat data
 	for stat in range(len(moneyStats)):
 		for player in range(len(playerIDs)):
-			sheet.cell(row=player + 2, column=stat + 13, value=moneyStats[stat][player]) # averaged positions
+			sheet.cell(row=player + 2, column=stat + 15, value=moneyStats[stat][player]) # averaged positions
 
 	for player in range(len(playerIDs)):
 		totalHandsPlayedPlayed = handsPlayed[0][player] + handsPlayed[1][player]
-		sheet.cell(row=player + 2, column=15, value=totalHandsPlayedPlayed) # averaged positions
+		sheet.cell(row=player + 2, column=17, value=totalHandsPlayedPlayed) # averaged positions
 
 	row = player + 2 + 1
 	rows = sheet.max_row
