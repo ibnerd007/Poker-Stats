@@ -101,10 +101,6 @@ bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
 stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
 
-startingStacks = [] # List that holds starting stacks, and tracks rebuys throughout session (2D)
-bustList = [] # Keeps track of IDs that have busted, for net stacks over time data (1D)
-firstJoined = False
-
 # Variables changing within while loop
 totalPlayed = 0 # total # of hands played
 beforeFlop = False
@@ -140,6 +136,7 @@ while (i < log_rows):
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
 		hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
+		startingStackSnapshot = []
 
 		totalPlayed += 1
 
@@ -188,25 +185,22 @@ while (i < log_rows):
 
 		beforeFlop = True
 
-		if firstJoined == False:
-			firstJoined = True
-
 	if str.find('joined') != -1:
 		# Player is either:
 		# 1. joining the game with his inital stack,
 		# 2. rebuying after a bust OR
 		# 3. sitting back down after standing up
 		# We need to know which option is happening
-
-		joinID = getID(str)
-		stack = getNum(str) # gets starting stack
-
-		if firstJoined == False:
-			startingStacks.append(stack)
+		pass
 
 	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
 		bustID = getID(str)
-		stacks[search(playerIDs, bustID)] = 0 # set their stack to 0 and leave it unless they rejoin
+
+		bustIdx = search(playerIDs, bustID)
+
+		stacks[bustIdx] = 0 # set their stack to 0 and leave it unless they rejoin
+
+		bustList.append(bustID) = 1
 
 
 	# Look for action throughout the entire hand to add to VPIP

@@ -1,7 +1,7 @@
 from search import *
 from appendMultiple import *
 
-def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks, hasFolded):
+def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded):
 	# Assigns new players an index, seat, and position
 	# Assigns old players a seat and position
 

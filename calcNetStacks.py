@@ -1,5 +1,4 @@
 import copy
-import time
 
 def calcNetStacks(sessionStacks):
 
@@ -25,6 +24,6 @@ def calcNetStacks(sessionStacks):
 
 		prevNumPlayers = numPlayers
 
-	print(startingStacks)
+	# print(startingStacks)
 
 	
