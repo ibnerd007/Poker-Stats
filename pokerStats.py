@@ -17,6 +17,7 @@ from numPlayersIn import *
 from whichHandType import *
 from capturePlayerStacks import *
 from addToPlayerDict import *
+from createPlayerDict import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -39,30 +40,16 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
-# set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 04'
-handTypeDesired = 'PLO' # can be NL, PLO, or combined
+from runPokerStats import date
+from runPokerStats import handTypeDesired
 
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
 
 # Create dictionary from playerDictionary.txt --------------------------------------------------------------------------
 
-playerDict = {}
-f = open('playerDictionary.txt', 'r')
+playerDict = createPlayerDict()
 
-count = 0
-for line in f:
-
-	line = line.replace('\n', '')
-	if count % 2 == 0:       # even lines are keys
-		key = line
-	else:                    # odd lines are names
-		name = line
-		playerDict[key] = name
-	count += 1
-
-f.close()
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Find path to Excel spreadsheet with log and ledger
@@ -108,15 +95,13 @@ mwbs = [] # money won before showdown ($) No takers?
 
 # -----------------------------------------------------------------------------------------------------------
 
+# Lists to be filled in loop
 playerIDs = []
 handsPlayed = [[], []] # handsPlayed = [[early], [late]]
 bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer)], [combination (string)], [high card (string)]]
 
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
 stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
-
-# newKeys = []
-
 
 # Variables changing within while loop
 totalPlayed = 0 # total # of hands played
@@ -128,7 +113,7 @@ holdEm = False
 PLO = False # possible hand types
 handType = None # set variable used to determine stats for PLO
 
-aggressorID = None # initalize aggressor ID for program to compare
+aggressorID = None # initalize aggressor ID for program to compare from c-bet statistic
 
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
@@ -167,7 +152,6 @@ while (i < log_rows):
 		holdEm = True
 	elif handType == 'PLO': # This hand is PLO
 		PLO = True
-	else: raise Exception('Hand type not recognized')
 
 
 	# Pre-flop ----------------------------------------------------------------------------------------
@@ -424,19 +408,19 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM,
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
-if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-	writeStacksOverTimetoExcel(sessionStacks, playerNames)
-else: 
-	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+# 	writeStacksOverTimetoExcel(sessionStacks, playerNames)
+# else: 
+# 	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-writeBankrollsToExcel(ledgerM, playerIDs, date)
+# writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
