@@ -40,7 +40,7 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 24'
+date = '5 27'
 handTypeDesired = 'combined' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -139,6 +139,9 @@ while (i < log_rows):
 	
 	str = log_sheet.cell_value(i,0) # get the string for the entire line
 
+	if i == 1 and str.find('requested a seat') == -1:
+		raise Exception('You forgot to run the Excel macro; log order is reversed!')
+
 	# Preflop -------------------------------------------------------------
 
 	if (str.find('starting hand #') != -1): # row found, indicates starting new hand
@@ -170,7 +173,6 @@ while (i < log_rows):
 	# Pre-flop ----------------------------------------------------------------------------------------
 
 	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
-		assert totalPlayed > 0, "You forgot to run the Excel macro; log order is reversed!"
 		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks, hasFolded)
 
 		# if search(currPlayerIDs[0], 'zQzHYg1f_X') != -1: # Xavier is playing
@@ -421,8 +423,8 @@ else: # both are true, both types were played
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
