@@ -91,8 +91,6 @@ wasd = [[], []] # won at showdown (%)
 mwas = [] # money won at showdown ($)
 mwbs = [] # money won before showdown ($) No takers?
 
-# bbWonPerFiftyHands = [] # Big Blinds won per 50 hands
-
 # -----------------------------------------------------------------------------------------------------------
 
 # Lists to be filled in loop
@@ -102,6 +100,10 @@ bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer
 
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
 stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
+
+startingStacks = [] # List that holds starting stacks, and tracks rebuys throughout session (2D)
+bustList = [] # Keeps track of IDs that have busted, for net stacks over time data (1D)
+firstJoined = False
 
 # Variables changing within while loop
 totalPlayed = 0 # total # of hands played
@@ -124,7 +126,7 @@ while (i < log_rows):
 	str = log_sheet.cell_value(i,0) # get the string for the entire line
 
 	if i == 1 and str.find('requested a seat') == -1:
-		raise Exception('You forgot to run the Excel macro; log order is reversed!')
+		raise Exception('Log order is reversed!')
 
 	# Preflop -------------------------------------------------------------
 
@@ -157,7 +159,7 @@ while (i < log_rows):
 	# Pre-flop ----------------------------------------------------------------------------------------
 
 	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
-		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, stacks, hasFolded)
+		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
 
 		# if search(currPlayerIDs[0], 'zQzHYg1f_X') != -1: # Xavier is playing
 		# 	print('Hand #: ', totalPlayed)
@@ -181,14 +183,31 @@ while (i < log_rows):
 
 		# Get each player's stack based on currPlayerIDs order
 		stacks = capturePlayerStacks(str, stacks, playerIDs, currPlayerIDs)
-		tempStacks = [item for item in stacks] # 'stacks' points to its old version if appended directly, temp list needed
+		tempStacks = [item for item in stacks] # 'stacks' points to its old version if appended directly, deepcopy needed
 		sessionStacks.append(tempStacks) # will be made into pandas dataframe after loop
 
 		beforeFlop = True
 
+		if firstJoined == False:
+			firstJoined = True
+
+	if str.find('joined') != -1:
+		# Player is either:
+		# 1. joining the game with his inital stack,
+		# 2. rebuying after a bust OR
+		# 3. sitting back down after standing up
+		# We need to know which option is happening
+
+		joinID = getID(str)
+		stack = getNum(str) # gets starting stack
+
+		if firstJoined == False:
+			startingStacks.append(stack)
+
 	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
 		bustID = getID(str)
 		stacks[search(playerIDs, bustID)] = 0 # set their stack to 0 and leave it unless they rejoin
+
 
 	# Look for action throughout the entire hand to add to VPIP
 	if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:
