@@ -32,13 +32,13 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 		cellDate = sheet.cell(row=i, column=1).value
 		dates.append(cellDate)
 
-	print(dates)
+	# print(dates)
 
 	if search(dates, date) != -1: # data from this date has been entered previously
-		print('Data not filled... this session already entered')
+		print('Bankroll data not filled... this session already entered\n')
 		return
 	else: # add date to column
-		print('Adding date...')
+		print('Adding bankroll data...\n')
 		if dates == [None]:
 			sheet.cell(row=sheet.max_row, column=1, value=date)
 		else:

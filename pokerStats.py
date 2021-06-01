@@ -40,7 +40,7 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 27'
+date = '5 04'
 handTypeDesired = 'PLO' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -154,11 +154,6 @@ while (i < log_rows):
 		hasFolded = [] # Tracks who has folded in the hand
 		hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
 
-		if str.find('No Limit Texas Hold\'em') != -1: # This hand is NL Holdem
-			holdEm = True
-		elif str.find('Pot Limit Omaha'): # This hand is PLO
-			PLO = True
-
 		totalPlayed += 1
 
 	# Code must skip every line until it finds a hand that matches desired hand type.
@@ -167,6 +162,12 @@ while (i < log_rows):
 	if handType != handTypeDesired and handTypeDesired != 'combined':
 		i += 1
 		continue
+
+	if handType == 'NL': # This hand is NL Holdem
+		holdEm = True
+	elif handType == 'PLO': # This hand is PLO
+		PLO = True
+	else: raise Exception('Hand type not recognized')
 
 
 	# Pre-flop ----------------------------------------------------------------------------------------
@@ -391,7 +392,7 @@ for i in range(len(playerIDs)):
 # Now, print everything that should be output:
 # 1. List of players
 # 2. Date of session
-# 3. Type of poker analyzed
+# 3. Type of poker analyzed (pokerType)
 # 4. Statistics & bankroll
 
 # print(playerIDs, '\n')
@@ -405,15 +406,16 @@ for i in range(len(playerIDs)):
 # print(playerIDs, '\n')
 print(playerNames, '\n')
 
-print('Date: %s' % date)
+print('Date: {}/{}'.format(date[0], date[2:4]))
 assert len(playerNames) == len(playerIDs), 'One or more player IDs are not in dictionary!'
 
-if holdEm == True and PLO == False:
-	print('No Limit Texas Hold\'em\n')
-elif holdEm == False and PLO == True:
-	print('Pot Limit Omaha\n')
-else: # both are true, both types were played
-	print('No Limit Texas Hold\'em & Pot Limit Omaha\n')
+if   holdEm == True  and PLO == False: pokerType = 'No Limit Texas Hold\'em\n'
+elif holdEm == False and PLO == True : pokerType = 'Pot Limit Omaha\n'
+else:                                  pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
+
+print(pokerType)
+
+assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
@@ -430,13 +432,14 @@ writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, m
 if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
 	writeStacksOverTimetoExcel(sessionStacks, playerNames)
 else: 
-	print("Stacks over time not filled, handTypeDesired != 'combined'")
+	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-# writeBankrollsToExcel(ledgerM, playerIDs, date)
+writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-print('Date: ', date)
-print('Poker type: ', handTypeDesired, '\n')
+print('Date: {}/{}'.format(date[0], date[2:4]))
+print('Poker type: ', pokerType)
+print('handTypeDesired =', handTypeDesired, '\n')
