@@ -40,7 +40,7 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 31'
+date = '5 27'
 handTypeDesired = 'PLO' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
@@ -422,8 +422,8 @@ printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM,
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 

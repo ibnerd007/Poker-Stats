@@ -31,7 +31,5 @@ def calcAFQ(afq, count, decimals):
 
 		afq[2][k] = round(afqTotal/2, decimals)
 
-	print(afq)
-
 	return afq
 
