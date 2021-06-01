@@ -40,8 +40,8 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 
 # set date of session & poker type desired (Holdem, PLO, or both)
-date = '5 27'
-handTypeDesired = 'combined' # can be NL, PLO, or combined
+date = '5 31'
+handTypeDesired = 'PLO' # can be NL, PLO, or combined
 
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -57,7 +57,6 @@ for line in f:
 	line = line.replace('\n', '')
 	if count % 2 == 0:       # even lines are keys
 		key = line
-		playerDict[key] = ''
 	else:                    # odd lines are names
 		name = line
 		playerDict[key] = name
@@ -116,7 +115,7 @@ bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
 stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
 
-newKeys = []
+# newKeys = []
 
 
 # Variables changing within while loop
@@ -155,6 +154,11 @@ while (i < log_rows):
 		hasFolded = [] # Tracks who has folded in the hand
 		hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
 
+		if str.find('No Limit Texas Hold\'em') != -1: # This hand is NL Holdem
+			holdEm = True
+		elif str.find('Pot Limit Omaha'): # This hand is PLO
+			PLO = True
+
 		totalPlayed += 1
 
 	# Code must skip every line until it finds a hand that matches desired hand type.
@@ -164,11 +168,6 @@ while (i < log_rows):
 		i += 1
 		continue
 
-	# Put this if/else after the determination, so only the correct types are presented on the readout
-	if str.find('No Limit Texas Hold\'em') != -1: # This hand is NL Holdem
-		holdEm = True
-	else: # This hand is PLO
-		PLO = True
 
 	# Pre-flop ----------------------------------------------------------------------------------------
 
@@ -418,13 +417,13 @@ else: # both are true, both types were played
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
