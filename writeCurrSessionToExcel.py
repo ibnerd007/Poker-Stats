@@ -8,7 +8,7 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 			                handTypeDesired):
 	
 	# wb = openpyxl.Workbook() # create new workbook
-	wb_path = r'Outputs\stats - Copy.xlsx'
+	wb_path = r'Outputs\stats.xlsx'
 
 	wb = openpyxl.load_workbook(wb_path) # load existing workbook
 

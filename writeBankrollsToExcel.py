@@ -14,7 +14,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 
 	# 1. Open workbook and sheet
 
-	wb_path = r'Outputs\stats.xlsx'
+	wb_path = r'Outputs\bankrolls.xlsx'
 
 	wb = openpyxl.load_workbook(wb_path) # load existing workbook
 
