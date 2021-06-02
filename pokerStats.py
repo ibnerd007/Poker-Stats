@@ -39,6 +39,7 @@ from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
+from writeAvgStatstoExcel import *
 
 from runPokerStats import date
 from runPokerStats import handTypeDesired
@@ -121,8 +122,8 @@ while (i < log_rows):
 	
 	str = log_sheet.cell_value(i,0) # get the string for the entire line
 
-	if i == 1 and str.find('requested a seat') == -1:
-		raise Exception('Log order is reversed!')
+	# if i == 1 and str.find('requested a seat') == -1:
+	# 	raise Exception('Log order is reversed!')
 
 	# Preflop -------------------------------------------------------------
 
@@ -425,14 +426,19 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
-if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-	writeStacksOverTimetoExcel(sessionStacks, playerNames)
-else: 
-	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+# 	writeStacksOverTimetoExcel(sessionStacks, playerNames)
+# else: 
+# 	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-writeBankrollsToExcel(ledgerM, playerIDs, date)
+# writeBankrollsToExcel(ledgerM, playerIDs, date)
+
+# Update the all-time stats for players if not already entered -------------------------------------------------------------
+
+writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # --------------------------------------------------------------------------------------------------------------------------
 

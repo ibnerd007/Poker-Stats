@@ -32,8 +32,6 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 		cellDate = sheet.cell(row=i, column=1).value
 		dates.append(cellDate)
 
-	# print(dates)
-
 	if search(dates, date) != -1: # data from this date has been entered previously
 		print('Bankroll data not filled... this session already entered\n')
 		return

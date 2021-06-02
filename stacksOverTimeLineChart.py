@@ -22,9 +22,12 @@ def stacksOverTimeLineChart(path, playerNames, stacks, n=None):
 	c1.style = 2
 	c1.x_axis.title = 'Hand'
 
+	c1.height = 18
+	c1.width = 32
+
 	data = Reference(ws, min_col=2, min_row=1, max_col=len(playerNames)+1, max_row=len(stacks)+1)
 	c1.add_data(data, titles_from_data=True)
 
-	ws.add_chart(c1, 'J2')
+	ws.add_chart(c1, 'A1')
 
 	wb.save(wb_path)
