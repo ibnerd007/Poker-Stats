@@ -195,12 +195,11 @@ while (i < log_rows):
 
 	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
 		bustID = getID(str)
-
 		bustIdx = search(playerIDs, bustID)
-
+		
 		stacks[bustIdx] = 0 # set their stack to 0 and leave it unless they rejoin
 
-		bustList.append(bustID) = 1
+		# bustList.append(bustID) = 1
 
 
 	# Look for action throughout the entire hand to add to VPIP
@@ -416,8 +415,8 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
