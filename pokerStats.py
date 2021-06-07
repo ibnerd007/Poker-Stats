@@ -1,5 +1,6 @@
 import xlrd
 import pandas as pd
+import time
 
 from startingHandNumber import *
 from assignPositions import *
@@ -118,6 +119,7 @@ aggressorID = None # initalize aggressor ID for program to compare from c-bet st
 i = 0
 
 while (i < log_rows):
+
 	# Step 1: Parse line beginning with "starting hand #", then 'Player stacks:', then certain actions
 	
 	str = log_sheet.cell_value(i,0) # get the string for the entire line

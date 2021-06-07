@@ -1,6 +1,7 @@
 import openpyxl
 from search import *
 from average import *
+import time
 
 def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
   		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired):
@@ -30,12 +31,10 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 	dates = []
 
-	for i in range(2, sheet.max_row + 1):
-		cellDate = sheet.cell(row=i, column=19).value
+	for i in range(5, sheet.max_row + 1):
+		cellDate = sheet.cell(row=i, column=1).value
 		dates.append(cellDate)
 	# dates is now filled
-
-	print('Dates:', dates)
 
 	if search(dates, date) != -1: # data from this date has been entered previously
 		print('Average stat data not filled... this session already entered\n')
@@ -46,6 +45,8 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 			sheet.cell(row=sheet.max_row, column=1, value=date)
 		else:
 			sheet.cell(row=sheet.max_row + 1, column=1, value=date)
+
+	print('Dates:', dates)
 
 	# 3. Capturing player indices ------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 			playerIdx = playerIndices[ID]
 
 			if playerIdx != -1:
-				# Get stats from this sessiona and averaged sessions
+				# Get stats from this session and averaged sessions
 				statAvg = sheet.cell(row=player + 2, column=stat + 3).value
 				statThisSession  = tdStats[stat][playerIdx][2]
 
@@ -84,15 +85,56 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 			player += 1
 
 
-	# # Fill Excel spreadsheet with C-bets vs opportunities and aggression factors, not a percent-based stats
-	# for player in range(len(playerIDs)): # rows
-	# 	sheet.cell(row=player + 2, column=12, value=afM[player][2])
-		
-	# 	totalBets = cbpCountM[player][0] + cbpCountM[player][1]
-	# 	sheet.cell(row=player + 2, column=13, value=totalBets) # fill c-bets
+	# Fill Excel spreadsheet with C-bets vs opportunities and aggression factors, not a percent-based stats
+	player = 0
+	for ID in playerIndices: # rows
 
-	# 	totalOpps = cbpCountM[player][2] + cbpCountM[player][3]
-	# 	sheet.cell(row=player + 2, column=14, value=totalOpps) # fill c-bet opportunities
+		if playerIdx != -1:
+
+			playerIdx = playerIndices[ID]
+		
+			totalHandsPlayed = sheet.cell(row=player + 2, column=12).value
+			handsPlayedThisSession  = handsPlayed[0][playerIdx] + handsPlayed[1][playerIdx]
+
+			# ----------------------------------------------------------------------------------
+
+			afPrev = sheet.cell(row=player + 2, column=10).value
+			afCurr = afM[playerIdx][2]
+
+			afAvg = average(afPrev, afCurr, totalHandsPlayed, handsPlayedThisSession)
+
+			sheet.cell(row=player + 2, column=10, value=afAvg)
+
+			# -----------------------------------------------------------------------------------
+			
+			cbpBetPrev = sheet.cell(row=player + 2, column=11).value
+			cbpBetCurr = cbpCountM[playerIdx][0] + cbpCountM[playerIdx][1]
+
+			cbpBetTotal = cbpBetPrev + cbpBetCurr
+
+			sheet.cell(row=player + 2, column=11, value=cbpBetTotal) # fill c-bets
+
+			# -----------------------------------------------------------------------------------
+
+			cbpOppsPrev = sheet.cell(row=player + 2, column=12).value
+			cbpOppsCurr = cbpCountM[playerIdx][2] + cbpCountM[playerIdx][3]
+
+			cbpOppsTotal = cbpOppsPrev + cbpOppsCurr
+
+			sheet.cell(row=player + 2, column=12, value=cbpOppsTotal) # fill c-bet opportunities
+
+			# -----------------------------------------------------------------------------------
+
+			if cbpOppsTotal != 0:
+				cbp = cbpBetTotal/cbpOppsTotal
+			else: cbp = 0
+
+			sheet.cell(row=player + 2, column=9, value=cbp) # fill percent data
+			sheet.cell(row=player + 2, column=9).number_format = '0.0%'
+
+			# -----------------------------------------------------------------------------------
+
+		player += 1
 
 	player = 0
 	for ID in playerIndices:
@@ -100,11 +142,11 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 		if playerIdx != -1:
 
-			totalTotal = sheet.cell(row=player + 2, column=12).value
+			totalTotal = sheet.cell(row=player + 2, column=13).value
 
 			totalHandsPlayed = handsPlayed[0][playerIdx] + handsPlayed[1][playerIdx]
 
-			sheet.cell(row=player + 2, column=12, value=totalHandsPlayed + totalTotal)
+			sheet.cell(row=player + 2, column=13, value=totalHandsPlayed + totalTotal)
 		
 		player += 1
 
