@@ -1,8 +1,8 @@
 import regex as re
 
 def getNum(str):
-	# retrieves the first number, without commas, from string str, 
-	# regardless of length or location in the string
+	# retrieves the first number without commas (after a 10-digit ID), from string str, 
+	# regardless of length
 	assert str.find('@') != -1, 'No ID in string'
 	afterIDIndex = str.find('@')
 	strAfterID = str[afterIDIndex+13:] # Makes sure no numbers in IDs are counted

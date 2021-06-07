@@ -102,6 +102,9 @@ bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
 stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
 
+stackChangeInfo = [] # keeps track of stack add ons or rebuys throughout the session
+bustList = []
+
 # Variables changing within while loop
 totalPlayed = 0 # total # of hands played
 beforeFlop = False
@@ -192,8 +195,18 @@ while (i < log_rows):
 		# 1. joining the game with his inital stack,
 		# 2. rebuying after a bust OR
 		# 3. sitting back down after standing up
-		# We need to know which option is happening
-		pass
+		# We need to know which option is happening. ONLY option 2 is applicable here
+		joinID = getID(str)
+
+		if joinID in bustList:
+			addOnID = joinID
+			addOnAmount = getNum(str)
+			addOnHand = totalPlayed + 1
+
+			addOnInfo = (addOnID, addOnAmount, addOnHand) # tuple, unchangeable
+			stackChangeInfo.append(addOnInfo)
+
+			bustList.remove(addOnID)
 
 	if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
 		bustID = getID(str)
@@ -201,8 +214,18 @@ while (i < log_rows):
 		
 		stacks[bustIdx] = 0 # set their stack to 0 and leave it unless they rejoin
 
-		# bustList.append(bustID) = 1
+		bustList.append(bustID)
 
+	if str.find('WARNING') != -1 and str.find('adding') != -1:
+		# print('WARNING log message: "{}"\n'.format(str))
+
+		# Player is adding on to their stack
+		addOnID = getID(str)
+		addOnAmount = getNum(str)
+		addOnHand = totalPlayed + 1
+
+		addOnInfo = (addOnID, addOnAmount, addOnHand) # tuple, unchangeable
+		stackChangeInfo.append(addOnInfo)
 
 	# Look for action throughout the entire hand to add to VPIP
 	if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:
@@ -425,10 +448,12 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 # writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 # 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
-# Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
+# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl ------------------------------------
+
+print(stackChangeInfo)
 
 if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-	writeStacksOverTimetoExcel(sessionStacks, playerNames)
+	writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs)
 else: 
 	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 
