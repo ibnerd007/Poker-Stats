@@ -42,8 +42,7 @@ from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 from writeAvgStatstoExcel import *
 
-from runPokerStats import date
-from runPokerStats import handTypeDesired
+from runPokerStats import * # imports date and handTypeDesired
 
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -428,10 +427,10 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Now, write dataframe containing stack data to Excel, then create charts with openpyxl ------------------------------------
 
-# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-# 	writeStacksOverTimetoExcel(sessionStacks, playerNames)
-# else: 
-# 	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+	writeStacksOverTimetoExcel(sessionStacks, playerNames)
+else: 
+	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
@@ -439,8 +438,8 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeAvgStatstoExcel(pokerStats.vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+#   		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
