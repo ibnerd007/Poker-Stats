@@ -41,9 +41,11 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 from writeAvgStatstoExcel import *
-from storePlayerNamesAndIDs import *
+from whoPlayedWhen import *
 
 from runPokerStats import * # imports date and handTypeDesired
+
+dateFormat = '{}/{}'.format(date[0:2], date[2:4])
 
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -425,9 +427,10 @@ for i in range(len(playerIDs)):
 # print(playerIDs, '\n')
 print(playerNames, '\n')
 
-storePlayerNamesAndIDs(playerNames, playerIDs, '{}/{}'.format(date[0], date[2:4]))
+whoPlayedWhen(playerNames, playerIDs, dateFormat)
 
-print('Date: {}/{}'.format(date[0], date[2:4]))
+print('Date: {}'.format(dateFormat))
+
 assert len(playerNames) == len(playerIDs), 'One or more player IDs are not in dictionary!'
 
 if   holdEm == True  and PLO == False: pokerType = 'No Limit Texas Hold\'em\n'
@@ -450,10 +453,10 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl ------------------------------------
 
-# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-# 	writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs)
-# else: 
-# 	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+	writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs)
+else: 
+	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
@@ -466,6 +469,6 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-print('Date: {}/{}'.format(date[0], date[2:4]))
+print('Date: {}'.format(dateFormat))
 print('Poker type: ', pokerType)
 print('handTypeDesired =', handTypeDesired, '\n')

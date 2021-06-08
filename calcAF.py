@@ -10,7 +10,7 @@ def calcAF(af, count, decimals):
 	for i in range(len(count[0][0])): # player
 		for j in range(len(count[0])): # position
 
-			if count[2][0][i] != 0:
+			if count[2][j][i] != 0:
 				tempAf = (count[0][j][i] + count[1][j][i])/count[2][j][i] # af = (bets + raises)/calls
 			else: # how did they not call once? lol
 				tempAf = -1

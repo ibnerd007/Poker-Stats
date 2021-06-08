@@ -1,9 +1,9 @@
-Date: 4/09
+Date: 04/09
 L5G0fi1P1T     Fish
 UOl9ieuNTH     Cedric
 -4Mt9GCcpf     Scott
 
-Date: 4/16
+Date: 04/16
 gpL6BdHM3Z     Raymond
 RlQUK84X1Q     Colin
 UOl9ieuNTH     Cedric
@@ -13,7 +13,7 @@ EZvsCiYcdt     Dmkpro67
 DAovHf6aFe     Cheyenne
 IZfCYGmoLP     Jacob
 
-Date: 4/19
+Date: 04/19
 -4Mt9GCcpf     Scott
 gpL6BdHM3Z     Raymond
 J_J1Sm6uON     Tristan
@@ -22,21 +22,21 @@ UOl9ieuNTH     Cedric
 wHCkaNaedp     Jacob
 DAovHf6aFe     Cheyenne
 
-Date: 4/24
+Date: 04/24
 -4Mt9GCcpf     Scott
 jvWHRQaeUN     Tristan
 L5G0fi1P1T     Fish
 UOl9ieuNTH     Cedric
 zQzHYg1f_X     Xavier
 
-Date: 4/26
+Date: 04/26
 -4Mt9GCcpf     Scott
 zQzHYg1f_X     Xavier
 L5G0fi1P1T     Fish
 UOl9ieuNTH     Cedric
 gpL6BdHM3Z     Raymond
 
-Date: 4/29
+Date: 04/29
 gpL6BdHM3Z     Raymond
 L5G0fi1P1T     Fish
 UOl9ieuNTH     Cedric
@@ -44,7 +44,7 @@ Tfv9gQlCKp     Kynan
 FIgidiXEkn     Jacob
 -4Mt9GCcpf     Scott
 
-Date: 5/04
+Date: 05/04
 -4Mt9GCcpf     Scott
 UOl9ieuNTH     Cedric
 EUC1-Ekcwo     Bill
@@ -56,24 +56,24 @@ FHfdGMNnXa     Marshall
 UPoeIpvEQ4     Regan
 pnFzv-_qqL     Cheyenne
 
-Date: 5/13
+Date: 05/13
 L5G0fi1P1T     Fish
 -4Mt9GCcpf     Scott
 
-Date: 5/17
+Date: 05/17
 L5G0fi1P1T     Fish
 -4Mt9GCcpf     Scott
 F7Ul_O2Igu     Cheyenne
 UOl9ieuNTH     Cedric
 gpL6BdHM3Z     Raymond
 
-Date: 5/20
+Date: 05/20
 L5G0fi1P1T     Fish
 UOl9ieuNTH     Cedric
 -4Mt9GCcpf     Scott
 zQzHYg1f_X     Xavier
 
-Date: 5/24
+Date: 05/24
 gpL6BdHM3Z     Raymond
 yA43wEtccZ     Regan
 UOl9ieuNTH     Cedric
@@ -82,26 +82,28 @@ DAovHf6aFe     Cheyenne
 -4Mt9GCcpf     Scott
 V7WKPs0Ygv     Jacob
 
-Date: 5/27
+Date: 05/27
 -4Mt9GCcpf     Scott
 Q6GqgSgbQq     Ben
 L5G0fi1P1T     Fish
 UOl9ieuNTH     Cedric
 gpL6BdHM3Z     Raymond
 
-Date: 5/28
+Date: 05/28
 L5G0fi1P1T     Fish
 -4Mt9GCcpf     Scott
 
-Date: 5/31
+Date: 05/31
 gpL6BdHM3Z     Raymond
 UOl9ieuNTH     Cedric
 L5G0fi1P1T     Fish
 
-Date: 6/07
+Date: 06/07
 L5G0fi1P1T     Fish
 -4Mt9GCcpf     Scott
 gpL6BdHM3Z     Raymond
 mZh56-rfJ5     Jonathan
 UOl9ieuNTH     Cedric
+
+
 
