@@ -1,5 +1,6 @@
 import copy
 from search import *
+from subtract import *
 
 def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 
@@ -8,7 +9,6 @@ def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 	prevNumPlayers = 0
 	startingStacks = []
 	net = []
-	currNet = []
 
 	for i in range(len(stacks)): # loops through every hand
 		numPlayers = len(stacks[i])
@@ -22,19 +22,20 @@ def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 
 		# Now, change ONLY startingStacks in this loop
 		for (idx, tuple) in enumerate(stackChangeInfo):
-			if tuple[2] == i: # Player is adding on this hand
+			if tuple[2] == i+1: # Player is adding on this hand
 				addOnID = tuple[0]
 				addOnAmount = tuple[1]
-				addOnHand = i
 
 				playerIdx = search(playerIDs, addOnID)
 
 				startingStacks[playerIdx] += (addOnAmount/100)
 
-				print(startingStacks)
+		currNet = subtract(sessionStacks[i], startingStacks)
+		net.append(currNet)
 
 		prevNumPlayers = numPlayers
 
-	print(startingStacks)
+	return net
+
 
 	

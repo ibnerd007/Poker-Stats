@@ -457,12 +457,12 @@ else:
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-writeBankrollsToExcel(ledgerM, playerIDs, date)
+# writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 # Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-writeAvgStatstoExcel(pokerStats.vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeAvgStatstoExcel(pokerStats.vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+#   		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
