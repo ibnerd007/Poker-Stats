@@ -41,6 +41,7 @@ from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
 from writeAvgStatstoExcel import *
+from storePlayerNamesAndIDs import *
 
 from runPokerStats import * # imports date and handTypeDesired
 
@@ -87,7 +88,7 @@ afq = [[], [], []]
 
 cbp = [[], [], [], []] # C-bet %. cbp[[early pos count], [late pos count], [early opportunities count], [late opportunities count]] 
 
-wtsd = [[], []] # went to showdown (%)
+wtsd = [[], []] # went to showdown (%) by position
 wasd = [[], []] # won at showdown (%)
 mwas = [] # money won at showdown ($)
 mwbs = [] # money won before showdown ($) No takers?
@@ -100,10 +101,10 @@ handsPlayed = [[], []] # handsPlayed = [[early], [late]]
 bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer)], [combination (string)], [high card (string)]]
 
 sessionStacks = [] # List that holds stack lists after every hand for every player in session (2D)
-stacks = [] # List that holds stack lists after a given hand for every player in session (1D)
+stacks = [] # List that holds stack lists after a single hand for every player in session (1D)
 
 stackChangeInfo = [] # keeps track of stack add ons or rebuys throughout the session
-bustList = []
+bustList = [] # Keeps track of players that are currently busted
 
 # Variables changing within while loop
 totalPlayed = 0 # total # of hands played
@@ -115,7 +116,7 @@ holdEm = False
 PLO = False # possible hand types
 handType = None # set variable used to determine stats for PLO
 
-aggressorID = None # initalize aggressor ID for program to compare from c-bet statistic
+aggressorID = None # initalize aggressor ID for program to compare for c-bet statistic
 
 # Counter for entire log, choose where to start --------------------------------------------------------------
 i = 0
@@ -131,7 +132,7 @@ while (i < log_rows):
 
 	# Preflop -------------------------------------------------------------
 
-	if (str.find('starting hand #') != -1): # row found, indicates starting new hand
+	if str.find('starting hand #') != -1: # row found, indicates starting new hand
 
 		handType = whichHandType(str, handType)
 
@@ -141,13 +142,12 @@ while (i < log_rows):
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
 		hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
-		startingStackSnapshot = []
 
 		totalPlayed += 1
 
 	# Code must skip every line until it finds a hand that matches desired hand type.
 	# This if statement effectively acts like hand types that are not desired were never played
-	# if handTypeDesired == 'combined', no problem
+	# if handTypeDesired == 'combined', this block is skipped enitrely, and the whole log is processed
 	if handType != handTypeDesired and handTypeDesired != 'combined':
 		i += 1
 		continue
@@ -160,7 +160,7 @@ while (i < log_rows):
 
 	# Pre-flop ----------------------------------------------------------------------------------------
 
-	if (str.find('Player stacks:') != -1): # row found, Players at table are now shown
+	if str.find('Player stacks:') != -1: # row found, Players at table are now shown
 		playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
 
 		# if search(currPlayerIDs[0], 'zQzHYg1f_X') != -1: # Xavier is playing
@@ -194,7 +194,7 @@ while (i < log_rows):
 		# Player is either:
 		# 1. joining the game with his inital stack,
 		# 2. rebuying after a bust OR
-		# 3. sitting back down after standing up
+		# 3. sitting back down after standing up.
 		# We need to know which option is happening. ONLY option 2 is applicable here
 		joinID = getID(str)
 
@@ -216,10 +216,9 @@ while (i < log_rows):
 
 		bustList.append(bustID)
 
-	if str.find('WARNING') != -1 and str.find('adding') != -1:
+	if str.find('WARNING') != -1 and str.find('adding') != -1: # player is adding on to their stack
 		# print('WARNING log message: "{}"\n'.format(str))
 
-		# Player is adding on to their stack
 		addOnID = getID(str)
 		addOnAmount = getNum(str)
 		addOnHand = totalPlayed + 1
@@ -239,10 +238,10 @@ while (i < log_rows):
 			playerDict[vpipID] = name # add new player to this session's dictionary as well
 
 	# Now, look for action preflop: call, raise, and/or 3 bet
-	if beforeFlop == True and str.find('raises') != -1: # Looking for a raise preflop
+	if beforeFlop and str.find('raises') != -1: # Looking for a raise preflop
 		calcPFR(str, pfr, playerIDs, currPlayerIDs)
 
-		if (hasRaised): # this is now a 3 bet
+		if hasRaised: # this is now a 3 bet
 			calcTBP(str, tbp, playerIDs, currPlayerIDs)
 
 		hasRaised = True
@@ -262,7 +261,7 @@ while (i < log_rows):
 		resetList(pfr[2])
 		resetList(tbp[2])
 
-	if beforeTurn == True and getID(str) == aggressorID and (aggressorID in currPlayerIDs[0]):
+	if beforeTurn and getID(str) == aggressorID and (aggressorID in currPlayerIDs[0]):
 		# It is the aggressor's action
 		calcCBP(str, cbp, aggressorID, playerIDs, currPlayerIDs) # c-bet percentage
 
@@ -313,7 +312,8 @@ while (i < log_rows):
 		assert wI != -1, 'winner ID not found in playerIDs somehow'
 		calcBestHands(str, wI, bestHands)
 
-	elif str.find('collected') != -1: # player has won before showdown. No side pots if there is no showdown (no one is all in)
+	elif str.find('collected') != -1: 
+		# player has won before showdown. No side pots if there is no showdown (no one is all in)
 		winnerID = getID(str)
 		pot = getNum(str)
 		calcMWBS(mwbs, pot, winnerID, playerIDs)
@@ -328,8 +328,6 @@ while (i < log_rows):
 
 			
 	i += 1
-	# print(i)
-
 
 # Post-loop calculations ------------------------------------------------------------------------------------------
 for i in range(len(mwas)): 
@@ -345,12 +343,12 @@ wtsdM = calcPercentAndTranspose(handsPlayed, wtsd, 3)
 wasdM = calcPercentAndTranspose(handsPlayed, wasd, 3)
 
 cbpM = calcPercentOfCbpAndTranspose(cbp, 2)
+cbpCountM = transpose(cbp)
 
 af = calcAF(af, actionCount, 2) # not a percentage
 afq = calcAFQ(afq, actionCount, 3) # percentage
 afM = transpose(af)
 afqM = transpose(afq)
-cbpCountM = transpose(cbp)
 
 bestHandsM = transpose(bestHands)
 
@@ -361,15 +359,14 @@ bestHandsM = transpose(bestHands)
 # ledger = [[total buy-in], [total buy-out], [net profit/loss], [# of rebuys]] per player
 ledger = [[], [], [], []]
 appendMultiple(ledger, len(playerIDs))
-# print(ledger)
+
 cols = {'id': 1, 'buy-in': 4, 'buy-out': 5, 'stack': 6, 'net': 7}
 
 # Loop for ledger
 i = 1
 while i < ledger_rows:
-	# print(cols['buy-in'])
 	id = ledger_sheet.cell_value(i, cols['id'])
-	idIndex = search(playerIDs,id)
+	idIndex = search(playerIDs, id)
 	
 	if idIndex == -1: # player did not play this type, but is still in the ledger
 	# Still print their ledger stats for the session
@@ -382,6 +379,7 @@ while i < ledger_rows:
 
 	# Capture the player's buy out
 	buyOut = ledger_sheet.cell_value(i, cols['buy-out'])
+
 	if buyOut != '': # player 'left' the table
 		ledger[1][idIndex] += buyOut
 	else: # player never technically 'left' so still has a 'stack'
@@ -427,6 +425,8 @@ for i in range(len(playerIDs)):
 # print(playerIDs, '\n')
 print(playerNames, '\n')
 
+storePlayerNamesAndIDs(playerNames, playerIDs, '{}/{}'.format(date[0], date[2:4]))
+
 print('Date: {}/{}'.format(date[0], date[2:4]))
 assert len(playerNames) == len(playerIDs), 'One or more player IDs are not in dictionary!'
 
@@ -450,10 +450,10 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl ------------------------------------
 
-if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-	writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs)
-else: 
-	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+# if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
+# 	writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs)
+# else: 
+# 	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
