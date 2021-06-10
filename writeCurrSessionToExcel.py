@@ -9,21 +9,34 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	
 	# wb = openpyxl.Workbook() # create new workbook
 	wb_path = r'Outputs\stats.xlsx'
-
 	wb = openpyxl.load_workbook(wb_path) # load existing workbook
 
-	if handTypeDesired == 'NL':
-		sheet = wb['NL Stats-this session'] # access sheet
-	elif handTypeDesired == 'PLO':
-		sheet = wb['PLO Stats-this session'] # access sheet
-	else: # combined hand types are desired
-		sheet = wb['All Stats-this session'] # access sheet
+	sheetname = '{} Stats-this session'.format(handTypeDesired)
+
+	# Get list of sheets
+	sheets = wb.sheetnames
+
+	# Delete old sheet if it exists, to avoid stacking charts
+	if sheetname in sheets:
+		sheet = wb[sheetname] # Define sheet
+		wb.remove(sheet)
+
+	# Create new sheet with same name, put at first index
+	sheet = wb.create_sheet(sheetname, 0)
 
 	# sheet.insert_rows(1, 2) # Before 1st row, insert 2 columns
 
 	# row = player
 	# column = stat index
 	# value = stat value
+
+	column_headers = ('Player', 'Buy in', 'Buy out', 'Net', 'Rebuys', 'VPIP', 'Pre-flop Raise',
+		'Three-bet', 'Aggression Factor', 'Aggro Frequency', 'Went to showdown', 'Won at showdown',
+		'C-bets', 'C-bet opportunities', 'At showdown', 'Before showdown', 'Hands played')
+
+	# Fill column headers on new sheet
+	for (i, column_name) in enumerate(column_headers):
+		sheet.cell(row=1, column=i+1, value=column_name)
 
 	for i in range(len(playerIDs)): # Fill out player names first
 		sheet.cell(row=i + 2, column=1, value=playerDict[playerIDs[i]])
@@ -73,16 +86,24 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	sheet.cell(row=3, column=20, value=date) # date of session
 
 	# Create 6 separate charts for data
+	# Define chart formatting parameters
+
+	width = 22
+	height = round((9/16)*width, 1)
+	style = 2 # standard
+	shape = 4 # idk what this is
+	first_column_idx = 'A' # Column 1
+	second_column_idx = 'O' # Column 15
 
 	# Pre-flop stats --------------------------------------------------------------------------------
 
 	chart1 = BarChart()
 	chart1.type = "col"
-	chart1.style = 2
+	chart1.style = style
 	chart1.title = "VPIP, Pre-flop raise, 3-bet"
 
-	chart1.width = 24
-	chart1.height = 13.5
+	chart1.width = width
+	chart1.height = height
 
 	chart1.legend.position = 'b'
 	chart1.legend = None
@@ -92,19 +113,19 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = 8
-	sheet.add_chart(chart1, "A14")	
+	chart1.shape = shape 
+	sheet.add_chart(chart1, "{}14".format(first_column_idx))	
 
 	# Aggression factor -----------------------------------------------------------------------------
 
 	chart1 = BarChart()
 	chart1.type = "col"
-	chart1.style = 2
+	chart1.style = style
 	chart1.title = "Aggression Factor"
 	chart1.legend = None
 
-	chart1.width = 24
-	chart1.height = 13.5
+	chart1.width = width
+	chart1.height = height
 
 	chart1.dataLabels = DataLabelList()
 	chart1.dataLabels.showVal = True
@@ -113,21 +134,21 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = 4
-	sheet.add_chart(chart1, "M14")
+	chart1.shape = shape
+	sheet.add_chart(chart1, "{}14".format(second_column_idx))
 
 	# C-bets vs opportunities -----------------------------------------------------------------------
 
 	chart1 = BarChart()
 	chart1.type = "col"
-	chart1.style = 2
+	chart1.style = style
 	chart1.title = "C-bets vs opportunities"
 
 	chart1.dataLabels = DataLabelList()
 	chart1.dataLabels.showVal = True
 
-	chart1.width = 24
-	chart1.height = 13.5
+	chart1.width = width
+	chart1.height = height
 
 	chart1.legend.position = 'b'
 
@@ -135,56 +156,56 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = 4
-	sheet.add_chart(chart1, "A40")
+	chart1.shape = shape
+	sheet.add_chart(chart1, "{}40".format(first_column_idx))
 
 	# WTSD vs WASD ----------------------------------------------------------------------------------
 
 	chart1 = BarChart()
 	chart1.type = "col"
-	chart1.style = 2
+	chart1.style = style
 	chart1.title = "Went to showdown vs Won at showdown"
 
 	chart1.dataLabels = DataLabelList()
 	chart1.dataLabels.showVal = True
 	chart1.legend = None
 
-	chart1.width = 24
-	chart1.height = 13.5
+	chart1.width = width
+	chart1.height = height
 
 	data = Reference(sheet, min_col=10, min_row=1, max_row=len(playerIDs)+1, max_col=11)
 	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = 4
-	sheet.add_chart(chart1, "M40")
+	chart1.shape = shape
+	sheet.add_chart(chart1, "{}40".format(second_column_idx))
 
 	# MWAS vs MWBS ---------------------------------------------------------------------------------
 
 	chart1 = BarChart()
 	chart1.type = "col"
-	chart1.style = 2
+	chart1.style = style
 	chart1.title = "Money won"
 
 	chart1.dataLabels = DataLabelList()
 	chart1.dataLabels.showVal = True
 	chart1.legend.position = 'b'
 	
-	chart1.width = 24
-	chart1.height = 13.5
+	chart1.width = width
+	chart1.height = height
 
 	data = Reference(sheet, min_col=15, min_row=1, max_row=len(playerIDs)+1, max_col=16)
 	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = 4
-	sheet.add_chart(chart1, "A66")
+	chart1.shape = shape
+	sheet.add_chart(chart1, "{}66".format(first_column_idx))
 
 	# # Hands played --------------------------------------------------------------------------------
 
 	chart1 = BarChart()
 	chart1.type = "bar"
-	chart1.style = 2
+	chart1.style = style
 	chart1.title = "Hands played"
 
 	chart1.dataLabels = DataLabelList()
@@ -198,8 +219,8 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = 4
-	sheet.add_chart(chart1, "M66")
+	chart1.shape = shape
+	sheet.add_chart(chart1, "{}66".format(second_column_idx))
 
 	# ---------------------------------------------------------------------------------------------
 
