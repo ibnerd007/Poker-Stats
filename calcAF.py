@@ -7,22 +7,34 @@ def calcAF(af, count, decimals):
 	# AF = (# bets + # raises)/(# calls)
 	# actions = ['bets', 'raises', 'calls', 'folds']
 
+	numPlayers = len(count[0][0])
+
 	for i in range(len(count[0][0])): # player
+
+		# Calculate aggression factor first based on position --------------------------------
 		for j in range(len(count[0])): # position
 
-			if count[2][j][i] != 0:
-				tempAf = (count[0][j][i] + count[1][j][i])/count[2][j][i] # af = (bets + raises)/calls
+			aggressives = count[0][j][i] + count[1][j][i]
+			calls = count[2][j][i]
+
+			if calls != 0:
+				tempAf = aggressives/calls
 			else: # how did they not call once? lol
 				tempAf = -1
 
 			af[j][i] = round(tempAf, decimals)
 
-	for k in range(len(count[0][0])): # Number of players
-		if   af[0][k] == -1 and af[1][k] == -1: afTotal = 0
-		elif af[0][k] == -1:                    afTotal = af[1][k]
-		elif af[1][k] == -1:                    afTotal = af[0][k]
-		else:                                   afTotal = af[0][k] + af[1][k]
+	# Calculate average aggression factor across all positions -------------------------------
+		allAggressives = count[0][0][i] + count[1][0][i] + count[0][1][i] + count[1][1][i]
+		#               (early position                )  (late position                  )
+		allCalls = count[2][0][i] + count[2][1][i]
+		#         (early         ) (late          )
 
-		af[2][k] = round(afTotal/2, decimals)
+		if allCalls != 0:
+			avgTempAf = allAggressives/allCalls
+		else: 
+			avgTempAf = -1
+
+		af[2][i] = round(avgTempAf, decimals)
 
 	return af

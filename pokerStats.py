@@ -443,29 +443,26 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl ------------------------------------
 
-if handTypeDesired == 'combined': # only executes if entire ledger will be parsed from the log file
-	writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs)
-else: 
-	print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired)
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-# writeBankrollsToExcel(ledgerM, playerIDs, date)
+writeBankrollsToExcel(ledgerM, playerIDs, date)
 
 # Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-# writeAvgStatstoExcel(pokerStats.vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-#   		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # --------------------------------------------------------------------------------------------------------------------------
 

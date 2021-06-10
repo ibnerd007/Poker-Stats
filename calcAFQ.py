@@ -13,23 +13,26 @@ def calcAFQ(afq, count, decimals):
 	for i in range(len(count[0][0])): # player
 		for j in range(len(count[0])): # position
 
+			# Calculate aggression factor first based on position --------------------------------
 			totalCount = count[0][j][i] + count[1][j][i] + count[2][j][i] + count[3][j][i]
+			aggressives = count[0][j][i] + count[1][j][i]
 
 			if totalCount != 0:
-				tempAFQ = (count[0][j][i] + count[1][j][i])/totalCount
+				tempAFQ = aggressives/totalCount
 			else:
 				tempAFQ = -1
 
 			afq[j][i] = round(tempAFQ, decimals)
 
-	# Calculate average aggression frequency across both positions
+	# Calculate average aggression frequency across both positions -------------------------------
+		allAggressives = count[0][0][i] + count[1][0][i] + count[0][1][i] + count[1][1][i]
 
-	for k in range(len(count[0][0])): # Number of players
-		if   afq[0][k] == -1: afqTotal = afq[1][k]
-		elif afq[1][k] == -1: afqTotal = afq[0][k]
-		else:                 afqTotal = afq[0][k] + afq[1][k]
+		allTotalCount = count[0][0][i] + count[1][0][i] + count[2][0][i] + count[3][0][i] + \
+						 count[0][1][i] + count[1][1][i] + count[2][1][i] + count[3][1][i]
 
-		afq[2][k] = round(afqTotal/2, decimals)
+		avgTempAfq = allAggressives/allTotalCount
+
+		afq[2][i] = round(avgTempAfq, decimals)
 
 	return afq
 

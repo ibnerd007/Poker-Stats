@@ -4,7 +4,11 @@ from calcAvgSessionStacks import *
 from stacksOverTimeLineChart import *
 from calcNetStacks import *
 
-def writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs):
+def writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired):
+
+	if handTypeDesired != 'combined':
+		print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+		return
 
 	rawDataPath = r'Outputs\stacks_over_time_raw.xlsx'
 	avgDataPath = r'Outputs\stacks_over_time_avg.xlsx'
