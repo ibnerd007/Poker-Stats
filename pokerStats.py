@@ -45,7 +45,7 @@ from whoPlayedWhen import *
 
 from runPokerStats import * # imports date and handTypeDesired
 
-dateFormat = '{}/{}'.format(date[0:2], date[2:4])
+dateFormat = '{}/{}'.format(date[:2], date[2:])
 
 handTypes = ['NL', 'PLO', 'combined']
 assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -448,8 +448,8 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
+# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
 
 # Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl ------------------------------------
 
@@ -457,7 +457,7 @@ writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, m
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-# writeBankrollsToExcel(ledgerM, playerIDs, date)
+# writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
 
 # Update the all-time stats for players if not already entered -------------------------------------------------------------
 

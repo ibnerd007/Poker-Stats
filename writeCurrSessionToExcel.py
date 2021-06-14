@@ -83,6 +83,7 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	sheet.delete_rows(row, sheet.max_row) # delete rows that may remain from previous sessions
 
+	sheet.cell(row=2, column=20, value='Date') # date of session
 	sheet.cell(row=3, column=20, value=date) # date of session
 
 	# Create 6 separate charts for data

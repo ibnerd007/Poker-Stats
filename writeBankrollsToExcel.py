@@ -1,7 +1,7 @@
 import openpyxl
 from search import *
 
-def writeBankrollsToExcel(ledgerM, playerIDs, date):
+def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric, Cheyenne, Tristan
@@ -32,15 +32,15 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 		cellDate = sheet.cell(row=i, column=1).value
 		dates.append(cellDate)
 
-	if search(dates, date) != -1: # data from this date has been entered previously
+	if search(dates, dateFormat) != -1: # data from this date has been entered previously
 		print('Bankroll data not filled... this session already entered\n')
 		return
 	else: # add date to column
 		print('Adding bankroll data...\n')
 		if dates == [None]:
-			sheet.cell(row=sheet.max_row, column=1, value=date)
+			sheet.cell(row=sheet.max_row, column=1, value=dateFormat)
 		else:
-			sheet.cell(row=sheet.max_row + 1, column=1, value=date)
+			sheet.cell(row=sheet.max_row + 1, column=1, value=dateFormat)
 
 	# 3. Add net to current net for each player -----------------------------------------------
 
@@ -80,13 +80,10 @@ def writeBankrollsToExcel(ledgerM, playerIDs, date):
 			UNCHbankroll         = sheet.cell(row=sheet.max_row-1, column=netCols[i] + 1).value
 			UNCHownMoneyInvested = sheet.cell(row=sheet.max_row-1, column=netCols[i] + 2).value
 
-			sheet.cell(row=sheet.max_row, column=netCols[i] - 1, value='Didn\'t play') # set bankroll
+			sheet.cell(row=sheet.max_row, column=netCols[i] - 1, value='Didn\'t play')
 			sheet.cell(row=sheet.max_row, column=netCols[i], value=UNCHnet)
 			sheet.cell(row=sheet.max_row, column=netCols[i] + 1, value=UNCHbankroll) # set bankroll
 			sheet.cell(row=sheet.max_row, column=netCols[i] + 2, value=UNCHownMoneyInvested) # all values are unchanged from previous
-		
-
-		# 4. Adjust bankrolls & own money invested for all players ---------------------------
 
 
 	wb.save(wb_path)
