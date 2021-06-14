@@ -443,26 +443,26 @@ assert len(playerNames) > 0, 'No hands of this type were played this session.'
 
 # Call this to see all stats for all players in session --------------------------------------------------------------------
 
-# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 # Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
+writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
 
 # Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl ------------------------------------
 
-# writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired)
+writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired)
 
 # Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-# writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
+writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
 
 # Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-# writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-#   		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
