@@ -9,7 +9,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
 	# Read:    playerName = sheet.cell(row=2, column=1).value
 	# Write:   sheet.cell(row=i + 2, column=1, value=playerDict[playerIDs[i]])
 
-	bankrollIDs = ['L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH', 'DAovHf6aFe']
+	bankrollIDs = ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH', 'DAovHf6aFe')
 	#               Fish          Raymond       Scott         Cedric        Cheyenne
 
 	# 1. Open workbook and sheet
@@ -48,9 +48,10 @@ def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
 		index = search(playerIDs, bankrollIDs[i])
 		if index == -1 and i == 4: # on Cheyenne, search for alternate ID
 			index = search(playerIDs, 'pnFzv-_qqL')
+		if index == -1 and i == 2: # on Scott, search for mobile ID instead
+			index = search(playerIDs, 'X6PyKTwqmn') 
 
 		newNet = sheet.cell(row=sheet.max_row-1, column=netCols[i]).value
-
 
 		if index != -1: # player played the session. Else, net remains the same as previously
 			newNet += ledgerM[index][2]

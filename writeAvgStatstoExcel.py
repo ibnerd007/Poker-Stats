@@ -26,7 +26,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 	# 2. Establish players of interest, and make sure date is not entered previously ----------------
 
-	statIDs = ['L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH']
+	statIDs = ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH')
 	#           fish          raymond       scott         cedric
 
 	dates = []
@@ -52,7 +52,9 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 	playerIndices = {}
 
-	for ID in statIDs:
+	for (i, ID) in enumerate(statIDs):
+		if i == 2 and ID != '-4Mt9GCcpf': # Scott is on mobile
+			ID = 'X6PyKTwqmn'
 		playerIndices[ID] = search(playerIDs, ID)
 
 	# 4. Fill sheet with data

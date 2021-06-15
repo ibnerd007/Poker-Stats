@@ -80,6 +80,6 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wt
 
 		totalPlayedbyPlayer = handsPlayed[0][i]+handsPlayed[1][i]
 		print('%s played %d hands this session.' % (playerDict[playerIDs[i]], totalPlayedbyPlayer))
-		# print('Best hand: %s - %s' % (bestHandsM[i][0], bestHandsM[i][2]))
+		print('Best hand: %s - %s' % (bestHandsM[i][0], bestHandsM[i][2]))
 
 		print('----------------------------------------------------------------------\n')
