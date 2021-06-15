@@ -31,7 +31,7 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	# value = stat value
 
 	column_headers = ('Player', 'Buy in', 'Buy out', 'Net', 'Rebuys', 'VPIP', 'Pre-flop Raise',
-		'Three-bet', 'Aggression Factor', 'Aggro Frequency', 'Went to showdown', 'Won at showdown',
+		'Three-bet', 'Aggro Frequency', 'Went to showdown', 'Won at showdown', 'Aggression Factor',
 		'C-bets', 'C-bet opportunities', 'At showdown', 'Before showdown', 'Hands played')
 
 	# Fill column headers on new sheet
