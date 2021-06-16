@@ -3,7 +3,7 @@ import os
 from poker_stats import pokerStats
 from tkinter import *
 
-date = '0610'
+date = '061021'
 handTypeDesired = 'NL'
 
 handTypes = ('combined', 'NL', 'PLO')
@@ -25,8 +25,8 @@ def run():
 
 	# Now that variables are defined, run Poker Stats
 	def runPokerStats():
-		date = clicked.get()
-		pokerStats(date, 'NL')
+		# date = clicked.get()
+		pokerStats('061021', 'NL')
 
 	# Dropdown menu options
 	logs = os.listdir('Logs')

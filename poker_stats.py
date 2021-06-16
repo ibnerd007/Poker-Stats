@@ -43,7 +43,7 @@ from whoPlayedWhen import *
 
 def pokerStats(date, handTypeDesired):
 
-	dateFormat = '{}/{}'.format(date[:2], date[2:])
+	dateFormat = '{}/{}'.format(date[:2], date[2:4])
 
 	handTypes = ['NL', 'PLO', 'combined']
 	assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -455,12 +455,12 @@ def pokerStats(date, handTypeDesired):
 
 		# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-		writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
+		# writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
 
 		# Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-		  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+		# writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+		#   		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 	else: print('No hands of this type ({}) were played this session.\n'.format(handTypeDesired))
 
