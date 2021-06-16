@@ -33,7 +33,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
 		dates.append(cellDate)
 
 	if search(dates, dateFormat) != -1: # data from this date has been entered previously
-		print('Bankroll data not filled... this session already entered\n')
+		# print('Bankroll data not filled... this session already entered\n')
 		return
 	else: # add date to column
 		print('Adding bankroll data...\n')

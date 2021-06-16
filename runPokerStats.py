@@ -1,8 +1,11 @@
-# set date of session & poker type desired (Holdem, PLO, or both)
+import runpy
+
 date = '0614'
+handTypeDesired = 'NL'
 
-# handTypes = ['NL', 'PLO', 'combined']
-handTypeDesired = 'combined'
+runpy.run_path('pokerStats.py')
 
-import pokerStats
+# date = '0504'
+# handTypeDesired = 'NL'
 
+# runpy.run_path('pokerStats.py')

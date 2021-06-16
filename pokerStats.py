@@ -32,8 +32,6 @@ from calcMWBS import *
 from calcBestHands import *
 from calcCBP import *
 
-from reportPercentages import *
-from reportDecimals import *
 from printAllStatsForAllPlayers import *
 
 from writeCurrSessionToExcel import *
@@ -43,7 +41,14 @@ from writeStacksOverTimetoExcel import *
 from writeAvgStatstoExcel import *
 from whoPlayedWhen import *
 
-from runPokerStats import * # imports date and handTypeDesired
+# from runPokerStats import date, handTypeDesired
+
+# Input variables --------------------------------------------------
+
+date = '0614'
+handTypeDesired = 'combined'
+
+# ------------------------------------------------------------------
 
 dateFormat = '{}/{}'.format(date[:2], date[2:])
 
@@ -58,8 +63,8 @@ playerDict = createPlayerDict()
 
 # Find path to Excel spreadsheet with log and ledger
 
-path_log = "Logs/log_%s.xls" % date
-path_ledger = "Ledgers/ledger_%s.xls" % date
+path_log = "Logs/log_{}.xls".format(date)
+path_ledger = "Ledgers/ledger_{}.xls".format(date)
 
 log_book = xlrd.open_workbook(path_log)
 log_sheet = log_book.sheet_by_index(0)
@@ -140,6 +145,9 @@ while (i < log_rows):
 
 		if not str.find('dead button') != -1: # dead button has NOT been found
 			dealerID = startingHandNumber(str) # dealer ID is determined and returned from this function
+		else:
+			dealerID = 'notAnID' # dummy ID in case there is a dead button on first hand
+			# This is possible if someone stands up before the start of the first hand
 
 		currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 		hasFolded = [] # Tracks who has folded in the hand
@@ -250,7 +258,7 @@ while (i < log_rows):
 
 	# Search for pre-flop aggressor for C-bet statistic
 
-	if beforeFlop == True and str.find('raises') != -1: # raise has been found
+	if beforeFlop and str.find('raises') != -1: # raise has been found
 		aggressorID = getID(str) # the latest raiser is the aggressor
 
 	# Flop --------------------------------------------------------------------------------------------
@@ -416,8 +424,6 @@ for i in range(len(playerIDs)):
 # 3. Type of poker analyzed (pokerType)
 # 4. Statistics & bankroll
 
-# print(playerIDs, '\n')
-
 print('The following people played this session:')
 playerNames = []
 for i in range(len(playerIDs)):
@@ -429,43 +435,45 @@ print(playerNames, '\n')
 
 whoPlayedWhen(playerNames, playerIDs, dateFormat)
 
-print('Date: {}'.format(dateFormat))
-
 assert len(playerNames) == len(playerIDs), 'One or more player IDs are not in dictionary!'
 
 if   holdEm == True  and PLO == False: pokerType = 'No Limit Texas Hold\'em\n'
 elif holdEm == False and PLO == True : pokerType = 'Pot Limit Omaha\n'
 else:                                  pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
 
-print(pokerType)
+print('Date: {}'.format(dateFormat))
+print('Poker type: ', pokerType)
+print('handTypeDesired =', handTypeDesired, '\n')
 
-assert len(playerNames) > 0, 'No hands of this type were played this session.'
+if len(playerNames) > 0:
+	# Call this to see all stats for all players in session --------------------------------------------------------------------
 
-# Call this to see all stats for all players in session --------------------------------------------------------------------
+	printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+							   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
-printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+	# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-# Now, write current session stats for all players to Excel ----------------------------------------------------------------
+	writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+				 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
 
-writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
+	# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 
-# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl ------------------------------------
+	writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired)
 
-writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired)
+	# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
+	writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
 
-writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
+	# Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-# Update the all-time stats for players if not already entered -------------------------------------------------------------
+	writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+	  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
-writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+else: print('No hands of this type ({}) were played this session.\n'.format(handTypeDesired))
 
 # --------------------------------------------------------------------------------------------------------------------------
 
 print('Date: {}'.format(dateFormat))
 print('Poker type: ', pokerType)
 print('handTypeDesired =', handTypeDesired, '\n')
+print('------------------------------------------------------------------------------------------------------')

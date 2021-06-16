@@ -37,7 +37,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 	# dates is now filled
 
 	if search(dates, date) != -1: # data from this date has been entered previously
-		print('Average stat data not filled... this session already entered\n')
+		# print('Average stat data not filled... this session already entered\n')
 		return
 	else: # add date to column
 		print('Adding average stat data...\n')
