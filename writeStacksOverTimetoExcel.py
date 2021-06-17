@@ -4,10 +4,10 @@ from calcAvgSessionStacks import *
 from stacksOverTimeLineChart import *
 from calcNetStacks import *
 
-def writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired):
+def writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat):
 
 	if handTypeDesired != 'combined':
-		print("Stacks over time not filled, handTypeDesired != 'combined'\n")
+		# print("Stacks over time not filled, handTypeDesired != 'combined'\n")
 		return
 
 	rawDataPath = r'Outputs\stacks_over_time_raw.xlsx'
@@ -42,9 +42,9 @@ def writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, play
 
 	# Create line charts in Excel for the data -----------------------------------------------------------
 
-	stacksOverTimeLineChart(rawDataPath, playerNames, sessionStacks)
-	stacksOverTimeLineChart(avgDataPath, playerNames, avgStacks, 10)
+	stacksOverTimeLineChart(rawDataPath, playerNames, sessionStacks, dateFormat)
+	stacksOverTimeLineChart(avgDataPath, playerNames, avgStacks, dateFormat, 10)
 
-	stacksOverTimeLineChart(rawNetDataPath, playerNames, net)
-	stacksOverTimeLineChart(avgNetDataPath, playerNames, avgNet, 10)
+	stacksOverTimeLineChart(rawNetDataPath, playerNames, net, dateFormat)
+	stacksOverTimeLineChart(avgNetDataPath, playerNames, avgNet, dateFormat, 10)
 

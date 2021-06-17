@@ -30,16 +30,15 @@ handTypes = ('combined', 'NL', 'PLO')
 
 
 def run():
-	output0 = ''
-	output1 = ''
-	output2 = ''
+	bg = 'light blue'
 
 	# Create object
 	window = Tk()
 	window.title('PokerNow Stats')
+	window.configure(background=bg)
 
 	# Adjust size
-	window.geometry("400x400")
+	window.geometry("500x400")
 
 	# Now that variables are defined, run Poker Stats
 	def runPokerStats():
@@ -54,11 +53,15 @@ def run():
 
 		pokerStats(date, 'NL',       includeCMD)
 		pokerStats(date, 'PLO',      includeCMD)
-		pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
+		output = pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
 
-		# output0 = assignOutput(output, 0)
-		# output1 = assignOutput(output, 1)
-		# output2 = assignOutput(output, 2) # Outputs are various messages displayed by the GUI
+		status1.configure(state=NORMAL)
+		status1.delete('1.0', END)
+		status1.insert(END, 'Session date: {}\n\n'.format(output[0]))
+		status1.insert(END, '{}\n\n'.format(output[1]))
+		status1.insert(END, output[2])
+		status1.configure(state=DISABLED)
+
 
 	def setState(): # disabled hand types if CMD output not wanted
 
@@ -80,16 +83,6 @@ def run():
 			check4.deselect()
 			check4.config(state=DISABLED)
 
-	def assignOutput(output, idx):
-		if idx == 0:
-			output = 'This session was played on {}'.format(output[0])
-		elif idx == 1:
-			output = 'The following people played: {}'.format(output[1])
-		elif idx == 2:
-			output = '{} was/were played during the session'.format(output[2])
-
-		return output
-
 	# Dropdown menu options
 	logs = os.listdir('Logs')
 	options = [''] * len(logs) # initialize list
@@ -103,10 +96,10 @@ def run():
 	clicked.set(options[-1]) # set to penultimate element (most recent date) in list
 
 	# Create welcome Label
-	welcome = Label( window , text = "Welcome to PokerNow Stats!", font='Arial 14' )
+	welcome = Label( window , text = "Welcome to PokerNow Stats!", font='Arial 14', bg=bg )
 	welcome.pack(pady=5)
 
-	instruct = Label( window , text = "Choose your date from the dropdown below." )
+	instruct = Label( window , text = "Choose your date from the dropdown below.", bg=bg )
 	instruct.pack()
 
 	# Create Dropdown menu
@@ -118,30 +111,27 @@ def run():
 	checkVar3 = IntVar()
 	checkVar4 = IntVar()
 
-	check1 = Checkbutton(window, text = 'Include command line output?', variable=checkVar1, command=setState)
+	check1 = Checkbutton(window, text = 'Include command line output?', variable=checkVar1, command=setState, bg=bg)
 	check1.pack(pady=5)
 
 	# The following checkbuttons allow the user to specify command line output desired.
-	check2 = Checkbutton(window, text = 'NL Texas Hold\'em', variable = checkVar2, state=DISABLED)
+	check2 = Checkbutton(window, text = 'NL Texas Hold\'em', variable = checkVar2, state=DISABLED, bg=bg)
 	check2.pack()
 
-	check3 = Checkbutton(window, text = 'Pot Limit Omaha', variable = checkVar3, state=DISABLED)
+	check3 = Checkbutton(window, text = 'Pot Limit Omaha', variable = checkVar3, state=DISABLED, bg=bg)
 	check3.pack()
 
-	check4 = Checkbutton(window, text = 'Both combined', variable = checkVar4, state=DISABLED)
+	check4 = Checkbutton(window, text = 'Both combined', variable = checkVar4, state=DISABLED, bg=bg)
 	check4.pack()
 
 	# Create run button that calls runPokerStats()
 	button = Button( window , text = "Run" , width=8, command = runPokerStats ).pack(pady=10)
 
-	# status1 = Label( window , text = output0 )
-	# status1.pack(pady=5)
+	status1 = Text(window, height=8, wrap=WORD, bg=bg, relief=FLAT, font='TkDefaultFont')
+	status1.pack(pady=5)
 
-	# status2 = Label( window , text = output1 )
-	# status2.pack(pady=5)
-
-	# status3 = Label( window , text = output2 )
-	# status3.pack(pady=5)
+	status2 = Text(window, height=1, wrap=WORD, bg=bg, relief=FLAT, font='TkDefaultFont')
+	status1.pack(pady=2)
 
 	# Execute tkinter
 	window.mainloop()

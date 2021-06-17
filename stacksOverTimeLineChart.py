@@ -4,7 +4,7 @@ from openpyxl.chart import (
     Reference
 )
 
-def stacksOverTimeLineChart(path, playerNames, stacks, n=None):
+def stacksOverTimeLineChart(path, playerNames, stacks, dateFormat, n=None):
 	# Creates and styles line chart for stacks over time
 
 	wb = openpyxl.load_workbook(path)
@@ -16,9 +16,9 @@ def stacksOverTimeLineChart(path, playerNames, stacks, n=None):
 
 	c1 = LineChart()
 	if 'avg' in path:
-		c1.title = '{} this session: {}-hand moving averages'.format(name, n)
+		c1.title = '{} this session ({}): {}-hand moving averages'.format(name, dateFormat, n)
 	else:
-		c1.title = '{} for this session'.format(name, n)
+		c1.title = '{} for this session ({})'.format(name, dateFormat)
 
 	c1.style = 2
 	c1.x_axis.title = 'Hand'
