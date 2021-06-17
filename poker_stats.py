@@ -41,9 +41,9 @@ from writeStacksOverTimetoExcel import *
 from writeAvgStatstoExcel import *
 from whoPlayedWhen import *
 
-def pokerStats(date, handTypeDesired):
+def pokerStats(date, handTypeDesired, includeCMD):
 
-	dateFormat = '{}/{}'.format(date[:2], date[2:4])
+	dateFormat = '{}/{}/{}'.format(date[:2], date[2:4], date[4:])
 
 	handTypes = ['NL', 'PLO', 'combined']
 	assert handTypeDesired in handTypes, 'Hand type not recognized'
@@ -432,26 +432,28 @@ def pokerStats(date, handTypeDesired):
 
 	if   holdEm == True  and PLO == False: pokerType = 'No Limit Texas Hold\'em\n'
 	elif holdEm == False and PLO == True : pokerType = 'Pot Limit Omaha\n'
-	else:                                  pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
+	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
+	else								 : pokerType = "N/A"
 
-	print('Date: {}'.format(dateFormat))
+	print('Date: ', dateFormat)
 	print('Poker type: ', pokerType)
-	print('handTypeDesired =', handTypeDesired, '\n')
+	print('handTypeDesired: ', handTypeDesired, '\n')
 
 	if len(playerNames) > 0:
 		# Call this to see all stats for all players in session --------------------------------------------------------------------
 
-		printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-								   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+		# if includeCMD[handTypeDesired] == 1:
+			# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-					 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
+		# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+		# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
 
 		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 
-		writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired)
+		# writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired)
 
 		# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
@@ -459,8 +461,8 @@ def pokerStats(date, handTypeDesired):
 
 		# Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-		# writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-		#   		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+		  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 	else: print('No hands of this type ({}) were played this session.\n'.format(handTypeDesired))
 
@@ -470,3 +472,7 @@ def pokerStats(date, handTypeDesired):
 	print('Poker type: ', pokerType)
 	print('handTypeDesired =', handTypeDesired, '\n')
 	print('------------------------------------------------------------------------------------------------------')
+
+	output = (dateFormat, playerNames, pokerType)
+
+	return output

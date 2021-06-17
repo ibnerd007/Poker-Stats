@@ -9,7 +9,7 @@ def whoPlayedWhen(names, IDs, date):
 	for (i, line) in enumerate(f):
 		if 'Date: ' in line:
 			line = line.replace('\n', '')
-			prevDates.append(line[6:])
+			prevDates.append(line[6:]) # Text past 'Date: '
 
 	f.close()
 

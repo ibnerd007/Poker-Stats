@@ -46,7 +46,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 		else:
 			sheet.cell(row=sheet.max_row + 1, column=1, value=date)
 
-	print('Dates:', dates)
+	# print('Dates:', dates)
 
 	# 3. Capturing player indices ------------------------------------------------------------------
 
