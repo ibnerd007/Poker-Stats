@@ -4,7 +4,7 @@ from poker_stats import pokerStats
 from tkinter import *
 
 # date = '061021'
-handTypeDesired = 'NL'
+# handTypeDesired = 'combined'
 
 handTypes = ('combined', 'NL', 'PLO')
 
@@ -31,7 +31,7 @@ def run():
 	def runPokerStats():
 		date = clicked.get()
 		date = date.replace('/', '') # remove slashes to make filename readable
-		pokerStats(date, 'NL')
+		pokerStats(date, 'combined')
 
 	def setState(): # disabled hand types if CMD output not wanted
 
