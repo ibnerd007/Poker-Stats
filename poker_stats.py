@@ -38,6 +38,7 @@ from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
 from writeStacksOverTimetoExcel import *
+from writeStatsOverTimeToExcel import *
 from writeAvgStatstoExcel import *
 from whoPlayedWhen import *
 
@@ -338,6 +339,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		mwbs[i] /= 100 # turn into dollar amounts
 
 	# Calculate stat percentages by player in early, late, and total position
+	# statM is indexed: statM[player (0-len(playerIDs))][position (0-2)]
 
 	vpipM = calcPercentAndTranspose(handsPlayed, vpip, 3)
 	pfrM = calcPercentAndTranspose(handsPlayed, pfr, 3)
@@ -354,8 +356,6 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	afqM = transpose(afq)
 
 	bestHandsM = transpose(bestHands)
-
-	# print(playerIDs, '\n')
 
 	# ---------------------------------------------------------------------
 
@@ -442,37 +442,37 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	if len(playerNames) > 0:
 		# Call this to see all stats for all players in session --------------------------------------------------------------------
 
-		if includeCMD[handTypeDesired] == 1:
-			printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-									   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+		# if includeCMD[handTypeDesired] == 1:
+			# printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+			# 						   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
 
 		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-					 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
+		# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+		# 			 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
 
 		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 
-		writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat)
+		# writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat)
+
+		# Keep track of stats across multiple sessions, much like bankrolls --------------------------------------------------------
+
+		writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+								  playerIDs, dateFormat, handTypeDesired)
 
 		# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-		writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
+		# writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
 
 		# Update the all-time stats for players if not already entered -------------------------------------------------------------
 
-		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-		  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+		# writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+		#   		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
 
 	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 
 	# --------------------------------------------------------------------------------------------------------------------------
 
-	# print('Date: {}'.format(dateFormat))
-	# print('Poker type: ', pokerType)
-	# print('handTypeDesired =', handTypeDesired, '\n')
-	# print('------------------------------------------------------------------------------------------------------')
-
-	output = (dateFormat, playerNames, pokerType)
+	output = (dateFormat, playerNames, pokerType) # output to display on the tkinter GUI
 
 	return output
