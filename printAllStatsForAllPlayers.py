@@ -22,7 +22,12 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wt
 
 		stats.add_row(['', '', '', '']) # empty row
 
-		stats.add_row(['Aggression factor', '{:.2f}'.format(afM[i][2]),        '{:.2f}'.format(afM[i][0]),        '{:.2f}'.format(afM[i][1])])
+		afPrintM = [0] * len(afM[i])
+		for pos, af in enumerate(afM[i]):
+			if af != -1: afPrintM[pos] = afM[i][pos]
+			else:        afPrintM[pos] = 'N/A'
+
+		stats.add_row(['Aggression factor', '{}'.format(afPrintM[2]),        '{}'.format(afPrintM[0]),        '{}'.format(afPrintM[1])])
 		stats.add_row(['Aggression freq',   '{:.1f} %'.format(afqM[i][2]*100), '{:.1f} %'.format(afqM[i][0]*100), '{:.1f} %'.format(afqM[i][1]*100)])
 
 		stats.add_row(['', '', '', '']) # empty row
@@ -39,6 +44,14 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wt
 		stats.add_row(['Won at showdown (abs)',  '{:.1f} %'.format(wasdM[i][2]*100), '{:.1f} %'.format(wasdM[i][0]*100), '{:.1f} %'.format(wasdM[i][1]*100)])
 		
 		stats.add_row(['', '', '', '']) # empty row
+
+		# Relative stats can result in divide by 0. Denote this in prettytable if necessary
+
+		# wasdRelPrintM = [0] * len(wasdRelM[i])
+		# for pos, wasdRel in enumerate(wasdRelM[i]):
+		# 	if wasdRel != -1: wasdRelPrintM[pos] = round(wasdRelM[i][pos], 1)
+		# 	else:             wasdRelPrintM[pos] = 0.0
+		# stats.add_row(['Won at showdown (rel)',  '{} %'.format(wasdRelPrintM[2]*100), '{} %'.format(wasdRelPrintM[0]*100), '{} %'.format(wasdRelPrintM[1]*100)])		
 
 		stats.add_row(['Won at showdown (rel)',  '{:.1f} %'.format(wasdRelM[i][2]*100), '{:.1f} %'.format(wasdRelM[i][0]*100), '{:.1f} %'.format(wasdRelM[i][1]*100)])		
 

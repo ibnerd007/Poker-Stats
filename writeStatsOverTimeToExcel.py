@@ -2,7 +2,7 @@ import openpyxl
 from search import *
 import time
 
-def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
 							  playerIDs, dateFormat, handTypeDesired):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
@@ -64,7 +64,7 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdM, 
 		# print('max row =', sheet.max_row)
 
 		playerStats = (vpipM[pI][2], pfrM[pI][2], tbpM[pI][2], afqM[pI][2], 
-			wtsdM[pI][2], wasdM[pI][2], cbpM[pI][2], afM[pI][2]) # stats are across all positions
+			wtsdM[pI][2], wasdRelM[pI][2], cbpM[pI][2], afM[pI][2]) # stats are across all positions
 
 		if pI != -1: # player played the session. Else, net remains the same as previously
 
