@@ -1,4 +1,7 @@
 import openpyxl
+from openpyxl.chart import BarChart, Series, Reference
+from openpyxl.chart.label import DataLabelList
+
 from search import *
 import time
 
@@ -70,9 +73,12 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 			for j, stat in enumerate(playerStats):
 				# set each stat one by one in a nested loop
-				sheet.cell(row=sheet.max_row, column=vpipCols[i] + j, value=stat)
+				if stat == -1:
+					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j, value=0)
+				else:
+					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j, value=stat)
 				
-				if j != 7: # NOT aggression frequency
+				if j != 7: # NOT aggression factor
 					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j).number_format = '0.0%'
 				else:
 					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j).number_format = '0.00'
@@ -81,5 +87,167 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 			sheet.cell(row=sheet.max_row, column=vpipCols[i] - 1, value='Didn\'t play')
 			# Don't fill anything else
 
+	# Initialize bar chart variables ------------------------------------------------------------
+	sheetname = ''
+	
+	if handTypeDesired == 'NL':
+		chartsheet = wb['NL charts'] # access sheet
+		sheetname = 'NL charts'
+
+	elif handTypeDesired == 'PLO':
+		chartsheet = wb['PLO charts'] # access sheet
+		sheetname = 'PLO charts'
+
+	else: # combined hand types are desired
+		chartsheet = wb['combined charts'] # access sheet
+		sheetname = 'combined charts'
+
+	wb.remove(chartsheet)
+
+	# Create new sheet with same name, put at penultimate index
+	chartsheet = wb.create_sheet(sheetname, -1)
+
+	first_column_idx = 'A'
+	second_column_idx = 'T'
+	width = 40
+	height = 10
+	style = 2
+	shape = 4
+
+	# Add bar charts -----------------------------------------------------------------------------
+	
+	chart1 = BarChart()
+	chart1.type = "col"
+	chart1.style = style
+	chart1.title = "VPIP"
+
+	chart1.width = width
+	chart1.height = height
+	chart1.shape = shape 
+
+	chart1.legend.position = 'r'
+	# chart1.legend = None
+	# chart1.x_axis.title = ''
+
+	data_fish = Reference(sheet, min_col=vpipCols[0], min_row=2, max_row=sheet.max_row+1)
+	data_raymond = Reference(sheet, min_col=vpipCols[1], min_row=2, max_row=sheet.max_row+1)
+	data_scott = Reference(sheet, min_col=vpipCols[2], min_row=2, max_row=sheet.max_row+1)
+	data_cedric = Reference(sheet, min_col=vpipCols[3], min_row=2, max_row=sheet.max_row+1)
+
+	series_fish = Series(data_fish, title='Fish')
+	series_raymond = Series(data_raymond, title='Raymond')
+	series_scott = Series(data_scott, title='Scott')
+	series_cedric = Series(data_cedric, title='Cedric')
+
+	chart1.append(series_fish)
+	chart1.append(series_raymond)
+	chart1.append(series_scott)
+	chart1.append(series_cedric)
+
+	cats = Reference(sheet, min_col=1, min_row=2, max_row=sheet.max_row)
+	chart1.set_categories(cats)
+
+	chartsheet.add_chart(chart1, "{}2".format(first_column_idx))
+
+	# ------------------------------------------------------------------------------------------
+
+	chart1 = BarChart()
+	chart1.type = "col"
+	chart1.style = style
+	chart1.title = "Aggression Frequency"
+
+	chart1.width = width
+	chart1.height = height
+	chart1.shape = shape 
+
+	chart1.legend.position = 'r'
+	# chart1.legend = None
+	# chart1.x_axis.title = ''
+
+	data_fish =    Reference(sheet, min_col=vpipCols[0] + 3, min_row=2, max_row=sheet.max_row+1)
+	data_raymond = Reference(sheet, min_col=vpipCols[1] + 3, min_row=2, max_row=sheet.max_row+1)
+	data_scott =   Reference(sheet, min_col=vpipCols[2] + 3, min_row=2, max_row=sheet.max_row+1)
+	data_cedric =  Reference(sheet, min_col=vpipCols[3] + 3, min_row=2, max_row=sheet.max_row+1)
+
+	series_fish = Series(data_fish, title='Fish')
+	series_raymond = Series(data_raymond, title='Raymond')
+	series_scott = Series(data_scott, title='Scott')
+	series_cedric = Series(data_cedric, title='Cedric')
+
+	chart1.append(series_fish)
+	chart1.append(series_raymond)
+	chart1.append(series_scott)
+	chart1.append(series_cedric)
+
+	cats = Reference(sheet, min_col=1, min_row=2, max_row=sheet.max_row)
+	chart1.set_categories(cats)
+
+	chartsheet.add_chart(chart1, "{}23".format(first_column_idx))
+
+	# ---------------------------------------------------------------------------------------------
+
+	chart1 = BarChart()
+	chart1.type = "col"
+	chart1.style = style
+	chart1.title = "Won at showdown"
+
+	chart1.width = width
+	chart1.height = height
+	chart1.shape = shape 
+
+	chart1.legend.position = 'r'
+	# chart1.legend = None
+	# chart1.x_axis.title = ''
+
+	data_fish =    Reference(sheet, min_col=vpipCols[0] + 5, min_row=2, max_row=sheet.max_row+1)
+	data_raymond = Reference(sheet, min_col=vpipCols[1] + 5, min_row=2, max_row=sheet.max_row+1)
+	data_scott =   Reference(sheet, min_col=vpipCols[2] + 5, min_row=2, max_row=sheet.max_row+1)
+	data_cedric =  Reference(sheet, min_col=vpipCols[3] + 5, min_row=2, max_row=sheet.max_row+1)
+
+	series_fish =    Series(data_fish,    title='Fish')
+	series_raymond = Series(data_raymond, title='Raymond')
+	series_scott =   Series(data_scott,   title='Scott')
+	series_cedric =  Series(data_cedric,  title='Cedric')
+
+	chart1.append(series_fish)
+	chart1.append(series_raymond)
+	chart1.append(series_scott)
+	chart1.append(series_cedric)
+
+	cats = Reference(sheet, min_col=1, min_row=2, max_row=sheet.max_row)
+	chart1.set_categories(cats)
+
+	chartsheet.add_chart(chart1, "{}44".format(first_column_idx))
+
+	# --------------------------------------------------------------------------------------------
+
+	chart1 = BarChart()
+	chart1.type = "col"
+	chart1.style = style
+	chart1.title = "C-bet %"
+
+	chart1.width = width
+	chart1.height = height
+	chart1.shape = shape 
+
+	chart1.legend.position = 'r'
+	# chart1.legend = None
+	# chart1.x_axis.title = ''
+
+	data_raymond = Reference(sheet, min_col=vpipCols[1] + 6, min_row=2, max_row=sheet.max_row+1)
+	data_scott =   Reference(sheet, min_col=vpipCols[2] + 6, min_row=2, max_row=sheet.max_row+1)
+
+	series_raymond = Series(data_raymond, title='Raymond')
+	series_scott =   Series(data_scott,   title='Scott')
+
+	chart1.append(series_raymond)
+	chart1.append(series_scott)
+
+	cats = Reference(sheet, min_col=1, min_row=2, max_row=sheet.max_row)
+	chart1.set_categories(cats)
+
+	chartsheet.add_chart(chart1, "{}65".format(first_column_idx))
+
+	# --------------------------------------------------------------------------------------------
 
 	wb.save(wb_path)
