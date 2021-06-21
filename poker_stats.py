@@ -345,7 +345,8 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	pfrM = calcPercentAndTranspose(handsPlayed, pfr, 3)
 	tbpM = calcPercentAndTranspose(handsPlayed, tbp, 4) # Calculates percentages for each preflop statistic
 	wtsdM = calcPercentAndTranspose(handsPlayed, wtsd, 3)
-	wasdM = calcPercentAndTranspose(handsPlayed, wasd, 3)
+	wasdM = calcPercentAndTranspose(handsPlayed, wasd, 3) # Calculates percentage relative to hands played
+	wasdRelM = calcPercentAndTranspose(wtsd, wasd, 3) # Calculates percentage relative to times WTSD
 
 	cbpM = calcPercentOfCbpAndTranspose(cbp, 2)
 	cbpCountM = transpose(cbp)
@@ -444,12 +445,12 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 		if includeCMD[handTypeDesired] == 1:
 			printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-									   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM)
+									ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM, wasdRelM)
 
 		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
 		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-					 			ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired)
+							ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
 
 		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 
@@ -467,7 +468,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		# Update the all-time stats for players if not already entered -------------------------------------------------------------
 
 		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-		  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+		  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired, wasdRelM)
 
 	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 

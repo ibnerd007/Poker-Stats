@@ -5,7 +5,7 @@ from openpyxl.chart.label import DataLabelList
 
 def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
 			                ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date,
-			                handTypeDesired):
+			                handTypeDesired, wasdRelM):
 	
 	# wb = openpyxl.Workbook() # create new workbook
 	wb_path = r'Outputs\stats.xlsx'
@@ -32,7 +32,7 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	column_headers = ('Player', 'Buy in', 'Buy out', 'Net', 'Rebuys', 'VPIP', 'Pre-flop Raise',
 		'Three-bet', 'Aggro Frequency', 'Went to showdown', 'Won at showdown', 'Aggression Factor',
-		'C-bets', 'C-bet opportunities', 'At showdown', 'Before showdown', 'Hands played')
+		'C-bets', 'C-bet opportunities', 'At showdown', 'Before showdown', 'Hands played', 'WTSD (rel)')
 
 	# Fill column headers on new sheet
 	for (i, column_name) in enumerate(column_headers):
@@ -77,6 +77,10 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	for player in range(len(playerIDs)):
 		totalHandsPlayed = handsPlayed[0][player] + handsPlayed[1][player]
 		sheet.cell(row=player + 2, column=17, value=totalHandsPlayed) # averaged positions
+
+	for player in range(len(playerIDs)):
+		sheet.cell(row=player + 2, column=18, value=wasdRelM[player][2]) # averaged positions
+		sheet.cell(row=player + 2, column=18).number_format = '0.0%'
 
 	row = player + 2 + 1
 	rows = sheet.max_row
@@ -181,6 +185,27 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	chart1.shape = shape
 	sheet.add_chart(chart1, "{}40".format(second_column_idx))
 
+	# WASD (relative) ----------------------------------------------------------------------------------
+
+	chart1 = BarChart()
+	chart1.type = "col"
+	chart1.style = style
+	chart1.title = "Won at showdown (relative to WTSD)"
+
+	chart1.dataLabels = DataLabelList()
+	chart1.dataLabels.showVal = True
+	chart1.legend = None
+
+	chart1.width = width
+	chart1.height = height
+
+	data = Reference(sheet, min_col=18, min_row=1, max_row=len(playerIDs)+1)
+	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	chart1.add_data(data, titles_from_data=True)
+	chart1.set_categories(cats)
+	chart1.shape = shape
+	sheet.add_chart(chart1, "{}66".format(first_column_idx))
+
 	# MWAS vs MWBS ---------------------------------------------------------------------------------
 
 	chart1 = BarChart()
@@ -200,9 +225,9 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
 	chart1.shape = shape
-	sheet.add_chart(chart1, "{}66".format(first_column_idx))
+	sheet.add_chart(chart1, "{}66".format(second_column_idx))
 
-	# # Hands played --------------------------------------------------------------------------------
+	# Hands played --------------------------------------------------------------------------------
 
 	chart1 = BarChart()
 	chart1.type = "bar"
@@ -221,7 +246,7 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
 	chart1.shape = shape
-	sheet.add_chart(chart1, "{}66".format(second_column_idx))
+	sheet.add_chart(chart1, "{}91".format(first_column_idx))
 
 	# ---------------------------------------------------------------------------------------------
 

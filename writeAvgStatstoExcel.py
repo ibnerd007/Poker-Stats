@@ -4,7 +4,7 @@ from average import *
 import time
 
 def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired):
+  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired, wasdRelM):
 	# Much like bankrolls, creates a weighted average of stats through total hands played
 	# Calculates separately for Holdem and PLO, as well as combined
 

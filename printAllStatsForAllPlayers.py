@@ -2,7 +2,7 @@ from search import *
 from prettytable import PrettyTable
 
 def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs,
-							   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM):
+							   ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM, wasdRelM):
 	# prints all stats for all players in the session to the command line using prettytable
 	# Copy and paste command line output to a text file to save
 	
@@ -36,8 +36,12 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wt
 		stats.add_row(['', '', '', '']) # empty row
 
 		stats.add_row(['Went to showdown', '{:.1f} %'.format(wtsdM[i][2]*100), '{:.1f} %'.format(wtsdM[i][0]*100), '{:.1f} %'.format(wtsdM[i][1]*100)])
-		stats.add_row(['Won at showdown',  '{:.1f} %'.format(wasdM[i][2]*100), '{:.1f} %'.format(wasdM[i][0]*100), '{:.1f} %'.format(wasdM[i][1]*100)])
+		stats.add_row(['Won at showdown (abs)',  '{:.1f} %'.format(wasdM[i][2]*100), '{:.1f} %'.format(wasdM[i][0]*100), '{:.1f} %'.format(wasdM[i][1]*100)])
 		
+		stats.add_row(['', '', '', '']) # empty row
+
+		stats.add_row(['Won at showdown (rel)',  '{:.1f} %'.format(wasdRelM[i][2]*100), '{:.1f} %'.format(wasdRelM[i][0]*100), '{:.1f} %'.format(wasdRelM[i][1]*100)])		
+
 		stats.add_row(['', '', '', '']) # empty row
 
 		stats.add_row(['Hands Played',  '{}'.format(handsPlayed[0][i]+handsPlayed[1][i]), 
@@ -80,6 +84,8 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wt
 
 		totalPlayedbyPlayer = handsPlayed[0][i]+handsPlayed[1][i]
 		print('%s played %d hands this session.' % (playerDict[playerIDs[i]], totalPlayedbyPlayer))
-		print('Best hand: %s - %s' % (bestHandsM[i][0], bestHandsM[i][2]))
+
+		if bestHandsM[i][0] != 0: # else, player didn't win at showdown once
+			print('Best hand: %s - %s' % (bestHandsM[i][0], bestHandsM[i][2]))
 
 		print('----------------------------------------------------------------------\n')
