@@ -119,10 +119,9 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	aggressorID = None # initalize aggressor ID for program to compare for c-bet statistic
 
-	# Counter for entire log, choose where to start --------------------------------------------------------------
-	i = 0
+	# Main loop, beginning at i = 0 --------------------------------------------------------------
 
-	while (i < log_rows):
+	for i in range(log_rows):
 
 		# Step 1: Parse line beginning with "starting hand #", then 'Player stacks:', then certain actions
 		
@@ -237,7 +236,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 				stackChangeInfo.append(addOnInfo)
 
 			else:
-				raise(Exception, "WARNING message doesn't have 'adding' or 'reseting'")
+				raise Exception("WARNING message doesn't have 'adding' or 'reseting'")
 
 		# Look for action throughout the entire hand to add to VPIP
 		if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:
@@ -342,8 +341,6 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 			if numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
 				calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
-
-		i += 1
 
 	# Post-loop calculations ------------------------------------------------------------------------------------------
 	for i in range(len(mwas)): 
