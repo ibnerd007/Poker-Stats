@@ -206,8 +206,9 @@ def pokerStats(date, handTypeDesired, includeCMD):
 				addOnID = joinID
 				addOnAmount = getNum(str)
 				addOnHand = totalPlayed + 1
+				isReset = False
 
-				addOnInfo = (addOnID, addOnAmount, addOnHand) # tuple, unchangeable
+				addOnInfo = (addOnID, addOnAmount, addOnHand, isReset) # tuple, unchangeable
 				stackChangeInfo.append(addOnInfo)
 
 				bustList.remove(addOnID)
@@ -220,15 +221,23 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 			bustList.append(bustID)
 
-		if str.find('WARNING') != -1 and str.find('adding') != -1: # player is adding on to their stack
-			# print('WARNING log message: "{}"\n'.format(str))
-
+		if str.find('WARNING') != -1: # player hasn't busted, but wants to add chips
 			addOnID = getID(str)
-			addOnAmount = getNum(str)
+			amount = getNum(str)
 			addOnHand = totalPlayed + 1
 
-			addOnInfo = (addOnID, addOnAmount, addOnHand) # tuple, unchangeable
-			stackChangeInfo.append(addOnInfo)
+			if str.find('adding') != -1: # player is adding on to their stack
+				isReset = False
+				addOnInfo = (addOnID, amount, addOnHand, isReset)
+				stackChangeInfo.append(addOnInfo)
+
+			elif str.find('reseting') != -1: # player is resetting their stack to a certain amount
+				isReset = True
+				addOnInfo = (addOnID, amount, addOnHand, isReset)
+				stackChangeInfo.append(addOnInfo)
+
+			else:
+				raise(Exception, "WARNING message doesn't have 'adding' or 'reseting'")
 
 		# Look for action throughout the entire hand to add to VPIP
 		if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:
@@ -452,8 +461,8 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-		# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-		# 					ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
+		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+							ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
 
 		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 
