@@ -10,8 +10,8 @@ from getID import *
 from getName import *
 from countAction import *
 from resetList import *
-from calcPercentAndTranspose import *
-from calcPercentOfCbpAndTranspose import *
+from calcPercent import *
+from calcPercentOfCbp import *
 from transpose import *
 from getNum import *
 from numPlayersIn import *
@@ -166,10 +166,6 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		if str.find('Player stacks:') != -1: # row found, Players at table are now shown
 			playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
 
-			# if search(currPlayerIDs[0], 'zQzHYg1f_X') != -1: # Xavier is playing
-			# 	print('Hand #: ', totalPlayed)
-			# 	print('Xavier\'s position: {} \n\n\n'.format(currPlayerIDs[2][search(currPlayerIDs[0], 'zQzHYg1f_X')]))
-
 			# Add necessary elements to stat lists & counter 3D list to not over-index
 			appendMultiple(vpip, playersAdded)
 			appendMultiple(pfr, playersAdded) 
@@ -205,14 +201,14 @@ def pokerStats(date, handTypeDesired, includeCMD):
 				addOnID = joinID
 				addOnAmount = getNum(str)
 				addOnHand = totalPlayed + 1
-				isReset = False
+				isReset = False # Stack is not being reset to a new value; player is buying back in (effectively adding on)
 
-				addOnInfo = (addOnID, addOnAmount, addOnHand, isReset) # tuple, unchangeable
+				addOnInfo = (addOnID, addOnAmount, addOnHand, isReset)
 				stackChangeInfo.append(addOnInfo)
 
 				bustList.remove(addOnID)
 
-		if str.find('quits the game with a stack of 0') != -1: # a player has busted, change their stack to 0
+		if str.find('quits the game with a stack of 0') != -1: # a player has busted
 			bustID = getID(str)
 			bustIdx = search(playerIDs, bustID)
 			
@@ -251,12 +247,15 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 		# Now, look for action preflop: call, raise, and/or 3 bet
 		if beforeFlop and str.find('raises') != -1: # Looking for a raise preflop
-			calcPFR(str, pfr, playerIDs, currPlayerIDs)
+
+			pfrID = getID(str)
+			calcPFR(pfrID, pfr, playerIDs, currPlayerIDs)
 
 			if hasRaised: # this is now a 3 bet
-				calcTBP(str, tbp, playerIDs, currPlayerIDs)
+
+				tbID = getID(str)
+				calcTBP(tbID, tbp, playerIDs, currPlayerIDs)
 				# Note: Every 4-bettor, 5-bettor, and onwards will also be counted in TBP stat.
-				# Also, if original 3-bettor raises again, he is counted AGAIN towards 3-bet stat.
 
 			hasRaised = True
 
@@ -350,20 +349,18 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	# Calculate stat percentages by player in early, late, and total position
 	# statM is indexed: statM[player (0-len(playerIDs))][position (0-2)]
 
-	vpipM = calcPercentAndTranspose(handsPlayed, vpip, 3)
-	pfrM = calcPercentAndTranspose(handsPlayed, pfr, 3)
-	tbpM = calcPercentAndTranspose(handsPlayed, tbp, 4) # Calculates percentages for each preflop statistic
-	wtsdM = calcPercentAndTranspose(handsPlayed, wtsd, 3)
-	wasdM = calcPercentAndTranspose(handsPlayed, wasd, 3) # Calculates percentage relative to hands played
-	wasdRelM = calcPercentAndTranspose(wtsd, wasd, 3) # Calculates percentage relative to times WTSD
+	vpipM =    transpose(calcPercent(vpip, handsPlayed, 3)) # Calculates percentages for each preflop statistic
+	pfrM =     transpose(calcPercent(pfr,  handsPlayed, 3))
+	tbpM =     transpose(calcPercent(tbp,  handsPlayed, 4))
+	wtsdM =    transpose(calcPercent(wtsd, handsPlayed, 3))
+	wasdM =    transpose(calcPercent(wasd, handsPlayed, 3)) # Calculates percentage relative to hands played
+	wasdRelM = transpose(calcPercent(wasd, wtsd,        3)) # Calculates percentage relative to times WTSD
 
-	cbpM = calcPercentOfCbpAndTranspose(cbp, 2)
+	cbpM = transpose(calcPercentOfCbp(cbp, 2))
 	cbpCountM = transpose(cbp)
 
-	af = calcAF(af, actionCount, 2) # not a percentage
-	afq = calcAFQ(afq, actionCount, 3) # percentage
-	afM = transpose(af)
-	afqM = transpose(afq)
+	afM =  transpose(calcAF (af,  actionCount, 2))
+	afqM = transpose(calcAFQ(afq, actionCount, 3))
 
 	bestHandsM = transpose(bestHands)
 
@@ -429,12 +426,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	# print('The following people played this session:')
 	playerNames = []
-	for i in range(len(playerIDs)):
-		playerID = playerIDs[i]	
-		playerNames.append(playerDict[playerID])
-
-	# print(playerIDs, '\n')
-	# print(playerNames, '\n')
+	for ID in playerIDs: playerNames.append(playerDict[ID])
 
 	whoPlayedWhen(playerNames, playerIDs, dateFormat)
 
@@ -443,7 +435,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	if   holdEm == True  and PLO == False: pokerType = 'No Limit Texas Hold\'em\n'
 	elif holdEm == False and PLO == True : pokerType = 'Pot Limit Omaha\n'
 	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
-	else								 : pokerType = "N/A"
+	else: 								   pokerType = "N/A"
 
 	# print('Date: ', dateFormat)
 	# print('Poker type: ', pokerType)

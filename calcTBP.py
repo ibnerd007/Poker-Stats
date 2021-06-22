@@ -1,11 +1,7 @@
 from getID import *
 from search import *
 
-def calcTBP(str, tbp, playerIDs, currPlayerIDs):
-	tbID = getID(str)
-
-	# print("This guy is 3 betting!")
-	# print(tbID)
+def calcTBP(tbID, tbp, playerIDs, currPlayerIDs):
 
 	i = search(currPlayerIDs, tbID) # for finding position ONLY
 	j = search(playerIDs, tbID) # for adding whole stat

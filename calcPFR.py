@@ -1,13 +1,11 @@
 from getID import *
 from search import *
 
-def calcPFR(str, pfr, playerIDs, currPlayerIDs):
+def calcPFR(pfrID, pfr, playerIDs, currPlayerIDs):
 	# Every hand, looks for players that call or raise preflop
 
-	# Find ID of player
-	vpipID = getID(str)
-	i = search(currPlayerIDs, vpipID) # for finding position ONLY
-	j = search(playerIDs, vpipID) # for adding whole stat
+	i = search(currPlayerIDs, pfrID) # for finding position ONLY
+	j = search(playerIDs, pfrID) # for adding whole stat
 
 	position = currPlayerIDs[2][i] # 'early' or 'late'
 
