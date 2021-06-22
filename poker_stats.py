@@ -246,6 +246,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 			calcPFR(str, pfr, playerIDs, currPlayerIDs)
 
 			if hasRaised: # this is now a 3 bet
+				print('This guy is 3-betting!:\n{}'.format(str))
 				calcTBP(str, tbp, playerIDs, currPlayerIDs)
 
 			hasRaised = True
@@ -330,7 +331,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 			if numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
 				calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 
-				
+		print(i)	
 		i += 1
 
 	# Post-loop calculations ------------------------------------------------------------------------------------------
@@ -449,12 +450,12 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-		# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-		# 					ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
+		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+							ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
 
 		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 
-		# writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat)
+		writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat)
 
 		# Keep track of stats across multiple sessions, much like bankrolls --------------------------------------------------------
 
