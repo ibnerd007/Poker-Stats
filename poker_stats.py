@@ -246,8 +246,9 @@ def pokerStats(date, handTypeDesired, includeCMD):
 			calcPFR(str, pfr, playerIDs, currPlayerIDs)
 
 			if hasRaised: # this is now a 3 bet
-				print('This guy is 3-betting!:\n{}'.format(str))
 				calcTBP(str, tbp, playerIDs, currPlayerIDs)
+				# Note: Every 4-bettor, 5-bettor, and onwards will also be counted in TBP stat.
+				# Also, if original 3-bettor raises again, he is counted AGAIN towards 3-bet stat.
 
 			hasRaised = True
 
@@ -327,11 +328,12 @@ def pokerStats(date, handTypeDesired, includeCMD):
 			resetList(vpip[2])
 
 			beforeTurn = False
+			beforeFlop = False # in case there is no flop or turn, these parameters still reset
+			hasRaised = False # in case hasRaised is tripped and there is no flop, it is also reset
 
 			if numPlayersIn(hasFolded) >= 2: # Showdown hands only: hand has ended AND two or more players didn't fold
 				calcWTSD(wtsd, hasFolded, playerIDs, currPlayerIDs) # All players left went to showdown
 
-		print(i)	
 		i += 1
 
 	# Post-loop calculations ------------------------------------------------------------------------------------------
@@ -450,8 +452,8 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-							ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
+		# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+		# 					ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
 
 		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 

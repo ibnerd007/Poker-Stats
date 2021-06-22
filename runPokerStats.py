@@ -95,7 +95,7 @@ def run():
 	clicked = StringVar()
 
 	# initial menu text
-	clicked.set(options[-1]) # set to penultimate element (most recent date) in list
+	clicked.set(options[-3]) # set to penultimate element (most recent date) in list
 
 	# Create welcome Label
 	welcome = Label( window , text = "Welcome to PokerNow Stats!", font='Arial 14', bg=bg )
