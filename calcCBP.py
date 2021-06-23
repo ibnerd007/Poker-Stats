@@ -12,15 +12,15 @@ def calcCBP(str, cbp, aggressorID, playerIDs, currPlayerIDs):
 	
 		if aggressorPosition == 'early':
 			cbp[2][aggressorIdx] += 1 # add 1 opportunity in early position
-			cbp[0][aggressorIdx] += 1 # add 1 c-bet
+			cbp[0][aggressorIdx] += 1 # add 1 c-bet "
 		else:
 			cbp[3][aggressorIdx] += 1 # add 1 opportunity in late position
-			cbp[1][aggressorIdx] += 1 # add 1 c-bet
+			cbp[1][aggressorIdx] += 1 # add 1 c-bet "
 
-	elif str.find('checks') != -1: # agggressor has had the opportunity to c-bet but has not
+	elif str.find('checks') != -1: # agggressor has had the opportunity to c-bet but did not
 		
 		if aggressorPosition == 'early': cbp[2][aggressorIdx] += 1 # add 1 opportunity in early position
 		else:                            cbp[3][aggressorIdx] += 1 # add 1 opportunity in late position
 
-	else: # players calls, raises, or folds
-		pass # no opportunity to c-bet, player in front donked. *Assumes player doesn't fold a free check*
+	else: # aggressor calls, raises, or folds
+		pass # no opportunity to c-bet, player in front donked. *Assumes aggressor doesn't fold a free check*

@@ -11,16 +11,16 @@ def calcBestHands(str, wI, bestHands):
 	tempStr = str[str.find('with'):] # Truncate string to only include parts about winning hand
 	handStr = replaceSuits(tempStr) # Suits come into Excel incorrectly. This function corrects them
 
-	currIndex = bestHands[1][wI] # bestHands[1][wI*] = rank, *winner index
+	currIndex = bestHands[1][wI] # bestHands[1][wI*] = rank (*winner index)
 	newIndex = -1 # reset index
 
 	for j in range(len(hands)):
 
 		if handStr.find(hands[j]) != -1: # the winning hand has been identified
 			# first, capture the high card, two characters if high card is a 10
-			tenHigh = howManyTens(handStr[handStr.find('combination: ') + 13:handStr.find('combination: ') + 15])
+			numTens = howManyTens(handStr[handStr.find('combination: ') + 13:handStr.find('combination: ') + 15])
 			highCard = handStr[handStr.find('combination') + 13:
-							   handStr.find('combination') + 14 + tenHigh]
+							   handStr.find('combination') + 14 + numTens]
 	
 			# Need to code some exceptions
 			if hands[j] == 'Pair' and handStr.find('Two') != -1: # hand is actually two pair
@@ -46,4 +46,4 @@ def calcBestHands(str, wI, bestHands):
 				bestHands[2][wI] = handStr[handStr.find('combination: ') + 13: handStr.find(')')]
 				bestHands[3][wI] = highCard # store high card for later comparison
 
-				break # no need to continue checking if hand is better through the rest of hands[]
+				break # no need to continue checking if hand is better through the rest of hands

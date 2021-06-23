@@ -12,24 +12,30 @@ def calcPercent(statCount, totalCount, decimals):
 		x = totalCount[0][i]
 		y = totalCount[1][i]
 
-		if y == 0 and x != 0: 
-			# no late position hands played
-			earlyList[i] = round(statCount[0][i]/x, decimals)
-			lateList[i] =  -1
+		try:    earlyList[i] = round(statCount[0][i]/x, decimals)
+		except: earlyList[i] = -1
 
-		elif x == 0 and y != 0: 
-			# no early position hands played
-			earlyList[i] = -1
-			lateList[i] =  round(statCount[1][i]/y, decimals)
+		try:    lateList[i] =  round(statCount[1][i]/y, decimals)
+		except: lateList[i] =  -1
 
-		elif y == 0 and x == 0:
-			earlyList[i] = -1
-			lateList[i] =  -1
+		# if y == 0 and x != 0: 
+		# 	# no late position hands played
+		# 	earlyList[i] = round(statCount[0][i]/x, decimals)
+		# 	lateList[i] =  -1
 
-		else:
-			# hands played in both positions
-			earlyList[i] = round(statCount[0][i]/x, decimals)
-			lateList[i] =  round(statCount[1][i]/y, decimals)
+		# elif x == 0 and y != 0: 
+		# 	# no early position hands played
+		# 	earlyList[i] = -1
+		# 	lateList[i] =  round(statCount[1][i]/y, decimals)
+
+		# elif y == 0 and x == 0:
+		# 	earlyList[i] = -1
+		# 	lateList[i] =  -1
+
+		# else:
+		# 	# hands played in both positions
+		# 	earlyList[i] = round(statCount[0][i]/x, decimals)
+		# 	lateList[i] =  round(statCount[1][i]/y, decimals)
 
 		
 		# Calculate stat averages now across both positions
