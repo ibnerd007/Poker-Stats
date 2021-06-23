@@ -220,8 +220,8 @@ def pokerStats(date, handTypeDesired, includeCMD):
 				addOnInfo = (addOnID, amount, addOnHand, isReset)
 				stackChangeInfo.append(addOnInfo)
 
-			else:
-				raise Exception("WARNING message doesn't have 'adding' or 'reseting'")
+			# else:
+			# 	raise Exception("WARNING message doesn't have 'adding' or 'reseting'")
 
 		# Look for action throughout the entire hand to add to VPIP
 		if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:
@@ -387,21 +387,21 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
 
-		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-							ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
+		# writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
+		# 					ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
 
 		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
 
-		writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat)
+		# writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat)
 
 		# Keep track of stats across multiple sessions, much like bankrolls --------------------------------------------------------
 
-		writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-								  playerIDs, dateFormat, handTypeDesired)
+		# writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
+		# 						  playerIDs, dateFormat, handTypeDesired)
 
 		# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
 
-		writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
+		# writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
 
 		# Update the all-time stats for players if not already entered -------------------------------------------------------------
 

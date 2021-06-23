@@ -7,17 +7,17 @@ handTypes = ('combined', 'NL', 'PLO')
 
 # Run all sessions in CMD to refill averages or bankrolls ---------------------
 
-# logs = os.listdir('Logs')
-# dates = [''] * len(logs)
+logs = os.listdir('Logs')
+dates = [''] * len(logs)
 
-# for i, log in enumerate(logs):
-# 	dates[i] = log[4:10]
+for i, log in enumerate(logs):
+	dates[i] = log[4:10]
 
-# includeCMD = {'NL': 0, 'PLO': 0, 'combined': 0}
+includeCMD = {'NL': 0, 'PLO': 0, 'combined': 0}
 
-# for date in dates:
-# 	for handType in handTypes:
-# 		pokerStats(date, handType, includeCMD)
+for date in dates:
+	for handType in handTypes:
+		pokerStats(date, handType, includeCMD)
 
 # Run in CMD ------------------------------------------------------------------
 
@@ -139,4 +139,4 @@ def run():
 	window.mainloop()
 
 
-run()
+# run()

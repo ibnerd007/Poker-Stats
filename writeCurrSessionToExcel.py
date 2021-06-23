@@ -221,6 +221,8 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	chart1 = BarChart()
 	chart1.type = "col"
 	chart1.style = style
+	chart1.grouping = 'stacked'
+	chart1.overlap = 100
 	chart1.title = "Money won"
 
 	chart1.dataLabels = DataLabelList()
