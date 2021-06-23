@@ -24,8 +24,6 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	# Create new sheet with same name, put at first index
 	sheet = wb.create_sheet(sheetname, 0)
 
-	# sheet.insert_rows(1, 2) # Before 1st row, insert 2 columns
-
 	# row = player
 	# column = stat index
 	# value = stat value
@@ -34,16 +32,20 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 		'Three-bet', 'Aggro Frequency', 'Went to showdown', 'Won at showdown', 'Aggression Factor',
 		'C-bets', 'C-bet opportunities', 'At showdown', 'Before showdown', 'Hands played', 'WTSD (rel)')
 
+	numPlayers = len(playerIDs)
+	numStats = len(ledgerM[0])
+
 	# Fill column headers on new sheet
 	for (i, column_name) in enumerate(column_headers):
 		sheet.cell(row=1, column=i+1, value=column_name)
 
-	for i in range(len(playerIDs)): # Fill out player names first
-		sheet.cell(row=i + 2, column=1, value=playerDict[playerIDs[i]])
+	# Fill out player names
+	for (i, ID) in enumerate(playerIDs): 
+		sheet.cell(row=i + 2, column=1, value=playerDict[ID])
 
 	# Next, fill ledger stats
-	for player in range(len(playerIDs)): # cols
-		for stat in range(len(ledgerM[0])): # rows
+	for player in range(numPlayers):
+		for stat in range(numStats):
 			sheet.cell(row=player + 2, column=stat + 2, value=ledgerM[player][stat]) # averaged positions
 
 
@@ -52,13 +54,13 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	# Fill Excel spreadsheet with percent stat data
 	for stat in range(len(tdStats)): # cols
-		for player in range(len(playerIDs)): # rows
+		for player in range(numPlayers): # rows
 			sheet.cell(row=player + 2, column=stat + 6, value=tdStats[stat][player][2]) # averaged positions
 			sheet.cell(row=player + 2, column=stat + 6).number_format = '0.0%'
 
 
 	# Fill Excel spreadsheet with C-bets vs opportunities and aggression factors, not a percent-based stats
-	for player in range(len(playerIDs)): # rows
+	for player in range(numPlayers): # rows
 		sheet.cell(row=player + 2, column=12, value=afM[player][2])
 		
 		totalBets = cbpCountM[player][0] + cbpCountM[player][1]
@@ -70,15 +72,15 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	# Fill Excel spreadsheet with monetary stat data
 	for stat in range(len(moneyStats)):
-		for player in range(len(playerIDs)):
+		for player in range(numPlayers):
 			sheet.cell(row=player + 2, column=stat + 15, value=moneyStats[stat][player]) # averaged positions
 			sheet.cell(row=player + 2, column=stat + 15).number_format = '"$"#,##0.00_-'
 
-	for player in range(len(playerIDs)):
+	for player in range(numPlayers):
 		totalHandsPlayed = handsPlayed[0][player] + handsPlayed[1][player]
 		sheet.cell(row=player + 2, column=17, value=totalHandsPlayed) # averaged positions
 
-	for player in range(len(playerIDs)):
+	for player in range(numPlayers):
 		sheet.cell(row=player + 2, column=18, value=wasdRelM[player][2]) # averaged positions
 		sheet.cell(row=player + 2, column=18).number_format = '0.0%'
 
@@ -114,8 +116,8 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	chart1.legend = None
 	# chart1.x_axis.title = ''
 
-	data = Reference(sheet, min_col=6, min_row=1, max_row=len(playerIDs)+1, max_col=8)
-	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	data = Reference(sheet, min_col=6, min_row=1, max_row=numPlayers+1, max_col=8)
+	cats = Reference(sheet, min_col=1, min_row=2, max_row=numPlayers+1)
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
 	chart1.shape = shape 
@@ -131,15 +133,17 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	chart1.width = width
 	chart1.height = height
+	chart1.shape = shape
 
 	chart1.dataLabels = DataLabelList()
 	chart1.dataLabels.showVal = True
 
-	data = Reference(sheet, min_col=12, min_row=1, max_row=len(playerIDs)+1, max_col=12)
-	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	data = Reference(sheet, min_col=12, min_row=1, max_row=numPlayers+1, max_col=12)
+	cats = Reference(sheet, min_col=1,  min_row=2, max_row=numPlayers+1)
+
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = shape
+
 	sheet.add_chart(chart1, "{}14".format(second_column_idx))
 
 	# C-bets vs opportunities -----------------------------------------------------------------------
@@ -154,14 +158,16 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	chart1.width = width
 	chart1.height = height
+	chart1.shape = shape
 
 	chart1.legend.position = 'b'
 
-	data = Reference(sheet, min_col=13, min_row=1, max_row=len(playerIDs)+1, max_col=14)
-	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	data = Reference(sheet, min_col=13, min_row=1, max_row=numPlayers+1, max_col=14)
+	cats = Reference(sheet, min_col=1,  min_row=2, max_row=numPlayers+1)
+
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = shape
+
 	sheet.add_chart(chart1, "{}40".format(first_column_idx))
 
 	# WTSD vs WASD ----------------------------------------------------------------------------------
@@ -177,12 +183,14 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	chart1.width = width
 	chart1.height = height
+	chart1.shape = shape
 
-	data = Reference(sheet, min_col=10, min_row=1, max_row=len(playerIDs)+1, max_col=11)
-	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	data = Reference(sheet, min_col=10, min_row=1, max_row=numPlayers+1, max_col=11)
+	cats = Reference(sheet, min_col=1,  min_row=2, max_row=numPlayers+1)
+
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = shape
+
 	sheet.add_chart(chart1, "{}40".format(second_column_idx))
 
 	# WASD (relative) ----------------------------------------------------------------------------------
@@ -198,12 +206,14 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	chart1.width = width
 	chart1.height = height
+	chart1.shape = shape
 
-	data = Reference(sheet, min_col=18, min_row=1, max_row=len(playerIDs)+1)
-	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	data = Reference(sheet, min_col=18, min_row=1, max_row=numPlayers+1)
+	cats = Reference(sheet, min_col=1,  min_row=2, max_row=numPlayers+1)
+
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = shape
+
 	sheet.add_chart(chart1, "{}66".format(first_column_idx))
 
 	# MWAS vs MWBS ---------------------------------------------------------------------------------
@@ -219,12 +229,14 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 	
 	chart1.width = width
 	chart1.height = height
+	chart1.shape = shape
 
-	data = Reference(sheet, min_col=15, min_row=1, max_row=len(playerIDs)+1, max_col=16)
-	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	data = Reference(sheet, min_col=15, min_row=1, max_row=numPlayers+1, max_col=16)
+	cats = Reference(sheet, min_col=1,  min_row=2, max_row=numPlayers+1)
+
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = shape
+
 	sheet.add_chart(chart1, "{}66".format(second_column_idx))
 
 	# Hands played --------------------------------------------------------------------------------
@@ -240,12 +252,14 @@ def writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasd
 
 	chart1.width = 13
 	chart1.height = 13
+	chart1.shape = shape
 
-	data = Reference(sheet, min_col=17, min_row=1, max_row=len(playerIDs)+1, max_col=17)
-	cats = Reference(sheet, min_col=1, min_row=2, max_row=len(playerIDs)+1)
+	data = Reference(sheet, min_col=17, min_row=1, max_row=numPlayers+1, max_col=17)
+	cats = Reference(sheet, min_col=1,  min_row=2, max_row=numPlayers+1)
+
 	chart1.add_data(data, titles_from_data=True)
 	chart1.set_categories(cats)
-	chart1.shape = shape
+
 	sheet.add_chart(chart1, "{}91".format(first_column_idx))
 
 	# ---------------------------------------------------------------------------------------------

@@ -20,7 +20,7 @@ def whoPlayedWhen(names, IDs, date):
 	if date not in prevDates:
 		print('Storing names and IDs for this session...')
 
-		line1 = ['Date: ', date, '\n']
+		line1 = ('Date: ', date, '\n')
 		
 		f.writelines(line1)
 

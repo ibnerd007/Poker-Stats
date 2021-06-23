@@ -31,33 +31,31 @@ def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
 	#    Compare this session's date with date column
 
 	dates = []
-	netCols = [3, 8, 13, 18] # columns in Excel where the net will be stored
+	netCols = (3, 8, 13, 18) # columns in Excel where the net will be stored
 
 	for i in range(2, sheet.max_row + 1):
 		cellDate = sheet.cell(row=i, column=1).value
 		dates.append(cellDate)
 
 	if search(dates, dateFormat) != -1: # data from this date has been entered previously
-		# print('Bankroll data not filled... this session already entered\n')
 		return
+
 	else: # add date to column
 		print('Adding bankroll data...\n')
 		if dates == [None]:
 			sheet.cell(row=sheet.max_row, column=1, value=dateFormat)
 		else:
-			sheet.cell(row=sheet.max_row + 1, column=1, value=dateFormat)
+			sheet.cell(row=sheet.max_row+1, column=1, value=dateFormat)
 
 	# 3. Add net to current net for each player -----------------------------------------------
 
-	for i in range(len(bankrollIDs)):
-		index = search(playerIDs, bankrollIDs[i])
-		if index == -1 and i == 2: # on Scott, search for mobile ID instead
+	for i, ID in enumerate(bankrollIDs):
+		index = search(playerIDs, ID)
+
+		if index == -1 and ID == '-4Mt9GCcpf': # Search for Scott's mobile ID instead
 			index = search(playerIDs, 'X6PyKTwqmn') 
 
 		prevNet = sheet.cell(row=sheet.max_row-1, column=netCols[i]).value
-
-		print(i)
-		print('max row =', sheet.max_row)
 
 		assert isinstance(prevNet, float) or isinstance(prevNet, int), \
 		'prevNet is of {} (value = "{}"), incorrectly'.format(type(prevNet), prevNet)

@@ -3,9 +3,11 @@ def subtract(minuend, subtrahend):
 	
 	assert len(minuend) == len(subtrahend), 'Lists cannot be subtracted: are different lengths'
 
-	difference = [0] * len(minuend)
+	length = len(minuend)
 
-	for i in range(len(minuend)):
+	difference = [0] * length
+
+	for i in range(length):
 		difference[i] = minuend[i] - subtrahend[i]
 		difference[i] = round(difference[i], 2)
 

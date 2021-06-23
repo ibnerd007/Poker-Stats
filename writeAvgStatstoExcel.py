@@ -17,12 +17,9 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 	wb = openpyxl.load_workbook(wb_path) # load existing workbook
 
-	if handTypeDesired == 'NL':
-		sheet = wb['NL Stats-all sessions'] # access sheet
-	elif handTypeDesired == 'PLO':
-		sheet = wb['PLO Stats-all sessions'] # access sheet
-	else: # combined hand types are desired
-		sheet = wb['All Stats-all sessions'] # access sheet
+	if handTypeDesired == 'NL':    sheet = wb['NL Stats-all sessions' ] # access sheet
+	elif handTypeDesired == 'PLO': sheet = wb['PLO Stats-all sessions']
+	else:                          sheet = wb['All Stats-all sessions']
 
 	# 2. Establish players of interest, and make sure date is not entered previously ----------------
 
@@ -37,16 +34,13 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 	# dates is now filled
 
 	if search(dates, date) != -1: # data from this date has been entered previously
-		# print('Average stat data not filled... this session already entered\n')
 		return
 	else: # add date to column
 		print('Adding average stat data...\n')
 		if dates == [None]:
 			sheet.cell(row=sheet.max_row, column=1, value=date)
 		else:
-			sheet.cell(row=sheet.max_row + 1, column=1, value=date)
-
-	# print('Dates:', dates)
+			sheet.cell(row=sheet.max_row+1, column=1, value=date)
 
 	# 3. Capturing player indices ------------------------------------------------------------------
 
@@ -57,7 +51,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 			ID = 'X6PyKTwqmn'
 		playerIndices[ID] = search(playerIDs, ID)
 
-	# 4. Fill sheet with data
+	# 4. Fill sheet with data ----------------------------------------------------------------------
 
 	tdStats = [vpipM, pfrM, tbpM, afqM, wtsdM, wasdM, wasdRelM]
 
@@ -103,7 +97,6 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 			
 			if afCurr != -1: # if AF is not -1 (the player called at least once during session)
 				afPrev = sheet.cell(row=player + 2, column=11).value
-
 				afAvg = average(afPrev, afCurr, totalHandsPlayed, handsPlayedThisSession)
 
 				sheet.cell(row=player + 2, column=11, value=afAvg)
@@ -128,9 +121,8 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 			# -----------------------------------------------------------------------------------
 
-			if cbpOppsTotal != 0: # if player at least tried to be aggressive
-				cbp = cbpBetTotal/cbpOppsTotal
-			else: cbp = 0
+			try:    cbp = cbpBetTotal/cbpOppsTotal
+			except: cbp = 0
 
 			sheet.cell(row=player + 2, column=10, value=cbp) # fill percent data
 			sheet.cell(row=player + 2, column=10).number_format = '0.0%'
@@ -144,9 +136,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 		playerIdx = playerIndices[ID]
 
 		if playerIdx != -1:
-
 			prevTotal = sheet.cell(row=player + 2, column=14).value
-
 			currTotal = handsPlayed[0][playerIdx] + handsPlayed[1][playerIdx]
 
 			sheet.cell(row=player + 2, column=14, value=prevTotal + currTotal)

@@ -5,6 +5,6 @@ def whichHandType(str, handType):
 		handType = 'NL'
 	elif str.find('Pot Limit Omaha Hi') != -1: # This hand is PLO
 		handType = 'PLO'
-	assert handType != None, 'Something is wrong, there should be hand type'
+	assert handType != None, 'Something is wrong, there should be a hand type'
 
 	return handType

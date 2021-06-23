@@ -40,14 +40,13 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	#    Compare this session's date with date column
 
 	dates = []
-	vpipCols = [3, 13, 23, 33] # columns in Excel where the net will be stored
+	vpipCols = (3, 13, 23, 33) # columns in Excel where the net will be stored
 
-	for i in range(2, sheet.max_row + 1):
+	for i in range(2, sheet.max_row+1):
 		cellDate = sheet.cell(row=i, column=1).value
 		dates.append(cellDate)
 
 	if search(dates, dateFormat) != -1: # data from this date has been entered previously
-		# print('Bankroll data not filled... this session already entered\n')
 		return
 	else: # add date to column
 		print('Adding stats over time data...\n')
@@ -58,25 +57,22 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 	# 3. Add stats for each player -----------------------------------------------
 
-	for i in range(len(statsOverTimeIDs)):
+	for i, ID in enumerate(statsOverTimeIDs):
 
-		pI = search(playerIDs, statsOverTimeIDs[i]) # player index
-		if pI == -1 and i == 2: # on Scott, search for mobile ID instead
+		pI = search(playerIDs, ID) # player index
+		
+		if pI == -1 and ID == '-4Mt9GCcpf': # search for Scott's mobile ID instead
 			pI = search(playerIDs, 'X6PyKTwqmn')
-
-		# print('max row =', sheet.max_row)
 
 		playerStats = (vpipM[pI][2], pfrM[pI][2], tbpM[pI][2], afqM[pI][2], 
 			wtsdM[pI][2], wasdRelM[pI][2], cbpM[pI][2], afM[pI][2]) # stats are across all positions
 
-		if pI != -1: # player played the session. Else, net remains the same as previously
+		if pI != -1: # player played the session
 
 			for j, stat in enumerate(playerStats):
 				# set each stat one by one in a nested loop
-				if stat == -1:
-					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j, value=0)
-				else:
-					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j, value=stat)
+				if stat == -1: sheet.cell(row=sheet.max_row, column=vpipCols[i] + j, value=0)
+				else:          sheet.cell(row=sheet.max_row, column=vpipCols[i] + j, value=stat)
 				
 				if j != 7: # NOT aggression factor
 					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j).number_format = '0.0%'
@@ -84,8 +80,7 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 					sheet.cell(row=sheet.max_row, column=vpipCols[i] + j).number_format = '0.00'
 
 		else: # player didn't play this session
-			sheet.cell(row=sheet.max_row, column=vpipCols[i] - 1, value='Didn\'t play')
-			# Don't fill anything else
+			sheet.cell(row=sheet.max_row, column=vpipCols[i]-1, value='Didn\'t play')
 
 	# Initialize bar chart variables ------------------------------------------------------------
 	sheetname = ''
@@ -104,7 +99,7 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 	wb.remove(chartsheet)
 
-	# Create new sheet with same name, put at penultimate index
+	# After deleting old sheet, create new sheet with same name, put at penultimate index
 	chartsheet = wb.create_sheet(sheetname, -1)
 
 	first_column_idx = 'A'
@@ -126,18 +121,17 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	chart1.shape = shape 
 
 	chart1.legend.position = 'r'
-	# chart1.legend = None
-	# chart1.x_axis.title = ''
+	chart1.x_axis.title = 'Date'
 
-	data_fish = Reference(sheet, min_col=vpipCols[0], min_row=2, max_row=sheet.max_row+1)
+	data_fish =    Reference(sheet, min_col=vpipCols[0], min_row=2, max_row=sheet.max_row+1)
 	data_raymond = Reference(sheet, min_col=vpipCols[1], min_row=2, max_row=sheet.max_row+1)
-	data_scott = Reference(sheet, min_col=vpipCols[2], min_row=2, max_row=sheet.max_row+1)
-	data_cedric = Reference(sheet, min_col=vpipCols[3], min_row=2, max_row=sheet.max_row+1)
+	data_scott =   Reference(sheet, min_col=vpipCols[2], min_row=2, max_row=sheet.max_row+1)
+	data_cedric =  Reference(sheet, min_col=vpipCols[3], min_row=2, max_row=sheet.max_row+1)
 
-	series_fish = Series(data_fish, title='Fish')
+	series_fish =    Series(data_fish,    title='Fish')
 	series_raymond = Series(data_raymond, title='Raymond')
-	series_scott = Series(data_scott, title='Scott')
-	series_cedric = Series(data_cedric, title='Cedric')
+	series_scott =   Series(data_scott,   title='Scott')
+	series_cedric =  Series(data_cedric,  title='Cedric')
 
 	chart1.append(series_fish)
 	chart1.append(series_raymond)
@@ -161,18 +155,16 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	chart1.shape = shape 
 
 	chart1.legend.position = 'r'
-	# chart1.legend = None
-	# chart1.x_axis.title = ''
 
 	data_fish =    Reference(sheet, min_col=vpipCols[0] + 3, min_row=2, max_row=sheet.max_row+1)
 	data_raymond = Reference(sheet, min_col=vpipCols[1] + 3, min_row=2, max_row=sheet.max_row+1)
 	data_scott =   Reference(sheet, min_col=vpipCols[2] + 3, min_row=2, max_row=sheet.max_row+1)
 	data_cedric =  Reference(sheet, min_col=vpipCols[3] + 3, min_row=2, max_row=sheet.max_row+1)
 
-	series_fish = Series(data_fish, title='Fish')
+	series_fish =    Series(data_fish,    title='Fish')
 	series_raymond = Series(data_raymond, title='Raymond')
-	series_scott = Series(data_scott, title='Scott')
-	series_cedric = Series(data_cedric, title='Cedric')
+	series_scott =   Series(data_scott,   title='Scott')
+	series_cedric =  Series(data_cedric,  title='Cedric')
 
 	chart1.append(series_fish)
 	chart1.append(series_raymond)
@@ -196,8 +188,6 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	chart1.shape = shape 
 
 	chart1.legend.position = 'r'
-	# chart1.legend = None
-	# chart1.x_axis.title = ''
 
 	data_fish =    Reference(sheet, min_col=vpipCols[0] + 5, min_row=2, max_row=sheet.max_row+1)
 	data_raymond = Reference(sheet, min_col=vpipCols[1] + 5, min_row=2, max_row=sheet.max_row+1)
@@ -231,8 +221,6 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	chart1.shape = shape 
 
 	chart1.legend.position = 'r'
-	# chart1.legend = None
-	# chart1.x_axis.title = ''
 
 	data_raymond = Reference(sheet, min_col=vpipCols[1] + 6, min_row=2, max_row=sheet.max_row+1)
 	data_scott =   Reference(sheet, min_col=vpipCols[2] + 6, min_row=2, max_row=sheet.max_row+1)
