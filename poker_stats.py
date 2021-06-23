@@ -3,7 +3,7 @@ import pandas as pd
 import time
 import copy
 
-from startingHandNumber import *
+from assignDealer import *
 from assignPositions import *
 from appendMultiple import *
 from appendMultiple3D import *
@@ -12,7 +12,6 @@ from getName import *
 from countAction import *
 from resetList import *
 from calcPercent import *
-from calcPercentOfCbp import *
 from transpose import *
 from getNum import *
 from numPlayersIn import *
@@ -32,6 +31,7 @@ from calcMWAS import *
 from calcMWBS import *
 from calcBestHands import *
 from calcCBP import *
+from calcLedger import *
 
 from printAllStatsForAllPlayers import *
 
@@ -59,18 +59,10 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	# Find path to Excel spreadsheet with log and ledger
 
 	path_log = "Logs/log_{}.xls".format(date)
-	path_ledger = "Ledgers/ledger_{}.xls".format(date)
 
 	log_book = xlrd.open_workbook(path_log)
 	log_sheet = log_book.sheet_by_index(0)
 	log_rows = log_sheet.nrows
-
-	# Find path to Excel spreadsheet with ledger
-
-	ledger_book = xlrd.open_workbook(path_ledger)
-	ledger_sheet = ledger_book.sheet_by_index(0)
-	ledger_rows = ledger_sheet.nrows
-
 
 	# The following lists keep track of specific stats; indexed by player ----------------------------------------
 
@@ -135,7 +127,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 			handType = whichHandType(str, handType)
 
 			if not str.find('dead button') != -1: # dead button has NOT been found
-				dealerID = startingHandNumber(str) # dealer ID is determined and returned from this function
+				dealerID = assignDealer(str) # dealer ID is determined and returned from this function
 			else:
 				dealerID = 'notAnID' # dummy ID in case there is a dead button on first hand
 				# This is possible if someone stands up before the start of the first hand
@@ -352,8 +344,8 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	wtsdM =    transpose(calcPercent(wtsd, handsPlayed, 3))
 	wasdM =    transpose(calcPercent(wasd, handsPlayed, 3)) # Calculates percentage relative to hands played
 	wasdRelM = transpose(calcPercent(wasd, wtsd,        3)) # Calculates percentage relative to times WTSD
+	cbpM =     transpose(calcPercent(cbp[0:2], cbp[2:4],2))
 
-	cbpM = transpose(calcPercentOfCbp(cbp, 2))
 	cbpCountM = transpose(cbp)
 
 	afM =  transpose(calcAF (af,  actionCount, 2))
@@ -363,59 +355,11 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	# ---------------------------------------------------------------------
 
-	# ledger = [[total buy-in], [total buy-out], [net profit/loss], [# of rebuys]] per player
-	ledger = [[], [], [], []]
-	appendMultiple(ledger, len(playerIDs))
-
-	cols = {'id': 1, 'buy-in': 4, 'buy-out': 5, 'stack': 6, 'net': 7}
-
-	# Loop for ledger
-	i = 1
-	while i < ledger_rows:
-		id = ledger_sheet.cell_value(i, cols['id'])
-		idIndex = search(playerIDs, id)
-		
-		if idIndex == -1: # player did not play this type, but is still in the ledger
-		# Still print their ledger stats for the session
-			i += 1
-			continue
-
-		# Capture the player's buy in so far
-		buyIn = ledger_sheet.cell_value(i, cols['buy-in'])
-		ledger[0][idIndex] += buyIn
-
-		# Capture the player's buy out
-		buyOut = ledger_sheet.cell_value(i, cols['buy-out'])
-
-		if buyOut != '': # player 'left' the table
-			ledger[1][idIndex] += buyOut
-		else: # player never technically 'left' so still has a 'stack'
-			ledger[1][idIndex] += ledger_sheet.cell_value(i, cols['stack'])
-
-		# Catpure the player's net profit/loss
-		net = ledger_sheet.cell_value(i, cols['net'])
-		ledger[2][idIndex] += net
-
-		# Capture the player's rebuys
-		ledger[3][idIndex] += 1
-
-		i += 1
-
-	for i in range(len(playerIDs)): ledger[3][i] -= 1 # Correct # of rebuys
-
-	ledgerM = transpose(ledger)
-
-	# Make into dollar amounts and round to necessary digits
-	for i in range(len(playerIDs)):
-		for j in range(len(ledgerM[0])):
-			if j < 3: # monetary amounts, not # of rebuys
-				ledgerM[i][j] /= 100
-				ledgerM[i][j] = round(ledgerM[i][j], 2) # $ amounts are in cents
-			else:
-				ledgerM[i][j] = round(ledgerM[i][j]) # number of rebuys is an integer
+	path_ledger = "Ledgers/ledger_{}.xls".format(date)
+	ledgerM = calcLedger(path_ledger, playerIDs)
 
 	# -----------------------------------------------------------------------------------------------------------------------
-	# Now, print everything that should be output:
+	# Now, the output functions:
 	# 1. List of players
 	# 2. Date of session
 	# 3. Type of poker analyzed (pokerType)
@@ -433,10 +377,6 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	elif holdEm == False and PLO == True : pokerType = 'Pot Limit Omaha\n'
 	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
 	else: 								   pokerType = "N/A"
-
-	# print('Date: ', dateFormat)
-	# print('Poker type: ', pokerType)
-	# print('handTypeDesired: ', handTypeDesired, '\n')
 
 	if len(playerNames) > 0:
 		# Call this to see all stats for all players in session --------------------------------------------------------------------

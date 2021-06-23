@@ -1,4 +1,4 @@
-def startingHandNumber(str):
+def assignDealer(str):
 	# save dealer ID in temp variable
 	atIndex = str.find('@')
 
