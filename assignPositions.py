@@ -43,29 +43,34 @@ def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFol
 
 	# ---------------------------------------------------------------------------------------
 
+	numPlayers = len(currPlayerIDs[0])
+
+	# ---------------------------------------------------------------------------------------
+
 	# Assign positions for the hand
-	dealerIndex = search(currPlayerIDs[0],dealerID)
+	dealerIndex = search(currPlayerIDs[0], dealerID)
 
-	for i in range(len(currPlayerIDs[1])):
-		currPlayerIDs[2].append(0) # preallocate space for positions
-		
+	temp = [0] * numPlayers
+	currPlayerIDs[2].extend(temp) # preallocate space for positions
 
-	for j in range(len(currPlayerIDs[1])): # loop through seat numbers
-		currPlayerIDs[2][(dealerIndex+j) % len(currPlayerIDs[1])] = j # fill positions, wrap around list
+	for i in range(numPlayers): # loop through seat numbers
+		currPlayerIDs[2][(dealerIndex+i) % numPlayers] = i # fill positions, wrap around list
 
 	#----------------------------------------------------------------------------------------
 
 	# Determine whether position is early or late
-	for i in range(len(currPlayerIDs[2])):
+	for i in range(numPlayers):
 		playerIdx = search(playerIDs, currPlayerIDs[0][i])
 
-		if currPlayerIDs[2][i]/len(currPlayerIDs[2]) < 0.5: # late position
+		if currPlayerIDs[2][i]/numPlayers < 0.5: # late position for the hand
 
-			currPlayerIDs[2][i] = 'late' # player is in early position
-			handsPlayed[1][playerIdx] += 1 # add hand played by position
+			position = 'late'
+			handsPlayed[1][playerIdx] += 1 # add hand played in late pos
 
 		else: # early position for the hand
-			currPlayerIDs[2][i] = 'early'
-			handsPlayed[0][playerIdx] += 1 # add hand played by position
+			position = 'early'
+			handsPlayed[0][playerIdx] += 1 # add hand in early pos
+
+		currPlayerIDs[2][i] = position
 
 	return playersAdded

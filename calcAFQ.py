@@ -17,17 +17,15 @@ def calcAFQ(afq, count, decimals):
 			totalCount = count[0][j][i] + count[1][j][i] + count[2][j][i] + count[3][j][i]
 			aggressives = count[0][j][i] + count[1][j][i]
 
-			if totalCount != 0:
-				tempAFQ = aggressives/totalCount
-			else:
-				tempAFQ = -1
+			try:    tempAFQ = aggressives/totalCount
+			except: tempAFQ = -1
 
 			afq[j][i] = round(tempAFQ, decimals)
 
-	# Calculate average aggression frequency across both positions -------------------------------
+		# Calculate average aggression frequency across both positions -------------------------------
 		allAggressives = count[0][0][i] + count[1][0][i] + count[0][1][i] + count[1][1][i]
 
-		allTotalCount = count[0][0][i] + count[1][0][i] + count[2][0][i] + count[3][0][i] + \
+		allTotalCount  = count[0][0][i] + count[1][0][i] + count[2][0][i] + count[3][0][i] + \
 						 count[0][1][i] + count[1][1][i] + count[2][1][i] + count[3][1][i]
 
 		avgTempAfq = allAggressives/allTotalCount

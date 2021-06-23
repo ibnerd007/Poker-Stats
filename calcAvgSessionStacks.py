@@ -4,6 +4,7 @@ import time
 def calcAvgSessionStacks(stacks, n):
 	# n = number of hands to average
 	
+	# avgStacks = [[]] * len(stacks)
 	avgStacks = []
 	prevNumPlayers = 0
 	iEffectives = []
@@ -18,7 +19,7 @@ def calcAvgSessionStacks(stacks, n):
 				iEffectives.append(0) # Keep track of separate MAVG counters for each player
 
 		for j in range(numPlayers): # Loop through players that have joined so far
-		
+
 			avgStacks[i].append(0)
 
 			iEff = iEffectives[j] # set the current iEffective

@@ -1,6 +1,7 @@
 import xlrd
 import pandas as pd
 import time
+import copy
 
 from startingHandNumber import *
 from assignPositions import *
@@ -127,9 +128,6 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		
 		str = log_sheet.cell_value(i,0) # get the string for the entire line
 
-		# if i == 1 and str.find('requested a seat') == -1:
-		# 	raise Exception('Log order is reversed!')
-
 		# Preflop -------------------------------------------------------------
 
 		if str.find('starting hand #') != -1: # row found, indicates starting new hand
@@ -184,8 +182,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 			# Get each player's stack based on currPlayerIDs order
 			stacks = capturePlayerStacks(str, stacks, playerIDs, currPlayerIDs)
-			tempStacks = [item for item in stacks] # 'stacks' points to its old version if appended directly, deepcopy needed
-			sessionStacks.append(tempStacks) # will be made into pandas dataframe after loop
+			sessionStacks.append(copy.deepcopy(stacks)) # will be made into pandas dataframe after loop
 
 			beforeFlop = True
 
