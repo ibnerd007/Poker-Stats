@@ -5,6 +5,7 @@ Designed and written by ibnerd007 for use with the logs and ledgers generated fr
 Stats tracked:
 
 VPIP (Voluntarily Put in Pot) (%)
+
 Pre-flop Raise (%)
 3-bet Pre-flop (%)
 Aggression Factor (# of bets + # of raises / # of calls)
