@@ -1,5 +1,6 @@
 # PokerStats
 ## Python program that keeps track of a variety of poker stats by player using a PokerNow log and ledger file
+##### Overview
 Designed and written by ibnerd007 for use with the logs and ledgers generated from a session on the online poker website www.pokernow.club
 
 Stats tracked:
@@ -19,6 +20,7 @@ Stats tracked:
 
 *Note: All stats are tracked positionally as well (except money won), and can be viewed in command line output.*
 
+##### Instructions for use
 Run main script -> `runPokerStats.py` (contains GUI)
 
 Once the program is running, choose the desired date to see specific stats from the dropdown menu. The dropdown shows all available
