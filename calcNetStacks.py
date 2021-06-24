@@ -25,7 +25,7 @@ def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 			addOnHand = tuple[2]
 			isReset = tuple[3]
 
-			if addOnHand == i+1: # Player is adding on this hand
+			if addOnHand-1 == i: # Player is adding on next hand
 				addOnID = tuple[0]
 				amount = tuple[1]
 
@@ -42,6 +42,8 @@ def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 		net.append(currNet)
 
 		prevNumPlayers = numPlayers
+
+	assert len(stacks) == len(net)
 
 	print(net)
 	return net

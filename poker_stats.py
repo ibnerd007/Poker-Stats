@@ -205,7 +205,10 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 			bustList.append(bustID)
 
-		if str.find('WARNING') != -1: # player hasn't busted, but wants to add chips
+		if str.find('WARNING') != -1 and totalPlayed > 0: # player hasn't busted, but wants to add chips
+			""" It is possible to change stack before the first hand, but these situations must
+			be ignored because they cause issues when calculating net stacks, and they don't represent
+			actual changes in a player's net gain/loss. """
 			addOnID = getID(str)
 			amount = getNum(str)
 			addOnHand = totalPlayed + 1
@@ -219,9 +222,6 @@ def pokerStats(date, handTypeDesired, includeCMD):
 				isReset = True
 				addOnInfo = (addOnID, amount, addOnHand, isReset)
 				stackChangeInfo.append(addOnInfo)
-
-			# else:
-			# 	raise Exception("WARNING message doesn't have 'adding' or 'reseting'")
 
 		# Look for action throughout the entire hand to add to VPIP
 		if str.find('calls') != -1 or str.find('raises') != -1 or str.find('bets') != -1:

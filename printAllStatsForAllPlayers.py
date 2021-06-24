@@ -88,7 +88,6 @@ def printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wt
 
 		# ---------------------------------------------------------------------------------------------------------
 
-
 		print(stats, '\n')
 		print(monetaryStats, '\n')
 
