@@ -32,17 +32,18 @@ def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 				playerIdx = search(playerIDs, addOnID)
 				
 				if isReset:
-					assert (amount/100) > sessionStacks[i-1][playerIdx], 'Reset stack is lower than original'
+					# assert (amount/100) > sessionStacks[i-1][playerIdx], 'Reset stack is lower than original'
 					
-					amount -= (sessionStacks[i-1][playerIdx]*100) # subtract current stack from reset amount
+					amount -= stacks[i-1][playerIdx]*100 # subtract current stack from reset amount
 
-				startingStacks[playerIdx] += (amount/100)
+				startingStacks[playerIdx] += amount/100
 
-		currNet = subtract(sessionStacks[i], startingStacks)
+		currNet = subtract(stacks[i], startingStacks)
 		net.append(currNet)
 
 		prevNumPlayers = numPlayers
 
+	print(net)
 	return net
 
 
