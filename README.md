@@ -17,7 +17,7 @@ Stats tracked:
 - Money won before showdown ($)
 - Hands played during session
 
-*Note: All stats are tracked positionally as well (except money won), and can be viewed in command line output.
+*Note: All stats are tracked positionally as well (except money won), and can be viewed in command line output.*
 
 Run main script -> `runPokerStats.py` (contains GUI)
 
@@ -56,5 +56,5 @@ has not already been entered.
 When viewing statistics from the current session in Excel, be sure to look at the date shown in the upper right corner. The Excel sheets
 will not be touched by the program if no hands of that type were played on the session, so it may show old data from a different date.
 
-*NOTE: The players of which you want to keep track for average stats, stats over time, and bankrolls must be hard-coded into the program.
-You just need their 10-digit ID and nickname.
+*Note: The players of which you want to keep track for average stats, stats over time, and bankrolls must be hard-coded into the program.
+You just need their 10-digit ID and nickname.*
