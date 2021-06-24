@@ -19,15 +19,15 @@ Stats tracked:
 
 *Note: All stats are tracked positionally as well (except money won), and can be viewed in command line output.
 
-Run main script -> runPokerStats.py (contains GUI)
+Run main script -> `runPokerStats.py` (contains GUI)
 
-Once the GUI is running, choose the desired date to see specific stats from the dropdown menu. The dropdown shows all available
-dates in the Poker-Stats/Logs directory.
+Once the program is running, choose the desired date to see specific stats from the dropdown menu. The dropdown shows all available
+dates in the `\Poker-Stats\Logs` directory.
 
 Next, choose whether command line output is desired using the checkboxes. You can print stats from Texas Holdem, PLO, or combined.
 The command line option will show positional statistics as well in table form. Positional Excel output will be released in a future update.
 
-Click 'Run'. The program will run, and display the session date, people that played, and the types of poker played (Holdem, PLO, or both).
+Click `Run`. The program will run, and display the session date, people that played, and the types of poker played (Holdem, PLO, or both).
 Open any Excel spreadsheet to view the new data and corresponding charts.
 
 The program will fill the following workbooks for the session specified:
