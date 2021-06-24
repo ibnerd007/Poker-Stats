@@ -1,43 +1,60 @@
 # Poker-Stats
-# Python script that keeps track of a variety of poker stats by player using a PokerNow log and ledger file
+# Python program that keeps track of a variety of poker stats by player using a PokerNow log and ledger file
 Designed and written by ibnerd007 for use with the logs and ledgers generated from a session on the online poker website www.pokernow.club
 
-Run main script -> pokerStats.py
+Stats tracked:
 
-There are a few variables that must be set correctly before running program:
+> VPIP (Voluntarily Put in Pot) (%)
+> Pre-flop Raise (%)
+> 3-bet Pre-flop (%)
+> Aggression Factor (# of bets + # of raises / # of calls)
+> Aggression Frequency (%)
+> C-bet percentage (# of c-bets / # of opportunities to c-bet) (%)
+> Went to showdown (%)
+> Won at showdown (absolute) (%)
+> Won at showdown (relative to "Went to showdown") (%)
+> Money won at showdown ($)
+> Money won before showdown ($)
+> Hands played during session
 
-1. handTypeDesired = hand type you want to see stats for. This variable can be one of the following:
-    'NL' - No Limit Texas Holdem
-    'PLO' - Pot Limit Omaha Hi
-    'combined' - hand type does not matter, all stats will be calculated for entire session regardless of poker type
-  
-2. Date = date of session. This date is used to find your PokerNow log and ledger files, which will be parsed.
-    Log and ledger files should be named like this: 'log_MM DD', 'ledger_MM DD' and put in the same folder as pokerStats.py. 
-    Use must use the same format to set date that you used to name the file, so that the file can be found.
+Note: All stats are tracked positionally (except money won), and can be viewed in command line output.
 
-Once you set these variables, there are a few options for output:
+Run main script -> runPokerStats.py (contains GUI)
 
-1. Print stats for this session directly to command line (This is the only option currently that supports positional stats)
-    At the bottom of the script, run the function 'printAllStatsForAllPlayers()'
+Once the GUI is running, choose the desired date to see specific stats from the dropdown menu. The dropdown shows all available
+dates in the Poker-Stats/Logs directory.
 
-2. Write stats for this session to an Excel spreadsheet
-    At the bottom of the script, run the function 'writeCurrSessiontoExcel()'
-    
-    A template is included in the repository under /Outputs, called 'stats.xlsx'. It can show stats broken down by poker type,
-    and organized into neat Excel charts for comparison.
+Next, choose whether command line output is desired using the checkboxes. You can print stats from Texas Holdem, PLO, or combined.
+The command line option will show positional statistics as well in table form. Positional Excel output will be released in a future update.
 
-3. Write stacks vs time data (raw and moving average) to separate Excel workbooks in \Outputs
-    At the bottom of the script, run the function 'writeStacksOverTimetoExcel()' *NOTE: This function only runs if handTypeDesired = combined
-    
-    This function uses the module pandas to create two dataframes with all the stack values at the start of every hand for each player 
-    over the course of the session (and moving averages). It then plots these data points in an Excel line chart for easy comparison in both workbooks.
-    
-4. Write bankroll data across multiple sessions to 'stats.xlsx'.
-    At the bottom of the script, run the function 'writeBankrollsToExcel()'
-    
-    If you wish to keep track of players' bankroll progress over the course of multiple sessions, this function allows you to do that.
-    For each session with a date that hasn't been recorded, it will plot bankroll data collected from the ledger to 'stats.xlsx'.
-    This data includes the player's total net, their bankroll, their own money invested to the bankroll (only when necessary), and
-    whether they played a session or not. This data is then graphed side by side for all players of interest.
-    
-    *NOTE: The players of which you want to keep track must be hard-coded into the function You just need their 10-digit ID and nickname.
+Click 'Run'. The program will run, and display the session date, people that played, and the types of poker played (Holdem, PLO, or both).
+Open any Excel spreadsheet to view the new data and corresponding charts.
+
+The program will fill the following workbooks for the session specified:
+
+> stats.xlsx                 (shows poker stats from current session)
+> net_over_time_raw.xlsx     (shows raw (not averaged) net gain/loss for each player, for current session, overlaid on one chart)
+> net_over_time_avg.xlsx     (shows 10-hand moving average of net gain/loss for each player, for current session, overlaid on one chart)
+> stacks_over_time_raw.xlsx  (shows raw (not averaged) stack for each player, for current session, overlaid on one chart)
+> stacks_over_time_avg.xlsx  (shows 10-hand moving average of each player's stack, for current session, overlaid on one chart)
+
+stacks_over_time shows a player's stack size throughout the session, but cannot be less than zero. It shows when a player added on and their stack
+at any point, but does not necessarily reflect net gain/loss.
+net_over_time shows a player's net gain/loss throughout the session, but does not show when a player added on and what their actual stack is.
+
+The program will also fill the following multi-session workbooks for the specified date, if data for said date has not already been entered during 
+runtime of a previous instance of PokerStats:
+
+> bankrolls.xlsx        (tracks certain players' net gain/loss over many sessions, regardless of poker type played)
+> stat averages.xlsx    (tracks all-time averages of players' stats over many session, sorted by poker type)
+> stats over time.xlsx  (tracks players' stats across multiple sessions, but instead of averaging, puts them side by side for trend comparison)
+
+The program will fill the stats.xlsx workbook. It will also fill net over time and stacks over time, both average and raw, for the 
+session specified. Average stats, bankroll information, and stats over time for the selected session date will be filled, if that date 
+has not already been entered.
+
+When viewing statistics from the current session in Excel, be sure to look at the date shown in the upper right corner. The Excel sheets
+will not be touched by the program if no hands of that type were played on the session, so it may show old data from a different date.
+
+*NOTE: The players of which you want to keep track for average stats, stats over time, and bankrolls must be hard-coded into the program.
+You just need their 10-digit ID and nickname.
