@@ -18,23 +18,20 @@ def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 
 			for k in range(playersAdded):
 				stackIdx = prevNumPlayers+k
-				startingStacks.append(stacks[i][stackIdx]) # append the player's starting stack from the end of stacks
+				startingStacks.append(stacks[i][stackIdx]) # append the player's starting stack to the end of stacks
 
 		# Now, change ONLY startingStacks in this loop for add ons
 		for (idx, tuple) in enumerate(stackChangeInfo):
 			addOnHand = tuple[2]
-			isReset = tuple[3]
 
 			if addOnHand-1 == i: # Player is adding on next hand
 				addOnID = tuple[0]
-				amount = tuple[1]
+				amount =  tuple[1]
+				isReset = tuple[3]
 
 				playerIdx = search(playerIDs, addOnID)
 				
-				if isReset:
-					# assert (amount/100) > sessionStacks[i-1][playerIdx], 'Reset stack is lower than original'
-					
-					amount -= stacks[i-1][playerIdx]*100 # subtract current stack from reset amount
+				if isReset:	amount -= stacks[i-1][playerIdx]*100 # subtract current stack from reset amount
 
 				startingStacks[playerIdx] += amount/100
 
@@ -45,7 +42,6 @@ def calcNetStacks(sessionStacks, stackChangeInfo, playerIDs):
 
 	assert len(stacks) == len(net)
 
-	print(net)
 	return net
 
 

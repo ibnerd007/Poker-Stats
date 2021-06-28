@@ -1,8 +1,9 @@
 def whoPlayedWhen(names, IDs, date):
 	# Stores player nicknames and IDs into a text file
 	# This will help reference who played what session as there are more sessions
+	path = r'Outputs\whoPlayedWhen.txt'
 
-	f = open('whoPlayedWhen.txt', 'r')
+	f = open(path, 'r')
 
 	prevDates = []
 
@@ -15,7 +16,7 @@ def whoPlayedWhen(names, IDs, date):
 
 	# --------------------------------------------------------------------------
 
-	f = open('whoPlayedWhen.txt', 'a')
+	f = open(path, 'a')
 
 	if date not in prevDates:
 		print('Storing names and IDs for this session...')

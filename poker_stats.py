@@ -1,7 +1,5 @@
-import xlrd
+import xlrd, time, copy
 import pandas as pd
-import time
-import copy
 
 from assignDealer import *
 from assignPositions import *
@@ -17,7 +15,6 @@ from getNum import *
 from numPlayersIn import *
 from whichHandType import *
 from capturePlayerStacks import *
-from addToPlayerDict import *
 from createPlayerDict import *
 
 from calcVPIP import *
@@ -34,7 +31,6 @@ from calcCBP import *
 from calcLedger import *
 
 from printAllStatsForAllPlayers import *
-
 from writeCurrSessionToExcel import *
 from writeBankrollsToExcel import *
 from stacksOverTimeLineChart import *
@@ -42,6 +38,7 @@ from writeStacksOverTimetoExcel import *
 from writeStatsOverTimeToExcel import *
 from writeAvgStatstoExcel import *
 from whoPlayedWhen import *
+from addToPlayerDict import *
 
 def pokerStats(date, handTypeDesired, includeCMD):
 
@@ -50,11 +47,11 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	handTypes = ['NL', 'PLO', 'combined']
 	assert handTypeDesired in handTypes, 'Hand type not recognized'
 
-	# Create dictionary from playerDictionary.txt --------------------------------------------------------------------------
+	# Create dictionary from playerDictionary.txt ----------------------------------------------------------------
 
 	playerDict = createPlayerDict()
 
-	# ----------------------------------------------------------------------------------------------------------------------
+	# ------------------------------------------------------------------------------------------------------------
 
 	# Find path to Excel spreadsheet with log and ledger
 
@@ -67,9 +64,14 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	# The following lists keep track of specific stats; indexed by player ----------------------------------------
 
 	# vpip/pfr/tbp = [[fish_early, raymond_early, ...], [fish_late, raymond_late, ...], [fish_alreadyCounted, ...]]
-	# actionCount = [[[betCount_early_fish, betCount_early_ray,...], [betCount_late_fish, betCount_late_ray]], [callCount_early_fish, callCount_early_ray, ...], ...]
+
+	# actionCount = [[[betCount_early_fish, betCount_early_ray,...], [betCount_late_fish, betCount_late_ray]], 
+	#				  [callCount_early_fish, callCount_early_ray, ...], ...]
+
 	# af = [[af_early_fish, af_early_ray, ...], [af_late_fish, af_late_ray, ...]]
+
 	# wtsd = [[wtsd_early_fish, wtsd_early_ray, ...], [wtsd_late_fish, wtsd_late_ray, ...]]
+
 	# mwas/mwbs = [money_fish, money_ray, ...]
 
 	vpip = [[], [], []] # voluntarily put in pot (%)
@@ -112,7 +114,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	aggressorID = None # initalize aggressor ID for program to compare for c-bet statistic
 
-	# Main loop, beginning at i = 0 --------------------------------------------------------------
+	# Main loop, beginning at i = 0 --------------------------------------------------------------------------
 
 	for i in range(log_rows):
 
@@ -166,9 +168,9 @@ def pokerStats(date, handTypeDesired, includeCMD):
 			appendMultiple(wtsd, playersAdded)
 			appendMultiple(wasd, playersAdded)
 			appendMultiple(cbp, playersAdded)
-			for j in range(playersAdded): mwas.append(0) # different function for 1D list
-			for j in range(playersAdded): mwbs.append(0)
-			for j in range(playersAdded): stacks.append(0)
+			mwas   += [0]*playersAdded # different function for 1D list
+			mwbs   += [0]*playersAdded
+			stacks += [0]*playersAdded
 
 			appendMultiple(bestHands, playersAdded)
 
@@ -190,7 +192,10 @@ def pokerStats(date, handTypeDesired, includeCMD):
 				addOnID = joinID
 				addOnAmount = getNum(str)
 				addOnHand = totalPlayed + 1
-				isReset = False # Stack is not being reset to a new value; player is buying back in (effectively adding on)
+				
+				isReset = False 
+				""" Stack is not being reset to a new value; 
+				player is buying back in (effectively adding on) """
 
 				addOnInfo = (addOnID, addOnAmount, addOnHand, isReset)
 				stackChangeInfo.append(addOnInfo)
@@ -337,6 +342,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	# Calculate stat percentages by player in early, late, and total position
 	# statM is indexed: statM[player (0-len(playerIDs))][position (0-2)]
+	# Transpose so that players are indexed on outside, easier to interpret for debugging
 
 	vpipM =    transpose(calcPercent(vpip, handsPlayed, 3)) # Calculates percentages for each preflop statistic
 	pfrM =     transpose(calcPercent(pfr,  handsPlayed, 3))
@@ -344,7 +350,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	wtsdM =    transpose(calcPercent(wtsd, handsPlayed, 3))
 	wasdM =    transpose(calcPercent(wasd, handsPlayed, 3)) # Calculates percentage relative to hands played
 	wasdRelM = transpose(calcPercent(wasd, wtsd,        3)) # Calculates percentage relative to times WTSD
-	cbpM =     transpose(calcPercent(cbp[0:2], cbp[2:4],2))
+	cbpM =     transpose(calcPercent(cbp[0:2], cbp[2:4],2)) # "                     of c-bet relative to opportunities
 
 	cbpCountM = transpose(cbp)
 
@@ -353,12 +359,12 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	bestHandsM = transpose(bestHands)
 
-	# ---------------------------------------------------------------------
+	# --------------------------------------------------------------------------------------------
 
 	path_ledger = "Ledgers/ledger_{}.xls".format(date)
 	ledgerM = calcLedger(path_ledger, playerIDs)
 
-	# -----------------------------------------------------------------------------------------------------------------------
+	# ---------------------------------------------------------------------------------------------
 	# Now, the output functions:
 	# 1. List of players
 	# 2. Date of session
@@ -379,38 +385,42 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	else: 								   pokerType = "N/A"
 
 	if len(playerNames) > 0:
-		# Call this to see all stats for all players in session --------------------------------------------------------------------
+		# Call this to see all stats for all players in session ------------------------------------
 
 		if includeCMD[handTypeDesired] == 1:
-			printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-									ledgerM, playerDict, playerIDs, handsPlayed, bestHandsM, wasdRelM)
+			printAllStatsForAllPlayers(vpipM, pfrM, tbpM, cbpM, cbpCountM, afM, afqM, wtsdM, 
+									   wasdM, mwas, mwbs, ledgerM, playerDict, playerIDs, 
+									   handsPlayed, bestHandsM, wasdRelM)
 
-		# Now, write current session stats for all players to Excel ----------------------------------------------------------------
+		# Now, write current session stats for all players to Excel --------------------------------
 
-		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas, mwbs, 
-							ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, dateFormat, handTypeDesired, wasdRelM)
+		writeCurrSessionToExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, mwas,
+								mwbs, ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, 
+								dateFormat, handTypeDesired, wasdRelM)
 
-		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl --------------------------------
+		# Now, write dataframe containing stack/net data to Excel, then create charts with openpyxl
 
-		writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, handTypeDesired, dateFormat)
+		writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, 
+								   handTypeDesired, dateFormat)
 
-		# Keep track of stats across multiple sessions, much like bankrolls --------------------------------------------------------
+		# Keep track of stats across multiple sessions, much like bankrolls ------------------------
 
 		writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
 								  playerIDs, dateFormat, handTypeDesired)
 
-		# Update the all-time bankrolls for players if not already entered ---------------------------------------------------------
+		# Update the all-time bankrolls for players if not already entered -------------------------
 
 		writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
 
-		# Update the all-time stats for players if not already entered -------------------------------------------------------------
+		# Update the all-time stats for players if not already entered -----------------------------
 
-		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, mwas, mwbs, 
-		  		 		   ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired)
+		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, 
+							 mwas, mwbs, ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, 
+							 date, handTypeDesired)
 
 	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 
-	# --------------------------------------------------------------------------------------------------------------------------
+	# ----------------------------------------------------------------------------------------------
 
 	output = (dateFormat, playerNames, pokerType) # output to display on the tkinter GUI
 

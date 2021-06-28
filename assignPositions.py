@@ -33,7 +33,6 @@ def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFol
 	prevSeatIndex = 0
 
 	while str.find('#', prevSeatIndex+1) != -1:
-
 		seatIndex = str.find('#',prevSeatIndex+1) + 1 # find number that shows seat
 		seat = int(str[seatIndex:seatIndex+2]) # assign seat index
 
@@ -63,7 +62,6 @@ def assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFol
 		playerIdx = search(playerIDs, currPlayerIDs[0][i])
 
 		if currPlayerIDs[2][i]/numPlayers < 0.5: # late position for the hand
-
 			position = 'late'
 			handsPlayed[1][playerIdx] += 1 # add hand played in late pos
 
