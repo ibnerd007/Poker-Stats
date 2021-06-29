@@ -384,6 +384,10 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
 	else: 								   pokerType = "N/A"
 
+	trackedIDs =   ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH')
+	#                Fish          Raymond       Scott         Cedric
+	alternateIDs = ('',           '',           'X6PyKTwqmn', '27qpPjb-rT')
+
 	if len(playerNames) > 0:
 		# Call this to see all stats for all players in session ------------------------------------
 
@@ -406,17 +410,17 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		# Keep track of stats across multiple sessions, much like bankrolls ------------------------
 
 		writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-								  playerIDs, dateFormat, handTypeDesired)
+								  playerIDs, dateFormat, handTypeDesired, trackedIDs, alternateIDs)
 
 		# Update the all-time bankrolls for players if not already entered -------------------------
 
-		writeBankrollsToExcel(ledgerM, playerIDs, dateFormat)
+		writeBankrollsToExcel(ledgerM, playerIDs, dateFormat, trackedIDs, alternateIDs)
 
 		# Update the all-time stats for players if not already entered -----------------------------
 
 		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, 
 							 mwas, mwbs, ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, 
-							 date, handTypeDesired)
+							 date, handTypeDesired, trackedIDs, alternateIDs)
 
 	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 

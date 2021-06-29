@@ -4,7 +4,8 @@ from average import *
 import time
 
 def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, mwas, mwbs, 
-  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired):
+  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired,
+  		 			 statIDs, alternateIDs):
 	# Much like bankrolls, creates a weighted average of stats through total hands played
 	# Calculates separately for Holdem and PLO, as well as combined
 
@@ -22,9 +23,6 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 	else:                          sheet = wb['All Stats-all sessions']
 
 	# 2. Establish players of interest, and make sure date is not entered previously ----------------
-
-	statIDs = ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH')
-	#           fish          raymond       scott         cedric
 
 	dates = []
 
@@ -46,10 +44,12 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 	playerIndices = {}
 
-	for (i, ID) in enumerate(statIDs):
-		if i == 2 and ID != '-4Mt9GCcpf': # Scott is on mobile
-			ID = 'X6PyKTwqmn'
-		playerIndices[ID] = search(playerIDs, ID)
+	for i, ID in enumerate(statIDs):
+		pI = search(playerIDs, ID)
+		if pI == -1: 
+			pI = search(playerIDs, alternateIDs[i])
+		
+		playerIndices[ID] = pI
 
 	# 4. Fill sheet with data ----------------------------------------------------------------------
 

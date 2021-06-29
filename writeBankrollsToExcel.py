@@ -2,7 +2,7 @@ import openpyxl
 from search import *
 import time
 
-def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
+def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat, bankrollIDs, alternateIDs):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric
@@ -15,9 +15,6 @@ def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
 	must right click and delete the entire row(s), NOT just the content by pressing 'Delete'.
 	Charts and graphs should move up correspondingly; this is how you know you have successfully
 	lowered the max_row object. This can cause plenty of errors so be careful when you use it. """
-
-	bankrollIDs = ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH')
-	#               Fish          Raymond       Scott         Cedric
 
 	# 1. Open workbook and sheet -------------------------------------------------------------
 
@@ -47,13 +44,14 @@ def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat):
 		else:
 			sheet.cell(row=sheet.max_row+1, column=1, value=dateFormat)
 
-	# 3. Add net to current net for each player -----------------------------------------------
+	# 3. Get each player's index in playerIDs  ------------------------------------------------
 
 	for i, ID in enumerate(bankrollIDs):
 		index = search(playerIDs, ID)
+		if index == -1: 
+			index = search(playerIDs, alternateIDs[i])
 
-		if index == -1 and ID == '-4Mt9GCcpf': # Search for Scott's mobile ID instead
-			index = search(playerIDs, 'X6PyKTwqmn') 
+	# 4. Add net to current net for each player -----------------------------------------------
 
 		prevNet = sheet.cell(row=sheet.max_row-1, column=netCols[i]).value
 

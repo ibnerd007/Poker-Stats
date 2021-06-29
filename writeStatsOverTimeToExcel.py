@@ -6,7 +6,8 @@ from search import *
 import time
 
 def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-							  playerIDs, dateFormat, handTypeDesired):
+							  playerIDs, dateFormat, handTypeDesired, statsOverTimeIDs, 
+							  alternateIDs):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric
@@ -19,9 +20,6 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	must right click and delete the entire row(s), NOT just the content by pressing 'Delete'.
 	Charts and graphs should move up correspondingly; this is how you know you have successfully
 	lowered the max_row object. This can cause plenty of errors so be careful when you use it. """
-
-	statsOverTimeIDs = ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH')
-	#                    Fish          Raymond       Scott         Cedric
 
 	# 1. Open workbook and sheet -------------------------------------------------------------
 
@@ -58,11 +56,8 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	# 3. Add stats for each player -----------------------------------------------
 
 	for i, ID in enumerate(statsOverTimeIDs):
-
 		pI = search(playerIDs, ID) # player index
-		
-		if pI == -1 and ID == '-4Mt9GCcpf': # search for Scott's mobile ID instead
-			pI = search(playerIDs, 'X6PyKTwqmn')
+		if pI == -1: pI = search(playerIDs, alternateIDs[i])
 
 		playerStats = (vpipM[pI][2], pfrM[pI][2], tbpM[pI][2], afqM[pI][2], 
 			wtsdM[pI][2], wasdRelM[pI][2], cbpM[pI][2], afM[pI][2]) # stats are across all positions
@@ -123,10 +118,10 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	chart1.legend.position = 'r'
 	chart1.x_axis.title = 'Date'
 
-	data_fish =    Reference(sheet, min_col=vpipCols[0], min_row=2, max_row=sheet.max_row+1)
-	data_raymond = Reference(sheet, min_col=vpipCols[1], min_row=2, max_row=sheet.max_row+1)
-	data_scott =   Reference(sheet, min_col=vpipCols[2], min_row=2, max_row=sheet.max_row+1)
-	data_cedric =  Reference(sheet, min_col=vpipCols[3], min_row=2, max_row=sheet.max_row+1)
+	data_fish =    Reference(sheet, min_col=vpipCols[0], min_row=2, max_row=sheet.max_row)
+	data_raymond = Reference(sheet, min_col=vpipCols[1], min_row=2, max_row=sheet.max_row)
+	data_scott =   Reference(sheet, min_col=vpipCols[2], min_row=2, max_row=sheet.max_row)
+	data_cedric =  Reference(sheet, min_col=vpipCols[3], min_row=2, max_row=sheet.max_row)
 
 	series_fish =    Series(data_fish,    title='Fish')
 	series_raymond = Series(data_raymond, title='Raymond')
@@ -156,10 +151,10 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 	chart1.legend.position = 'r'
 
-	data_fish =    Reference(sheet, min_col=vpipCols[0] + 3, min_row=2, max_row=sheet.max_row+1)
-	data_raymond = Reference(sheet, min_col=vpipCols[1] + 3, min_row=2, max_row=sheet.max_row+1)
-	data_scott =   Reference(sheet, min_col=vpipCols[2] + 3, min_row=2, max_row=sheet.max_row+1)
-	data_cedric =  Reference(sheet, min_col=vpipCols[3] + 3, min_row=2, max_row=sheet.max_row+1)
+	data_fish =    Reference(sheet, min_col=vpipCols[0] + 3, min_row=2, max_row=sheet.max_row)
+	data_raymond = Reference(sheet, min_col=vpipCols[1] + 3, min_row=2, max_row=sheet.max_row)
+	data_scott =   Reference(sheet, min_col=vpipCols[2] + 3, min_row=2, max_row=sheet.max_row)
+	data_cedric =  Reference(sheet, min_col=vpipCols[3] + 3, min_row=2, max_row=sheet.max_row)
 
 	series_fish =    Series(data_fish,    title='Fish')
 	series_raymond = Series(data_raymond, title='Raymond')
@@ -189,10 +184,10 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 	chart1.legend.position = 'r'
 
-	data_fish =    Reference(sheet, min_col=vpipCols[0] + 5, min_row=2, max_row=sheet.max_row+1)
-	data_raymond = Reference(sheet, min_col=vpipCols[1] + 5, min_row=2, max_row=sheet.max_row+1)
-	data_scott =   Reference(sheet, min_col=vpipCols[2] + 5, min_row=2, max_row=sheet.max_row+1)
-	data_cedric =  Reference(sheet, min_col=vpipCols[3] + 5, min_row=2, max_row=sheet.max_row+1)
+	data_fish =    Reference(sheet, min_col=vpipCols[0] + 5, min_row=2, max_row=sheet.max_row)
+	data_raymond = Reference(sheet, min_col=vpipCols[1] + 5, min_row=2, max_row=sheet.max_row)
+	data_scott =   Reference(sheet, min_col=vpipCols[2] + 5, min_row=2, max_row=sheet.max_row)
+	data_cedric =  Reference(sheet, min_col=vpipCols[3] + 5, min_row=2, max_row=sheet.max_row)
 
 	series_fish =    Series(data_fish,    title='Fish')
 	series_raymond = Series(data_raymond, title='Raymond')
@@ -222,8 +217,8 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 	chart1.legend.position = 'r'
 
-	data_raymond = Reference(sheet, min_col=vpipCols[1] + 6, min_row=2, max_row=sheet.max_row+1)
-	data_scott =   Reference(sheet, min_col=vpipCols[2] + 6, min_row=2, max_row=sheet.max_row+1)
+	data_raymond = Reference(sheet, min_col=vpipCols[1] + 6, min_row=2, max_row=sheet.max_row)
+	data_scott =   Reference(sheet, min_col=vpipCols[2] + 6, min_row=2, max_row=sheet.max_row)
 
 	series_raymond = Series(data_raymond, title='Raymond')
 	series_scott =   Series(data_scott,   title='Scott')
