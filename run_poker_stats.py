@@ -39,8 +39,8 @@ def run():
 
 		includeCMD = {'NL': includeCMDnl, 'PLO': includeCMDplo, 'combined': includeCMDcombined}
 
-		pokerStats(date, 'NL',       includeCMD)
-		pokerStats(date, 'PLO',      includeCMD)
+		pokerStats(         date, 'NL',       includeCMD)
+		pokerStats(         date, 'PLO',      includeCMD)
 		output = pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
 
 		status1.configure(state=NORMAL)
