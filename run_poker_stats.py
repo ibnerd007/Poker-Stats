@@ -26,10 +26,14 @@ def run():
 	window.configure(background=bg)
 
 	# Adjust size
-	window.geometry("500x400")
+	# window.geometry("500x400")
 
 	# Now that variables are defined, run Poker Stats
 	def runPokerStats():
+
+
+		hide()
+
 		date = clicked.get()
 		date = date.replace('/', '') # remove slashes to make filename readable
 
@@ -43,12 +47,26 @@ def run():
 		pokerStats(         date, 'PLO',      includeCMD)
 		output = pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
 
-		status1.configure(state=NORMAL)
-		status1.delete('1.0', END)
+		# status1.configure(state=NORMAL)
 		status1.insert(END, 'Session date: {}\n\n'.format(output[0]))
 		status1.insert(END, '{}\n\n'.format(output[1]))
 		status1.insert(END, output[2])
-		status1.configure(state=DISABLED)
+		# status1.configure(state=DISABLED)
+
+		# status2.configure(state=NORMAL)
+		status2.insert('1.0', 'Task completed successfully.')
+		status2.tag_add("center", "1.0", "end")
+		# status2.configure(state=DISABLED)
+
+	def hide():
+		# status1.configure(state=NORMAL)
+		status1.delete('1.0', 'end') # Delete previous output for new run
+		# status1.configure(state=DISABLED) # Don't allow user to change output
+
+		# status2.configure(state=NORMAL)
+		status2.delete('1.0', 'end')
+		# status2.configure(state=DISABLED)
+
 
 
 	def setState(): # disabled hand types if CMD output not wanted
@@ -99,27 +117,32 @@ def run():
 	checkVar3 = IntVar()
 	checkVar4 = IntVar()
 
-	check1 = Checkbutton(window, text = 'Include command line output?', variable=checkVar1, command=setState, bg=bg)
+	check1 = Checkbutton(window, text = 'Include command line output?', variable=checkVar1, command=setState, bg=bg,
+								 activebackground=bg)
 	check1.pack(pady=5)
 
 	# The following checkbuttons allow the user to specify command line output desired.
-	check2 = Checkbutton(window, text = 'NL Texas Hold\'em', variable = checkVar2, state=DISABLED, bg=bg)
+	check2 = Checkbutton(window, text = 'NL Texas Hold\'em', variable = checkVar2, state=DISABLED, bg=bg,
+								 activebackground=bg)
 	check2.pack()
 
-	check3 = Checkbutton(window, text = 'Pot Limit Omaha', variable = checkVar3, state=DISABLED, bg=bg)
+	check3 = Checkbutton(window, text = 'Pot Limit Omaha', variable = checkVar3, state=DISABLED, bg=bg,
+								 activebackground=bg)
 	check3.pack()
 
-	check4 = Checkbutton(window, text = 'Both combined', variable = checkVar4, state=DISABLED, bg=bg)
+	check4 = Checkbutton(window, text = 'Both combined', variable = checkVar4, state=DISABLED, bg=bg,
+								 activebackground=bg)
 	check4.pack()
 
-	# Create run button that calls runPokerStats()
+	# Call runPokerStats() when 'Run' button is pressed
 	button = Button( window , text = "Run" , width=8, command = runPokerStats ).pack(pady=10)
 
 	status1 = Text(window, height=8, wrap=WORD, bg=bg, relief=FLAT, font='TkDefaultFont')
 	status1.pack(pady=5)
 
-	status2 = Text(window, height=1, wrap=WORD, bg=bg, relief=FLAT, font='TkDefaultFont')
-	status1.pack(pady=2)
+	status2 = Text(window, height=2, wrap=WORD, fg='dark green', bg=bg, relief=FLAT, font='TkDefaultFont')
+	status2.tag_configure("center", justify='center')
+	status2.pack()
 
 	# Execute tkinter
 	window.mainloop()

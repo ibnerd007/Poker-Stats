@@ -13,7 +13,7 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	# Fish, Raymond, Scott, Cedric
 
 	# Read:    playerName = sheet.cell(row=2, column=1).value
-	# Write:   sheet.cell(row=i + 2, column=1, value=playerDict[playerIDs[i]])
+	# Write:   sheet.cell(row=i+2, column=1, value=playerDict[playerIDs[i]])
 
 	""" PLEASE READ: sheet.max_row does not function as expected. Even if there is no value
 	in an entire row, those cells can still trigger the max_row object. To reduce max_row, you
