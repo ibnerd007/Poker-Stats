@@ -2,7 +2,7 @@ import openpyxl
 from search import *
 import time
 
-def writeBankrollsToExcel(ledgerM, playerIDs, dateFormat, bankrollIDs, alternateIDs):
+def writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, bankrollIDs):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric

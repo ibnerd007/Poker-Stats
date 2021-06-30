@@ -384,9 +384,13 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & PLO\n'
 	else: 								   pokerType = "N/A"
 
-	trackedIDs =   ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH')
-	#                Fish          Raymond       Scott         Cedric
-	alternateIDs = ('',           '',           'X6PyKTwqmn', '27qpPjb-rT')
+	trackedIDs =   (('L5G0fi1P1T'), ('gpL6BdHM3Z'), ('-4Mt9GCcpf', 'X6PyKTwqmn'), ('UOl9ieuNTH', '27qpPjb-rT'))
+	#                 Fish            Raymond         Scott                         Cedric
+
+	trackedNames = (('Fish', 'Howler', 'River God'), ('Ray', 'Raymond'), ('Scott', 'Scotty'), 
+		('Cedric', 'Il Magnifico'))
+
+	pI = assignPlayerIndices(playerIDs, playerNames)
 
 	if len(playerNames) > 0:
 		# Call this to see all stats for all players in session ------------------------------------
@@ -407,20 +411,22 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		writeStacksOverTimetoExcel(sessionStacks, playerNames, stackChangeInfo, playerIDs, 
 								   handTypeDesired, dateFormat)
 
+		#### TRANS-SESSION STATS -------------------------------------------------------------------------------
+
 		# Keep track of stats across multiple sessions, much like bankrolls ------------------------
 
 		writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-								  playerIDs, dateFormat, handTypeDesired, trackedIDs, alternateIDs)
+								  playerIDs, dateFormat, handTypeDesired, trackedIDs)
 
 		# Update the all-time bankrolls for players if not already entered -------------------------
 
-		writeBankrollsToExcel(ledgerM, playerIDs, dateFormat, trackedIDs, alternateIDs)
+		writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, trackedIDs)
 
 		# Update the all-time stats for players if not already entered -----------------------------
 
 		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, 
-							 mwas, mwbs, ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, 
-							 date, handTypeDesired, trackedIDs, alternateIDs)
+							 mwas, mwbs, ledgerM, playerIDs, playerNames, handsPlayed, bestHandsM, 
+							 date, handTypeDesired, trackedIDs)
 
 	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 

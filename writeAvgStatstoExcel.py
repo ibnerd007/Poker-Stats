@@ -4,8 +4,8 @@ from average import *
 import time
 
 def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, mwas, mwbs, 
-  		 			 ledgerM, playerIDs, playerDict, handsPlayed, bestHandsM, date, handTypeDesired,
-  		 			 statIDs, alternateIDs):
+  		 			 ledgerM, playerIDs, playerNames, handsPlayed, bestHandsM, date, handTypeDesired,
+  		 			 statIDs):
 	# Much like bankrolls, creates a weighted average of stats through total hands played
 	# Calculates separately for Holdem and PLO, as well as combined
 
@@ -53,7 +53,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 	# 4. Fill sheet with data ----------------------------------------------------------------------
 
-	tdStats = [vpipM, pfrM, tbpM, afqM, wtsdM, wasdM, wasdRelM]
+	tdStats = (vpipM, pfrM, tbpM, afqM, wtsdM, wasdM, wasdRelM)
 
 	# Fill Excel spreadsheet with percent stat data
 	for stat in range(len(tdStats)): # cols

@@ -6,8 +6,7 @@ from search import *
 import time
 
 def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-							  playerIDs, dateFormat, handTypeDesired, statsOverTimeIDs, 
-							  alternateIDs):
+							  playerIDs, dateFormat, handTypeDesired, statsOverTimeIDs):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric
