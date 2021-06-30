@@ -381,7 +381,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	if   holdEm == True  and PLO == False: pokerType = 'No Limit Texas Hold\'em\n'
 	elif holdEm == False and PLO == True : pokerType = 'Pot Limit Omaha\n'
-	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & Pot Limit Omaha\n'
+	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & PLO\n'
 	else: 								   pokerType = "N/A"
 
 	trackedIDs =   ('L5G0fi1P1T', 'gpL6BdHM3Z', '-4Mt9GCcpf', 'UOl9ieuNTH')

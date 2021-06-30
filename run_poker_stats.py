@@ -26,13 +26,15 @@ def run():
 	window.configure(background=bg)
 
 	# Adjust size
-	# window.geometry("500x400")
+	window.geometry("500x400")
 
 	# Now that variables are defined, run Poker Stats
 	def runPokerStats():
+		spaces = ('       ','            ','  ') # cop-out way to line up text
 
-
-		hide()
+		status1.configure(state=NORMAL)
+		status1.delete('1.0', 'end') # Delete previous output for new run
+		status1.configure(state=DISABLED) # Don't allow user to change output
 
 		date = clicked.get()
 		date = date.replace('/', '') # remove slashes to make filename readable
@@ -43,30 +45,40 @@ def run():
 
 		includeCMD = {'NL': includeCMDnl, 'PLO': includeCMDplo, 'combined': includeCMDcombined}
 
-		pokerStats(         date, 'NL',       includeCMD)
-		pokerStats(         date, 'PLO',      includeCMD)
-		output = pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
 
-		# status1.configure(state=NORMAL)
-		status1.insert(END, 'Session date: {}\n\n'.format(output[0]))
-		status1.insert(END, '{}\n\n'.format(output[1]))
-		status1.insert(END, output[2])
-		# status1.configure(state=DISABLED)
+		try:
+			pokerStats(date, 'combined', includeCMD)
+			
+		except Exception as e:
+			status2.configure(fg='dark red')
+			statusMessage.set('ERROR: {}'.format(e))
 
-		# status2.configure(state=NORMAL)
-		status2.insert('1.0', 'Task completed successfully.')
-		status2.tag_add("center", "1.0", "end")
-		# status2.configure(state=DISABLED)
+		try:
+			pokerStats(date, 'PLO', includeCMD)
+			
+		except Exception as e:
+			status2.configure(fg='dark red')
+			statusMessage.set('ERROR: {}'.format(e))
 
-	def hide():
-		# status1.configure(state=NORMAL)
-		status1.delete('1.0', 'end') # Delete previous output for new run
-		# status1.configure(state=DISABLED) # Don't allow user to change output
+		try:
+			output = pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
+			statusMessage.set('Task completed successfully.')
 
-		# status2.configure(state=NORMAL)
-		status2.delete('1.0', 'end')
-		# status2.configure(state=DISABLED)
+		except Exception as e:
+			status2.configure(fg='dark red')
+			statusMessage.set('ERROR: {}'.format(e))
 
+		status1.configure(state=NORMAL)
+		status1.insert(END, 'Session date:{}{}\n\n'.format(spaces[0], output[0]))
+
+		status1.insert(END, 'Players:{}'.format(spaces[1]))
+		for player in output[1]:
+			status1.insert(END, '{}, '.format(player))
+		status1.delete('end-3c', 'end')
+		status1.insert(END, '\n\n')
+
+		status1.insert(END, 'Poker type played:{}{}'.format(spaces[2], output[2]))
+		status1.configure(state=DISABLED)
 
 
 	def setState(): # disabled hand types if CMD output not wanted
@@ -137,12 +149,14 @@ def run():
 	# Call runPokerStats() when 'Run' button is pressed
 	button = Button( window , text = "Run" , width=8, command = runPokerStats ).pack(pady=10)
 
-	status1 = Text(window, height=8, wrap=WORD, bg=bg, relief=FLAT, font='TkDefaultFont')
-	status1.pack(pady=5)
+	status1 = Text(window, height=7, wrap=WORD, bg=bg)
+	status1.pack(padx=10)
 
-	status2 = Text(window, height=2, wrap=WORD, fg='dark green', bg=bg, relief=FLAT, font='TkDefaultFont')
-	status2.tag_configure("center", justify='center')
-	status2.pack()
+	# font=TkDeafultFont
+
+	statusMessage = StringVar()
+	status2 = Label(window, textvariable=statusMessage, height=2, fg='dark green', bg=bg)
+	status2.pack(pady=1)
 
 	# Execute tkinter
 	window.mainloop()
