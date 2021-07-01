@@ -6,7 +6,7 @@ from search import *
 import time
 
 def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-							  playerIDs, dateFormat, handTypeDesired, statsOverTimeIDs):
+							  playerIndices, dateFormat, handTypeDesired):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric
@@ -54,9 +54,7 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 	# 3. Add stats for each player -----------------------------------------------
 
-	for i, ID in enumerate(statsOverTimeIDs):
-		pI = search(playerIDs, ID) # player index
-		if pI == -1: pI = search(playerIDs, alternateIDs[i])
+	for pI in playerIndices:
 
 		playerStats = (vpipM[pI][2], pfrM[pI][2], tbpM[pI][2], afqM[pI][2], 
 			wtsdM[pI][2], wasdRelM[pI][2], cbpM[pI][2], afM[pI][2]) # stats are across all positions

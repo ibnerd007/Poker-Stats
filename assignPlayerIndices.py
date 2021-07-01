@@ -1,3 +1,6 @@
+# import os
+from isMatch import *
+
 def assignPlayerIndices(playerIDs, playerNames):
 	# Arguments: playerIDs:   current 10-digit IDs of players this session
 	#            playerNames: nicknames used by the players this session.
@@ -23,22 +26,72 @@ def assignPlayerIndices(playerIDs, playerNames):
 		If neither method works, the function will make the index -1, and assume the player did not play.
 	"""
 
+	trackedIDs = []
+	trackedNames = []
 
-	trackedIDs =   (('L5G0fi1P1T'), ('gpL6BdHM3Z'), ('-4Mt9GCcpf', 'X6PyKTwqmn'), ('UOl9ieuNTH', '27qpPjb-rT'))
-	#                 Fish            Raymond         Scott                         Cedric
+	# filenames = os.listdir('Tracked Players') # out of order, must code manually
+	filenames = ['Fish_IDs.txt', 'Fish_names.txt', 'Raymond_IDs.txt', 'Raymond_names.txt', 
+	             'Scott_IDs.txt', 'Scott_names.txt', 'Cedric_IDs.txt', 'Cedric_names.txt']
 
-	trackedNames = (('Fish', 'Howler', 'River God'), ('Ray', 'Raymond'), ('Scott', 'Scotty'), 
-		('Cedric', 'Il Magnifico'))
+	# 1. Get IDs & names from files -------------------------------------------
 
-	mappedIndices = []
+	for i, filename in enumerate(filenames): # Go through all files with names and IDs
+	    temp = list()
+
+	    file = open(r'Tracked Players\{}'.format(filename), 'r')
+	    for line in file:
+	        line = line.replace('\n', '')
+	        temp.append(line)
+
+	    if i % 2 == 0: # file is even, is an ID file
+	        trackedIDs.append(temp)
+	    else:          # file is odd, it is a name file
+	        trackedNames.append(temp)
+
+	    file.close()
+
+	# 2. Map indices ----------------------------------------------------------
+
+	numPlayers = len(playerIDs)
+	mappedIndices = [-1] * 4 
+	newIDs = [''] * 4 # Any new IDs that are found must be stored
+
+	for pI, tuple in enumerate(trackedIDs):
+	    for trackedID in tuple:
+	        for i, ID in enumerate(playerIDs):
+	            if trackedID == ID:
+	                # Add index to mappedIndices
+	                mappedIndices[pI] = i
+
+	print(mappedIndices)
+
+	# Iterate through indices. If -1, start matching
+	for i, index in enumerate(mappedIndices):
+	    if index == -1: # No match found above
+	        # First, get list of tracked names
+	        for trackedName in trackedNames[i]:
+	            for j, name in enumerate(playerNames):
+	                if isMatch(name, trackedName):
+	                    # Found it!
+	                    mappedIndices[i] = j
+	                    newIDs[i] = playerIDs[j]
+
+	print(mappedIndices)
+	print(newIDs)
+
+	# 3. Write new IDs to correct file -----------------------------------------
+	mynames = ('Fish', 'Raymond', 'Scott', 'Cedric')
+
+	for i, newID in enumerate(newIDs):
+	    if newID != '':
+	        file = open(r'Tracked Players\{}_IDs.txt'.format(mynames[i]), 'a')
+	        file.write('{}\n'.format(newID))
+	        file.close()
+
+	return mappedIndices
 
 
-	for pI, tuple in trackedIDs:
-		for trackedID in tuple:
-			for i, ID in enumerate(playerIDs):
-				if trackedID == ID:
-					# Add index to mappedIndices
-					mappedIndices[pI] = i
+    
 
 	
 

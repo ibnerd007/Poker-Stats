@@ -4,8 +4,7 @@ from average import *
 import time
 
 def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, mwas, mwbs, 
-  		 			 ledgerM, playerIDs, playerNames, handsPlayed, bestHandsM, date, handTypeDesired,
-  		 			 statIDs):
+  		 			 ledgerM, playerIndices, handsPlayed, date, handTypeDesired):
 	# Much like bankrolls, creates a weighted average of stats through total hands played
 	# Calculates separately for Holdem and PLO, as well as combined
 
@@ -40,71 +39,52 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 		else:
 			sheet.cell(row=sheet.max_row+1, column=1, value=date)
 
-	# 3. Capturing player indices ------------------------------------------------------------------
-
-	playerIndices = {}
-
-	for i, ID in enumerate(statIDs):
-		pI = search(playerIDs, ID)
-		if pI == -1: 
-			pI = search(playerIDs, alternateIDs[i])
-		
-		playerIndices[ID] = pI
-
 	# 4. Fill sheet with data ----------------------------------------------------------------------
 
 	tdStats = (vpipM, pfrM, tbpM, afqM, wtsdM, wasdM, wasdRelM)
 
 	# Fill Excel spreadsheet with percent stat data
 	for stat in range(len(tdStats)): # cols
-		player = 0
-		for ID in playerIndices: # rows
+		for row, pI in enumerate(playerIndices): # rows
 			# Assign player's index this session
-			playerIdx = playerIndices[ID]
 
-			if playerIdx != -1:
+			if pI != -1:
 				# Get stats from this session and averaged sessions
-				statAvg = sheet.cell(row=player + 2, column=stat + 3).value
-				statThisSession  = tdStats[stat][playerIdx][2]
+				statAvg = sheet.cell(row=row+2, column=stat+3).value
+				statThisSession  = tdStats[stat][pI][2]
 
 				# Get hands played this session and total across all sessions
 				totalHandsPlayed = sheet.cell(row=player + 2, column=14).value
-				handsPlayedThisSession  = handsPlayed[0][playerIdx] + handsPlayed[1][playerIdx]
+				handsPlayedThisSession  = handsPlayed[0][pI] + handsPlayed[1][pI]
 
 				# Calculate weighted average
 				newStatAvg = average(statAvg, statThisSession, totalHandsPlayed, handsPlayedThisSession)
 				
-				sheet.cell(row=player + 2, column=stat + 3, value=newStatAvg) # fill percent data
-				sheet.cell(row=player + 2, column=stat + 3).number_format = '0.0%'
-			
-			# Increment for the next row on next loop iteration
-			player += 1
+				sheet.cell(row=row+2, column=stat+3, value=newStatAvg) # fill percent data
+				sheet.cell(row=row+2, column=stat+3).number_format = '0.0%'
 
 
 	# Fill Excel spreadsheet with C-bets vs opportunities and aggression factors, not a percent-based stats
-	player = 0
-	for ID in playerIndices: # rows
+	for row, pI in enumerate(playerIndices): # rows
 
-		if playerIdx != -1:
-
-			playerIdx = playerIndices[ID]
+		if pI != -1:
 		
-			totalHandsPlayed = sheet.cell(row=player + 2, column=14).value
-			handsPlayedThisSession  = handsPlayed[0][playerIdx] + handsPlayed[1][playerIdx]
+			totalHandsPlayed = sheet.cell(row=row+2, column=14).value
+			handsPlayedThisSession  = handsPlayed[0][pI] + handsPlayed[1][pI]
 
 			# ----------------------------------------------------------------------------------
-			afCurr = afM[playerIdx][2]
+			afCurr = afM[pI][2]
 			
 			if afCurr != -1: # if AF is not -1 (the player called at least once during session)
-				afPrev = sheet.cell(row=player + 2, column=11).value
+				afPrev = sheet.cell(row=row+2, column=11).value
 				afAvg = average(afPrev, afCurr, totalHandsPlayed, handsPlayedThisSession)
 
 				sheet.cell(row=player + 2, column=11, value=afAvg)
 
 			# -----------------------------------------------------------------------------------
 			
-			cbpBetPrev = sheet.cell(row=player + 2, column=12).value
-			cbpBetCurr = cbpCountM[playerIdx][0] + cbpCountM[playerIdx][1]
+			cbpBetPrev = sheet.cell(row=row+2, column=12).value
+			cbpBetCurr = cbpCountM[pI][0] + cbpCountM[pI][1]
 
 			cbpBetTotal = cbpBetPrev + cbpBetCurr
 
@@ -112,8 +92,8 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 			# -----------------------------------------------------------------------------------
 
-			cbpOppsPrev = sheet.cell(row=player + 2, column=13).value
-			cbpOppsCurr = cbpCountM[playerIdx][2] + cbpCountM[playerIdx][3]
+			cbpOppsPrev = sheet.cell(row=row+2, column=13).value
+			cbpOppsCurr = cbpCountM[pI][2] + cbpCountM[pI][3]
 
 			cbpOppsTotal = cbpOppsPrev + cbpOppsCurr
 
@@ -124,23 +104,17 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 			try:    cbp = cbpBetTotal/cbpOppsTotal
 			except: cbp = 0
 
-			sheet.cell(row=player + 2, column=10, value=cbp) # fill percent data
-			sheet.cell(row=player + 2, column=10).number_format = '0.0%'
+			sheet.cell(row=row+2, column=10, value=cbp) # fill percent data
+			sheet.cell(row=row+2, column=10).number_format = '0.0%'
 
 			# -----------------------------------------------------------------------------------
 
-		player += 1
+	for row, pI in enumerate(playerIndices):
 
-	player = 0
-	for ID in playerIndices:
-		playerIdx = playerIndices[ID]
+		if pI != -1:
+			prevTotal = sheet.cell(row=row+2, column=14).value
+			currTotal = handsPlayed[0][pI] + handsPlayed[1][pI]
 
-		if playerIdx != -1:
-			prevTotal = sheet.cell(row=player + 2, column=14).value
-			currTotal = handsPlayed[0][playerIdx] + handsPlayed[1][playerIdx]
-
-			sheet.cell(row=player + 2, column=14, value=prevTotal + currTotal)
-		
-		player += 1
+			sheet.cell(row=row+2, column=14, value=prevTotal + currTotal)
 
 	wb.save(wb_path)

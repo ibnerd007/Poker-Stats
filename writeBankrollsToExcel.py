@@ -2,7 +2,7 @@ import openpyxl
 from search import *
 import time
 
-def writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, bankrollIDs):
+def writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, playerIndices):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric
@@ -44,12 +44,9 @@ def writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, bankrollI
 		else:
 			sheet.cell(row=sheet.max_row+1, column=1, value=dateFormat)
 
-	# 3. Get each player's index in playerIDs  ------------------------------------------------
+	# 3. Get each player's index ------------- ------------------------------------------------
 
-	for i, ID in enumerate(bankrollIDs):
-		index = search(playerIDs, ID)
-		if index == -1: 
-			index = search(playerIDs, alternateIDs[i])
+	for index in playerIndices:
 
 	# 4. Add net to current net for each player -----------------------------------------------
 
@@ -73,7 +70,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, bankrollI
 
 			bankroll += net
 
-			assert bankroll >= 0, 'Bankroll = %.2f < 0: %s' % (bankroll, bankrollIDs[i])
+			assert bankroll >= 0, 'Bankroll = {.2f} < 0 for index {}'.format(bankroll, index)
 
 			sheet.cell(row=sheet.max_row, column=netCols[i], value=newNet)
 			sheet.cell(row=sheet.max_row, column=netCols[i] + 1, value=bankroll) # set bankroll

@@ -416,7 +416,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		# Keep track of stats across multiple sessions, much like bankrolls ------------------------
 
 		writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-								  playerIDs, dateFormat, handTypeDesired, trackedIDs)
+								  playerIDs, dateFormat, handTypeDesired, )
 
 		# Update the all-time bankrolls for players if not already entered -------------------------
 
