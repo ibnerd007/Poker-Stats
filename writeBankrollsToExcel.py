@@ -2,7 +2,7 @@ import openpyxl
 from search import *
 import time
 
-def writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, playerIndices):
+def writeBankrollsToExcel(ledgerM, dateFormat, playerIndices):
 	# Keeps a running bankroll of regular players across multiple sessions
 	# Players tracked:
 	# Fish, Raymond, Scott, Cedric
@@ -46,7 +46,7 @@ def writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, playerInd
 
 	# 3. Get each player's index ------------- ------------------------------------------------
 
-	for index in playerIndices:
+	for i, index in enumerate(playerIndices):
 
 	# 4. Add net to current net for each player -----------------------------------------------
 

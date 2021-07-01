@@ -63,7 +63,7 @@ def assignPlayerIndices(playerIDs, playerNames):
 	                # Add index to mappedIndices
 	                mappedIndices[pI] = i
 
-	print(mappedIndices)
+	# print(mappedIndices)
 
 	# Iterate through indices. If -1, start matching
 	for i, index in enumerate(mappedIndices):
@@ -76,8 +76,8 @@ def assignPlayerIndices(playerIDs, playerNames):
 	                    mappedIndices[i] = j
 	                    newIDs[i] = playerIDs[j]
 
-	print(mappedIndices)
-	print(newIDs)
+	# print(mappedIndices)
+	# print(newIDs)
 
 	# 3. Write new IDs to correct file -----------------------------------------
 	mynames = ('Fish', 'Raymond', 'Scott', 'Cedric')

@@ -54,7 +54,7 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 
 	# 3. Add stats for each player -----------------------------------------------
 
-	for pI in playerIndices:
+	for i, pI in enumerate(playerIndices):
 
 		playerStats = (vpipM[pI][2], pfrM[pI][2], tbpM[pI][2], afqM[pI][2], 
 			wtsdM[pI][2], wasdRelM[pI][2], cbpM[pI][2], afM[pI][2]) # stats are across all positions

@@ -16,6 +16,7 @@ from numPlayersIn import *
 from whichHandType import *
 from capturePlayerStacks import *
 from createPlayerDict import *
+from assignPlayerIndices import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -384,13 +385,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	elif holdEm == True  and PLO == True : pokerType = 'No Limit Texas Hold\'em & PLO\n'
 	else: 								   pokerType = "N/A"
 
-	trackedIDs =   (('L5G0fi1P1T'), ('gpL6BdHM3Z'), ('-4Mt9GCcpf', 'X6PyKTwqmn'), ('UOl9ieuNTH', '27qpPjb-rT'))
-	#                 Fish            Raymond         Scott                         Cedric
-
-	trackedNames = (('Fish', 'Howler', 'River God'), ('Ray', 'Raymond'), ('Scott', 'Scotty'), 
-		('Cedric', 'Il Magnifico'))
-
-	pI = assignPlayerIndices(playerIDs, playerNames)
+	playerIndices = assignPlayerIndices(playerIDs, playerNames)
 
 	if len(playerNames) > 0:
 		# Call this to see all stats for all players in session ------------------------------------
@@ -416,17 +411,16 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		# Keep track of stats across multiple sessions, much like bankrolls ------------------------
 
 		writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRelM, mwas, mwbs, 
-								  playerIDs, dateFormat, handTypeDesired, )
+								  playerIndices, dateFormat, handTypeDesired)
 
 		# Update the all-time bankrolls for players if not already entered -------------------------
 
-		writeBankrollsToExcel(ledgerM, playerIDs, playerNames, dateFormat, trackedIDs)
+		writeBankrollsToExcel(ledgerM, dateFormat, playerIndices)
 
 		# Update the all-time stats for players if not already entered -----------------------------
 
 		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, 
-							 mwas, mwbs, ledgerM, playerIDs, playerNames, handsPlayed, bestHandsM, 
-							 date, handTypeDesired, trackedIDs)
+							 mwas, mwbs, ledgerM, playerIndices, handsPlayed, date, handTypeDesired)
 
 	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 

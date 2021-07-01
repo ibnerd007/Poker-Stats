@@ -1,4 +1,4 @@
-import os
+import os, time
 
 from poker_stats import pokerStats
 from tkinter import *
@@ -45,28 +45,14 @@ def run():
 
 		includeCMD = {'NL': includeCMDnl, 'PLO': includeCMDplo, 'combined': includeCMDcombined}
 
+		start = time.time()
 
-		try:
-			pokerStats(date, 'combined', includeCMD)
-			
-		except Exception as e:
-			status2.configure(fg='dark red')
-			statusMessage.set('ERROR: {}'.format(e))
+		pokerStats(date, 'NL', includeCMD)
+		pokerStats(date, 'PLO', includeCMD)
+		output = pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
 
-		try:
-			pokerStats(date, 'PLO', includeCMD)
-			
-		except Exception as e:
-			status2.configure(fg='dark red')
-			statusMessage.set('ERROR: {}'.format(e))
-
-		try:
-			output = pokerStats(date, 'combined', includeCMD) # shows every player and every hand type
-			statusMessage.set('Task completed successfully.')
-
-		except Exception as e:
-			status2.configure(fg='dark red')
-			statusMessage.set('ERROR: {}'.format(e))
+		end = time.time()
+		elapsed = end - start
 
 		status1.configure(state=NORMAL)
 		status1.insert(END, 'Session date:{}{}\n\n'.format(spaces[0], output[0]))
@@ -74,11 +60,13 @@ def run():
 		status1.insert(END, 'Players:{}'.format(spaces[1]))
 		for player in output[1]:
 			status1.insert(END, '{}, '.format(player))
-		status1.delete('end-3c', 'end')
+		status1.delete('end-3c', 'end') # Delete last comma ',' from the list of players
 		status1.insert(END, '\n\n')
 
 		status1.insert(END, 'Poker type played:{}{}'.format(spaces[2], output[2]))
 		status1.configure(state=DISABLED)
+
+		statusMessage.set('Task completed in {:.2f} seconds.'.format(elapsed))
 
 
 	def setState(): # disabled hand types if CMD output not wanted
@@ -152,10 +140,10 @@ def run():
 	status1 = Text(window, height=7, wrap=WORD, bg=bg)
 	status1.pack(padx=10)
 
-	# font=TkDeafultFont
+	# font=TkDefaultFont
 
 	statusMessage = StringVar()
-	status2 = Label(window, textvariable=statusMessage, height=2, fg='dark green', bg=bg)
+	status2 = Label(window, textvariable=statusMessage, height=2, fg='dark green', bg=bg, font='TkDefaultFont 10')
 	status2.pack(pady=1)
 
 	# Execute tkinter
