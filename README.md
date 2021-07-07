@@ -21,7 +21,7 @@ Stats tracked:
 *Note: All stats are tracked positionally (except money won). Stats broken down by position can be viewed in command line output.*
 
 ##### Instructions for use
-Run main script -> `runPokerStats.py` (contains GUI)
+Run main script -> `run_poker_stats.py` (contains GUI)
 
 Once the program is running, choose the desired date to see specific stats from the dropdown menu. The dropdown shows all available
 dates in the `\Poker-Stats\Logs` directory.
