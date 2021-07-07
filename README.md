@@ -18,7 +18,7 @@ Stats tracked:
 - Money won before showdown ($)
 - Hands played during session
 
-*Note: All stats are tracked positionally as well (except money won), and can be viewed in command line output.*
+*Note: All stats are tracked positionally (except money won). Stats broken down by position can be viewed in command line output.*
 
 ##### Instructions for use
 Run main script -> `runPokerStats.py` (contains GUI)
