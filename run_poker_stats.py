@@ -91,7 +91,7 @@ def run():
 
 	def key_pressed(event):
 		if event.keysym == 'Return': runPokerStats()
-		# if event.keysym == 'Escape': window.destroy()
+		if event.keysym == 'Escape': window.destroy()
 
 
 	# Dropdown menu options
