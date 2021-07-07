@@ -445,7 +445,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, 
 							 mwas, mwbs, ledgerM, playerIndices, handsPlayed, date, handTypeDesired)
 
-	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
+	# else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 
 	# ----------------------------------------------------------------------------------------------
 

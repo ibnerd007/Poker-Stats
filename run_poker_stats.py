@@ -30,7 +30,7 @@ def run():
 
 	# Now that variables are defined, run Poker Stats
 	def runPokerStats():
-		spaces = ('       ','            ','  ') # cop-out way to line up text
+		spaces = ('       ','            ','  ') # cop-out way to line up output text
 
 		status1.configure(state=NORMAL)
 		status1.delete('1.0', 'end') # Delete previous output for new run
@@ -89,6 +89,11 @@ def run():
 			check4.deselect()
 			check4.config(state=DISABLED)
 
+	def key_pressed(event):
+		if event.keysym == 'Return': runPokerStats()
+		# if event.keysym == 'Escape': window.destroy()
+
+
 	# Dropdown menu options
 	logs = os.listdir('Logs')
 	options = [''] * len(logs) # initialize list
@@ -145,6 +150,8 @@ def run():
 	statusMessage = StringVar()
 	status2 = Label(window, textvariable=statusMessage, height=2, fg='dark green', bg=bg, font='TkDefaultFont 10')
 	status2.pack(pady=1)
+
+	window.bind('<Key>', key_pressed)
 
 	# Execute tkinter
 	window.mainloop()
