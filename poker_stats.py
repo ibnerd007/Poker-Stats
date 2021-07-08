@@ -40,6 +40,7 @@ from writeStatsOverTimeToExcel import *
 from writeAvgStatstoExcel import *
 from whoPlayedWhen import *
 from addToPlayerDict import *
+from wipeCurrSessionSheets import *
 
 def pokerStats(date, handTypeDesired, includeCMD):
 
@@ -122,7 +123,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	debugDates = ('040921','041621','041921','042421','042621','042921','050421','051321','051721',
 				  '052021','052421','052721','052821','053121','060721','061021','061421','061521',
-				  '061721','062121')
+				  '061721','062121','062421')
 
 	if path_log[9:15] in debugDates: # run from top to bottom of log for debugging purposes
 		begin = 0
@@ -445,7 +446,9 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, 
 							 mwas, mwbs, ledgerM, playerIndices, handsPlayed, date, handTypeDesired)
 
-	# else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
+	else: 
+		print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
+		wipeCurrSessionSheets(handTypeDesired)
 
 	# ----------------------------------------------------------------------------------------------
 
