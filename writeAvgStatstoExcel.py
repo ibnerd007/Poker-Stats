@@ -54,7 +54,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 				statThisSession  = tdStats[stat][pI][2]
 
 				# Get hands played this session and total across all sessions
-				totalHandsPlayed = sheet.cell(row=player + 2, column=14).value
+				totalHandsPlayed = sheet.cell(row=row+2, column=14).value
 				handsPlayedThisSession  = handsPlayed[0][pI] + handsPlayed[1][pI]
 
 				# Calculate weighted average
@@ -79,7 +79,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 				afPrev = sheet.cell(row=row+2, column=11).value
 				afAvg = average(afPrev, afCurr, totalHandsPlayed, handsPlayedThisSession)
 
-				sheet.cell(row=player + 2, column=11, value=afAvg)
+				sheet.cell(row=row+2, column=11, value=afAvg)
 
 			# -----------------------------------------------------------------------------------
 			
@@ -88,7 +88,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 			cbpBetTotal = cbpBetPrev + cbpBetCurr
 
-			sheet.cell(row=player + 2, column=12, value=cbpBetTotal) # fill c-bets
+			sheet.cell(row=row+2, column=12, value=cbpBetTotal) # fill c-bets
 
 			# -----------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ def writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, 
 
 			cbpOppsTotal = cbpOppsPrev + cbpOppsCurr
 
-			sheet.cell(row=player + 2, column=13, value=cbpOppsTotal) # fill c-bet opportunities
+			sheet.cell(row=row+2, column=13, value=cbpOppsTotal) # fill c-bet opportunities
 
 			# -----------------------------------------------------------------------------------
 
