@@ -447,7 +447,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 							 mwas, mwbs, ledgerM, playerIndices, handsPlayed, date, handTypeDesired)
 
 	else: 
-		print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
+		# print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 		wipeCurrSessionSheets(handTypeDesired)
 
 	# ----------------------------------------------------------------------------------------------

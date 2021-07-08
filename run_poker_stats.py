@@ -22,11 +22,14 @@ def run():
 
 	# Create object
 	window = Tk()
-	window.title('PokerNow Stats')
+	window.title('PokerStats')
 	window.configure(background=bg)
 
+	photo = PhotoImage(file = "aces.png")
+	window.iconphoto(True, photo)
+
 	# Adjust size
-	window.geometry("500x400")
+	window.geometry("500x460")
 
 	# Now that variables are defined, run Poker Stats
 	def runPokerStats():
@@ -93,12 +96,24 @@ def run():
 		if event.keysym == 'Return': runPokerStats()
 		if event.keysym == 'Escape': window.destroy()
 
+	def openStats():
+		# Run command to open Excel in command line
+		os.system(r"start excel.exe C:\Users\joseph.phillips\Documents\GitHub\Poker-Stats\Outputs\stats.xlsx")
+
+	def openNet():
+		# Run command to open Excel in command line
+		os.system(r"start excel.exe C:\Users\joseph.phillips\Documents\GitHub\Poker-Stats\Outputs\net_over_time_avg.xlsx")
+
+
 
 	# Dropdown menu options
 	logs = os.listdir('Logs')
 	options = [''] * len(logs) # initialize list
 	for i, name in enumerate(logs): # get logs in directory
-		options[i] = '{}/{}/{}'.format(name[4:6], name[6:8], name[8:10])
+		month = name[4:6 ]
+		day =   name[6:8 ]
+		year =  name[8:10]
+		options[i] = '{}/{}/{}'.format(month, day, year)
 
 	# datatype of menu text
 	clicked = StringVar()
@@ -107,7 +122,7 @@ def run():
 	clicked.set(options[-1]) # set to penultimate element (most recent date) in list
 
 	# Create welcome Label
-	welcome = Label( window , text = "Welcome to PokerNow Stats!", font='Arial 14', bg=bg )
+	welcome = Label( window , text = "Welcome to PokerStats!", font='Arial 14', bg=bg )
 	welcome.pack(pady=5)
 
 	instruct = Label( window , text = "Choose your date from the dropdown below.", bg=bg )
@@ -142,7 +157,7 @@ def run():
 	# Call runPokerStats() when 'Run' button is pressed
 	button = Button( window , text = "Run" , width=8, command = runPokerStats ).pack(pady=10)
 
-	status1 = Text(window, height=7, wrap=WORD, bg=bg)
+	status1 = Text(window, height=6, wrap=WORD, bg=bg)
 	status1.pack(padx=10)
 
 	# font=TkDefaultFont
@@ -150,6 +165,11 @@ def run():
 	statusMessage = StringVar()
 	status2 = Label(window, textvariable=statusMessage, height=2, fg='dark green', bg=bg, font='TkDefaultFont 10')
 	status2.pack(pady=1)
+
+	# Open stats.xlsx when button is pressed
+	button1 = Button( window , text = "Open this session's stats", command = openStats ).pack(pady=3)
+	
+	button2 = Button( window , text = "Open net vs time", command = openNet ).pack()
 
 	window.bind('<Key>', key_pressed)
 

@@ -8,8 +8,12 @@ def wipeCurrSessionSheets(handTypeDesired):
 	wb_path = r'Outputs\stats.xlsx'
 	wb = openpyxl.load_workbook(wb_path) # load existing workbook
 
-	sheet = wb['{} Stats-this session'.format(handTypeDesired)]
+	sheetnames = wb.sheetnames
 
-	wb.remove(sheet)
+	sheetname = '{} Stats-this session'.format(handTypeDesired)
+
+	if sheetname in sheetnames:
+		sheet = wb[sheetname]
+		wb.remove(sheet)
 
 	wb.save(wb_path)

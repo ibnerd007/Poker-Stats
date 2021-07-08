@@ -27,11 +27,11 @@ def writeStatsOverTimetoExcel(vpipM, pfrM, tbpM, cbpM, afM, afqM, wtsdM, wasdRel
 	wb = openpyxl.load_workbook(wb_path) # load existing workbook
 
 	if handTypeDesired == 'NL':
-		sheet = wb['NL SOT'] # access sheet
+		sheet = wb['NL SOT'] # 'Stacks Over Time'
 	elif handTypeDesired == 'PLO':
-		sheet = wb['PLO SOT'] # access sheet
+		sheet = wb['PLO SOT']
 	else: # combined hand types are desired
-		sheet = wb['combined SOT'] # access sheet
+		sheet = wb['combined SOT']
 
 	# 2. Check to make sure this session has not already been recorded -----------------------
 	#    Compare this session's date with date column
