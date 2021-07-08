@@ -115,9 +115,27 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	aggressorID = None # initalize aggressor ID for program to compare for c-bet statistic
 
-	# Main loop, beginning at i = 0 --------------------------------------------------------------------------
+	# Main loop, beginning at either beginning or end -------------------------------------------------------
 
-	for i in range(log_rows):
+	# If loop should be from the beginning, add to this tuple of dates in Excel where log order is already
+	# switched.
+
+	debugDates = ('040921','041621','041921','042421','042621','042921','050421','051321','051721',
+				  '052021','052421','052721','052821','053121','060721','061021','061421','061521',
+				  '061721','062121')
+
+	if path_log[9:15] in debugDates: # run from top to bottom of log for debugging purposes
+		begin = 0
+		end = log_rows
+		order = 1
+	else: 
+		begin = log_rows-1
+		end = 0 # will not include entry row
+		order = -1
+
+	# ---------------------------------------------------------------------------------------------------------
+
+	for i in range(begin, end, order):
 
 		# Step 1: Parse line beginning with "starting hand #", then 'Player stacks:', then certain actions
 		
@@ -126,6 +144,13 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		# Preflop -------------------------------------------------------------
 
 		if str.find('starting hand #') != -1: # row found, indicates starting new hand
+
+			if totalPlayed == 0: # very first hand seen
+				index = str.find('starting hand #')
+				handNum = str[index+15:index+15+3]
+
+				if handNum != '1  ':
+					raise Exception('Log order is incorrect, expected hand 1, got {}'.format(handNum))
 
 			handType = whichHandType(str, handType)
 
@@ -144,9 +169,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		# Code must skip every line until it finds a hand that matches desired hand type.
 		# This if statement effectively acts like hand types that are not desired were never played
 		# if handTypeDesired == 'combined', this block is skipped enitrely, and the whole log is processed
-		if handType != handTypeDesired and handTypeDesired != 'combined':
-			i += 1
-			continue
+		if handType != handTypeDesired and handTypeDesired != 'combined': continue
 
 		if handType == 'NL': # This hand is NL Holdem
 			holdEm = True
@@ -159,7 +182,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		if str.find('Player stacks:') != -1: # row found, Players at table are now shown
 			playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
 
-			# Add necessary elements to stat lists & counter 3D list to not over-index
+			# Add necessary elements to 2D stat lists
 			appendMultiple(vpip, playersAdded)
 			appendMultiple(pfr, playersAdded) 
 			appendMultiple(tbp, playersAdded)
@@ -422,7 +445,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		writeAvgStatstoExcel(vpipM, pfrM, tbpM, cbpCountM, afM, afqM, wtsdM, wasdM, wasdRelM, 
 							 mwas, mwbs, ledgerM, playerIndices, handsPlayed, date, handTypeDesired)
 
-	else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
+	# else: print('No {} hands were played on {}.\n'.format(handTypeDesired, dateFormat))
 
 	# ----------------------------------------------------------------------------------------------
 

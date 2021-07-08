@@ -18,10 +18,10 @@ Stats tracked:
 - Money won before showdown ($)
 - Hands played during session
 
-*Note: All stats are tracked positionally as well (except money won), and can be viewed in command line output.*
+*Note: All stats are tracked positionally (except money won). Stats broken down by position can be viewed in command line output.*
 
 ##### Instructions for use
-Run main script -> `runPokerStats.py` (contains GUI)
+Run main script -> `run_poker_stats.py` (contains GUI)
 
 Once the program is running, choose the desired date to see specific stats from the dropdown menu. The dropdown shows all available
 dates in the `\Poker-Stats\Logs` directory.
@@ -40,7 +40,7 @@ The program will fill the following workbooks for the session specified:
 - `stacks_over_time_raw.xlsx`  (shows raw (not averaged) stack for each player, for current session, overlaid on one chart)
 - `stacks_over_time_avg.xlsx`  (shows 10-hand moving average of each player's stack, for current session, overlaid on one chart)
 
-`stacks_over_time.xlsx shows` a player's stack size throughout the session, but cannot be less than zero. It shows when a player added on and their stack
+`stacks_over_time.xlsx` shows a player's stack size throughout the session, but cannot be less than zero. It shows when a player added on and their stack
 at any point, but does not necessarily reflect net gain/loss.
 `net_over_time.xlsx` shows a player's net gain/loss throughout the session, but does not show when a player added on and what their actual stack is.
 
@@ -51,9 +51,9 @@ runtime of a previous instance of `PokerStats`:
 - `stat averages.xlsx`    (tracks all-time averages of players' stats over many session, sorted by poker type)
 - `stats over time.xlsx`  (tracks players' stats across multiple sessions, but instead of averaging, puts them side by side for trend comparison)
 
-The program will fill the `stats.xlsx` workbook. It will also fill net over time and stacks over time, both average and raw, for the 
-session specified. Stat averages, bankrolls, and stats over time for the selected session date will be filled, if that date 
-has not already been entered.
+The program will fill the `stats.xlsx` workbook automatically on every run. It will also fill net over time and stacks over time, both average and raw, 
+for the session specified. Stat averages, bankrolls, and stats over time for the selected session date will be filled, if that date has not already 
+been entered.
 
 When viewing statistics from the current session in Excel, be sure to look at the date shown in the upper right corner. The Excel sheets
 will not be touched by the program if no hands of that type were played on the session, so it may show old data from a different date.
