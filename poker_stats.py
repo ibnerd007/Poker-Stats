@@ -43,18 +43,6 @@ from whoPlayedWhen import *
 from addToPlayerDict import *
 from wipeCurrSessionSheets import *
 
-# from misc_funcs import (assignDealer, assignPositions, appendMultiple, appendMultiple3D, countAction, resetList, 
-# calcPercent, transpose, numPlayersIn, whichHandType, capturePlayerStacks, createPlayerDict, assignPlayerIndices,
-# howManyTens, replaceSuits)
-
-# from get_funcs import getID, getName, getNum
-
-# from calc_funcs import (calcVPIP, calcPFR, calcTBP, calcAF, calcAFQ, calcWTSD, calcWASD, calcMWAS, calcMWBS, 
-# calcBestHands, calcCBP, calcLedger)
-
-# from output_funcs import (printAllStatsForAllPlayers, writeCurrSessionToExcel, writeBankrollsToExcel, 
-# stacksOverTimeLineChart, writeStacksOverTimetoExcel, writeStatsOverTimeToExcel, writeAvgStatstoExcel,
-# whoPlayedWhen, addToPlayerDict, wipeCurrSessionSheets)
 
 def pokerStats(date, handTypeDesired, includeCMD):
 
