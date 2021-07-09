@@ -5,18 +5,19 @@ from assignDealer import *
 from assignPositions import *
 from appendMultiple import *
 from appendMultiple3D import *
-from getID import *
-from getName import *
 from countAction import *
 from resetList import *
 from calcPercent import *
 from transpose import *
-from getNum import *
 from numPlayersIn import *
 from whichHandType import *
 from capturePlayerStacks import *
 from createPlayerDict import *
 from assignPlayerIndices import *
+
+from getID import *
+from getName import *
+from getNum import *
 
 from calcVPIP import *
 from calcPFR import *
@@ -42,12 +43,24 @@ from whoPlayedWhen import *
 from addToPlayerDict import *
 from wipeCurrSessionSheets import *
 
+# from misc_funcs import (assignDealer, assignPositions, appendMultiple, appendMultiple3D, countAction, resetList, 
+# calcPercent, transpose, numPlayersIn, whichHandType, capturePlayerStacks, createPlayerDict, assignPlayerIndices,
+# howManyTens, replaceSuits)
+
+# from get_funcs import getID, getName, getNum
+
+# from calc_funcs import (calcVPIP, calcPFR, calcTBP, calcAF, calcAFQ, calcWTSD, calcWASD, calcMWAS, calcMWBS, 
+# calcBestHands, calcCBP, calcLedger)
+
+# from output_funcs import (printAllStatsForAllPlayers, writeCurrSessionToExcel, writeBankrollsToExcel, 
+# stacksOverTimeLineChart, writeStacksOverTimetoExcel, writeStatsOverTimeToExcel, writeAvgStatstoExcel,
+# whoPlayedWhen, addToPlayerDict, wipeCurrSessionSheets)
+
 def pokerStats(date, handTypeDesired, includeCMD):
 
 	dateFormat = '{}/{}/{}'.format(date[:2], date[2:4], date[4:])
 
-	handTypes = ['NL', 'PLO', 'combined']
-	assert handTypeDesired in handTypes, 'Hand type not recognized'
+	# handTypesPossible = ['NL', 'PLO', 'combined']
 
 	# Create dictionary from playerDictionary.txt ----------------------------------------------------------------
 
@@ -79,22 +92,23 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	vpip = [[], [], []] # voluntarily put in pot (%)
 	pfr  = [[], [], []] # pre flop raise (%)
 	tbp  = [[], [], []] # 3-bet percentage
-	actionCount = [[[], []], [[], []], [[], []], [[],[]]] # 3D list that counts every possible action and position when action is made, for each player
-														  # to be used for calculating aggression factor and aggression frequency
+	actionCount = [[[], []], [[], []], [[], []], [[],[]]] # 3D list that counts every possible action and position when action is made, 
+														  # for each player to be used for calculating aggression factor and aggression 
+														  # frequency
 	af = [[], [], []] # 2D list for aggression factor, aggression frequency
 	afq = [[], [], []]
 
 	cbp = [[], [], [], []] # C-bet %. cbp[[early pos count], [late pos count], [early opportunities count], [late opportunities count]] 
 
 	wtsd = [[], []] # went to showdown (%) by position
-	wasd = [[], []] # won at showdown (%)
+	wasd = [[], []] # won at showdown (%) by position
 	mwas = [] # money won at showdown ($)
 	mwbs = [] # money won before showdown ($) No takers?
 
 	# -----------------------------------------------------------------------------------------------------------
 
 	# Lists to be filled in loop
-	playerIDs = []
+	playerIDs = [] # Keeps every player's session ID in the order in which they arrived
 	handsPlayed = [[], []] # handsPlayed = [[early], [late]]
 	bestHands = [[], [], [], []] # bestHands = [[hand name (string)], [rank (integer)], [combination (string)], [high card (string)]]
 
@@ -107,8 +121,9 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	# Variables changing within while loop
 	totalPlayed = 0 # total # of hands played
 	beforeFlop = False
-	hasRaised = False # there is a raise on the table
 	beforeTurn = False
+
+	hasRaised = False # there is a raise on the table
 
 	holdEm = False
 	PLO = False # possible hand types
@@ -160,10 +175,12 @@ def pokerStats(date, handTypeDesired, includeCMD):
 			else:
 				dealerID = 'notAnID' # dummy ID in case there is a dead button on first hand
 				# This is possible if someone stands up before the start of the first hand
+				# For the first hand, penultimate player will be the dealer
 
 			currPlayerIDs = [[], [], []] # ID, seat, position. This is reset every hand
 			hasFolded = [] # Tracks who has folded in the hand
-			hasCollected = [] # If a player collects a main pot and side pot, they only win at showdown once
+			hasCollected = [] # Track who has already collected from pot.
+							  # If a player collects a main pot and side pot, they only win at showdown once
 
 			totalPlayed += 1
 
@@ -183,21 +200,25 @@ def pokerStats(date, handTypeDesired, includeCMD):
 		if str.find('Player stacks:') != -1: # row found, Players at table are now shown
 			playersAdded = assignPositions(str, dealerID, playerIDs, currPlayerIDs, handsPlayed, hasFolded)
 
-			# Add necessary elements to 2D stat lists
+			# Add necessary elements to stat lists
+			# 1-D
+			mwas   += [0]*playersAdded
+			mwbs   += [0]*playersAdded
+			stacks += [0]*playersAdded
+
+			# 2-D
 			appendMultiple(vpip, playersAdded)
 			appendMultiple(pfr, playersAdded) 
 			appendMultiple(tbp, playersAdded)
 			appendMultiple(af, playersAdded)
 			appendMultiple(afq, playersAdded) 
-			appendMultiple3D(actionCount, playersAdded) # different function for 3D list
 			appendMultiple(wtsd, playersAdded)
 			appendMultiple(wasd, playersAdded)
 			appendMultiple(cbp, playersAdded)
-			mwas   += [0]*playersAdded # different function for 1D list
-			mwbs   += [0]*playersAdded
-			stacks += [0]*playersAdded
-
 			appendMultiple(bestHands, playersAdded)
+
+			# 3-D
+			appendMultiple3D(actionCount, playersAdded) # different function for 3D list
 
 			# Get each player's stack based on currPlayerIDs order
 			stacks = capturePlayerStacks(str, stacks, playerIDs, currPlayerIDs)
@@ -367,7 +388,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 
 	# Calculate stat percentages by player in early, late, and total position
 	# statM is indexed: statM[player (0-len(playerIDs))][position (0-2)]
-	# Transpose so that players are indexed on outside, easier to interpret for debugging
+	# Transpose so that players are indexed on outside, easier to interperet for debugging
 
 	vpipM =    transpose(calcPercent(vpip, handsPlayed, 3)) # Calculates percentages for each preflop statistic
 	pfrM =     transpose(calcPercent(pfr,  handsPlayed, 3))
@@ -375,6 +396,7 @@ def pokerStats(date, handTypeDesired, includeCMD):
 	wtsdM =    transpose(calcPercent(wtsd, handsPlayed, 3))
 	wasdM =    transpose(calcPercent(wasd, handsPlayed, 3)) # Calculates percentage relative to hands played
 	wasdRelM = transpose(calcPercent(wasd, wtsd,        3)) # Calculates percentage relative to times WTSD
+
 	cbpM =     transpose(calcPercent(cbp[0:2], cbp[2:4],2)) # "                     of c-bet relative to opportunities
 
 	cbpCountM = transpose(cbp)
