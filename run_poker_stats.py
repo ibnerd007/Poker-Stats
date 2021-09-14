@@ -98,11 +98,11 @@ def run():
 
 	def openStats():
 		# Run command to open Excel in command line
-		os.system(r"start excel.exe C:\Users\joseph.phillips\Documents\GitHub\Poker-Stats\Outputs\stats.xlsx")
+		os.system(r"start excel.exe C:\Users\scott\OneDrive\Documents\GitHub\Poker-Stats\Outputs\stats.xlsx")
 
 	def openNet():
 		# Run command to open Excel in command line
-		os.system(r"start excel.exe C:\Users\joseph.phillips\Documents\GitHub\Poker-Stats\Outputs\net_over_time_avg.xlsx")
+		os.system(r"start excel.exe C:\Users\scott\OneDrive\Documents\GitHub\Poker-Stats\Outputs\net_over_time_avg.xlsx")
 
 
 
